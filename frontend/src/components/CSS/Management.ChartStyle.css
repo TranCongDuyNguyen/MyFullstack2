@@ -1,0 +1,142 @@
+.container.parameter-display {
+    height: 13rem;
+}
+.container.parameter-display .text {
+        font-size: 1.6rem;
+        top: 3.2rem;
+        left: 4.2rem;
+        position: absolute;
+}
+.parameter-display .motor-temp-box {
+    color: white;
+    border: solid 0.04em rgba(255, 255, 255, 0.452); 
+    border-radius: 1.4em;
+    box-shadow: 0 0 0.4em 0.1em rgb(199, 255, 236);
+    background-color: #000;
+    margin-bottom: 2rem;
+    height: 8.8em;
+    width: 12em;
+    margin-top: 2em;
+    position: relative;
+}
+.parameter-display .drive-temp-box {
+    color: white;
+    border: solid 0.04em rgba(255, 255, 255, 0.452); 
+    background-color: #000;
+    margin-bottom: 2rem;
+    height: 8.8em;
+    width: 12em;
+    margin-top: 2em;
+    border-radius: 1.4em;
+    box-shadow: 0 0 0.4em 0.1em #ffc7c7ff;
+    position: relative;
+}
+
+.parameter-display .radial-box .recharts-wrapper {
+    position: absolute;
+    top: -2.8rem;
+    right: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 14rem;
+    width: 14rem;
+    color: white;
+}
+
+
+.recharts-cartesian-axis-line {
+    stroke: white;
+}
+.recharts-cartesian-axis-tick {    
+    font-size: 0.8rem;
+    font-family: Roboto, sans-serif;
+}
+
+.recharts-responsive-container.motor-area-chart.torque{
+    height: 100%!important;
+    position: absolute;
+    top: 2em;
+    left: 0em;
+}
+
+.recharts-responsive-container.motor-area-chart.ampere{
+    height: 100%!important;
+    position: absolute;
+    top: 1em;
+    left: 0em;
+}
+.recharts-responsive-container.motor-area-chart .recharts-surface {
+    height: 24rem;
+    width: 40rem;
+}
+.recharts-responsive-container.motor-area-chart.torque .recharts-wrapper {
+    right: -5.8rem;
+    top: 0rem;
+    height: 100%!important;
+    margin: 0!important;
+}
+
+.recharts-responsive-container.motor-area-chart.ampere .recharts-wrapper {
+    right: -5.8rem;
+    top: 0rem;
+    height: 100%!important;
+    margin: 0!important;
+}
+
+@media screen and (max-width: 480px) {
+    .recharts-responsive-container.motor-area-chart{
+        height: 60%!important;
+        position: absolute;
+        top: 4em;
+        left: 0em;
+    }
+    .recharts-responsive-container.motor-area-chart .recharts-surface {
+        height: 15rem;
+        width: 23rem;
+    }
+    .recharts-responsive-container.motor-area-chart.torque .recharts-wrapper {
+        right: -0.8rem;
+        top: -3rem;
+        height: 15rem;
+        width: 23rem;
+    }
+    .recharts-responsive-container.motor-area-chart.ampere .recharts-wrapper {
+        right: -0.8rem;
+        top: -14rem;
+        height: 15rem;
+        width: 23rem;
+    }
+
+    div.radial-box {
+        justify-content: center;
+    }
+    .parameter-display .drive-temp-box {
+        height: 6.8em;
+        width: 8em;
+        margin-top: 0.5em;
+        margin-bottom: 0;
+    }
+    .parameter-display .motor-temp-box {
+        height: 6.8em;
+        width: 8em;
+        margin-top: 0.25 em;
+        margin-bottom: 0.25em;
+    }
+    .parameter-display .radial-box .recharts-wrapper {
+        height: 10rem!important;
+        width: 10rem!important;
+        right: 0.92rem;
+        top: -1.6rem;
+    }
+    .parameter-display .radial-box .recharts-surface {
+        height: 10rem;
+        width: 10rem;
+    }
+    .container.parameter-display .text {
+        font-size: 1.2rem;
+        top: 2.4rem;
+        left: 2.8rem;
+        position: absolute;
+}
+}

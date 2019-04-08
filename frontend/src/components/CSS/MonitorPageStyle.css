@@ -1,0 +1,168 @@
+.motor-1-dc {
+    border: solid 1px #eeeeee ;
+    margin-bottom: 0.8rem;
+    border-radius: 1.4em;
+    max-width: 1366px!important;
+}
+.page-button {
+    display: flex;
+    font-weight: 600;
+}
+.page-button a{
+    margin-right: 0.2em;  
+    width: 1.8em;
+    height: 1.8em;
+    border: solid 1px #eeeeee ;
+    border-radius: 0.4em;
+    color: #FBFCFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.page-button a:hover{
+    background-color: rgba(230,230,230,0.4);
+    border-color: #eeeeee;
+    color: #485563;
+    text-decoration: unset;
+}
+.page-button a:active{
+    background-color: #485563BB;
+    border-color: white;
+    color: #aaaaaa;
+    border-width: 2px;
+}
+.current-and-torque .current-box, .torque-box {
+    color: white;
+    border: solid 0.04em #8ec5fc; 
+    margin: 2rem 4rem 2rem 1rem;
+    height: 8.8em;
+    width: 12em;
+    border-radius: 1.4em;
+    box-shadow: 0 0 0.4em 0.1em #e0c3fc;
+    position: relative;
+}
+.current-and-torque .current-box .dc, .torque-box .dc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.thermal .motorT-box, .driveT-box {
+    color: white;
+    border: solid 0.04em #43e97b; 
+    margin: 2rem 4rem 2rem 1rem;
+    height: 8.8em;
+    width: 12em;
+    border-radius: 1.4em;
+    box-shadow: 0 0 0.4em 0.1em #38f9d7;
+    position: relative;
+}
+
+.thermal .motorT-box .dc, .driveT-box .dc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.power-box {
+    color: white;
+    border: solid 0.04em #4facfe; 
+    margin: 2rem 4rem 2rem 1rem;
+    height: 8.8em;
+    width: 12em;
+    border-radius: 1.4em;
+    box-shadow: 0 0 0.4em 0.1em #00f2fe;
+    position: relative;
+}
+
+.power-box .dc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dc .text {
+    position: absolute;
+    font-size: 1.5em;   
+    right: 2.6em;
+    top: 1.5em;
+}
+.dc .unitText {
+    position: absolute;
+    right: 1.2em;
+    top: 1.2em;
+}
+.torque-box .dc .unitText {
+    right: 0.6em;
+}
+.dc .text .blink {
+    color: #D60000;
+}
+
+.trend-button {
+    position: absolute;
+    top: 6.4em;
+    right: 3.2em;
+    width: 6em;
+    height: 2em;
+    border: solid 1px #dddddd;
+    border-radius: 1.4em;
+    padding-top: 0.2em;
+    padding-left: 2.2rem;
+    transition: background-color 300ms ease-in-out;
+}
+.trend-button:hover {
+    background-color: rgba(230,230,230,0.4);
+    border-color: #eeeeee;
+    color: #485563;
+}
+
+.trend-button:active {
+    background-color: #485563BB;
+    border-color: white;
+    color: #aaaaaa;
+    border-width: 2px;
+}
+
+.motor-1-dc {
+    max-width: 1366px!important;
+    margin: 0.01em auto;
+    border-radius: 1.4em;
+    padding-top: 1em;
+}
+
+.tc-box {
+    border: solid 0.5px #eeeeee55;
+    border-radius: 1.2em;
+    width: 33em;
+    height: 16em;
+    padding: 1em 1em 1em 1em;
+    background: linear-gradient(0deg, rgba(0,0,0,0.1) 0%, rgba(221,221,238,0.4) 100%);
+}
+.hide {
+    display: none;
+}
+.tc-box .exit-button {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    outline:none;
+    height: 1em;
+    width: 1em;
+    font-size: 2rem;
+    position: absolute;
+    top: -0.3em;
+    right: 1.0em;
+    transition: color 100ms ease-in-out;
+    color: #111111dd;
+}
+.tc-box .exit-button:hover {
+    color: #eeeeee;
+}
+.tc-box .exit-button:active {
+    color: #aaaaaa;
+}
+.temp .yAxis-name {
+    left: 4.4em;
+}

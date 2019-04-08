@@ -1,0 +1,15 @@
+.dc .recharts-surface{
+    position: absolute;
+    right: -1.1em;
+}
+
+.dc.recharts-sector .recharts-radial-bar-background-sector path{
+    d: M 61.2,115
+    A 53.8,53.8,0,
+    0,1,
+    168.8,115
+  L 158.9,115
+            A 43.9,43.9,0,
+            0,0,
+            71.1,115 Z;
+}

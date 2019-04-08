@@ -1,0 +1,72 @@
+* {
+    box-sizing: border-box;
+  }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+.f-box {
+    border: solid 0.04em rgba(255, 255, 255, 0.452); 
+    border-radius: 1.4em;
+    width: 14rem;
+    height: 3rem;
+    margin: 40px auto 0;
+    background-color: #00fede;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    color: black;
+  }
+.f-box:before {
+    content: '';
+    display: block;
+    width: 3rem;
+    height: 100%;
+    position: relative;
+    background-color: #000;
+    transition: all 0.5s ease;
+  }
+.f-input {
+    width: 3.6em;
+    height: 0.8em;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    color: #000;
+    padding: 0.1em 0.1em 0.1em 0.3em;
+    font-size: 2.2em;
+    position: absolute;
+    top: 0.22em;
+    right: 1.4em;
+}
+  
+.f-input:focus {
+    outline: none;
+  }
+ 
+.f-button {
+    position: absolute;
+    width: 3rem;
+    top: 0.01em;
+    right: 0.2em;
+}
+.f-txt {
+    letter-spacing: -0.05em;
+    position: absolute;
+    height: 0.8em;
+    width: 3em;
+    top: -0.12em;
+    right: -0.2em;
+    font-size: 2.4rem;
+}
+.otime-box {
+    color: #00fede;
+    font-size: 2.4rem;
+    margin: 40px auto 0;
+}

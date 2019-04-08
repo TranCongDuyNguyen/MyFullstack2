@@ -1,0 +1,39 @@
+.brand-text {
+    position: absolute;
+    font-size: 1em;
+    top: 0.8em;
+    right: -0.4em;
+    font-family: "Lucida Grande", Tahoma;
+    font-weight: bolder;
+    color: #C97D60;
+}
+.dropdown .dropdown-menu a {
+    color: black;
+    background-color: white;
+}
+.dropdown .dropdown-menu a:hover {
+    background-color: #f8f9fa;
+}
+.dropdown .dropdown-toggle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255,255,255,0);
+}
+
+.navbar-collapse .navbar-nav li {
+    transition: all 0.5s;
+}
+.navbar-collapse .navbar-nav li:hover {
+    background-color: #545b62;
+    border-color: #4e555b;
+    color: white;
+    border-radius: 0.25rem;
+}
+.nav-item a{
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar-collapse .nav-item .nav-link:hover{
+    background-color: #545b62;
+    border-color: #4e555b;
+    border-radius: 0.25rem;
+}

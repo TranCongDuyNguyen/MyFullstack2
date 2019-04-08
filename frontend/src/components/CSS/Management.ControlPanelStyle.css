@@ -1,0 +1,14 @@
+.led-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.led-container .active-status {
+    display: flex;
+    justify-content: space-evenly;
+}
+.led-container .service-status {
+    display: flex;
+    justify-content: space-evenly;
+}

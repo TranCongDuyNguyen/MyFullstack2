@@ -1,0 +1,261 @@
+.container .row .headline {
+    font-family: "Montserrat", sans-serif;
+    font-size:6rem;
+    margin: auto;
+    text-align: center;
+    font-weight: normal;
+    color: #222;
+    margin-bottom: 0.25em;
+}
+
+.container .row .sub-headline {
+    font-family: "Lucida Grande", Tahoma;
+    font-size: 1.5rem;
+    font-weight: lighter;
+    font-variant: normal;
+    text-transform: uppercase;
+    color: #666666;
+    margin: auto;
+    letter-spacing: 0.3em;
+}
+.container .card {
+    overflow: hidden;
+}
+.card .card-img-top {
+    width: 100%;
+    height: 18vw;
+    max-width: 348px;
+    max-height: 385.75px;
+    object-fit: cover;
+    transition: all 0.75s ease-in-out 0s
+}
+.card .card-img-top:hover {
+    transform: scale(1.125);
+}
+.card .card-title {
+    font-size: 1.625rem;
+    font-family: "Siemens Sans Bold",Arial,sans-serif;
+    line-height: 1.23077;
+    margin-top: -0.19231em;
+    margin-bottom: 1.03846em;
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    color: #2d373c;
+}
+.card .card-text {
+    font-size: 1rem;
+    font-family: "Siemens Sans Roman",Arial,sans-serif;
+    line-height: 1.5;
+    margin-top: -0.3125em;
+    margin-bottom: -0.5em;
+    color: #2d373c;
+}
+
+.card .btn {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    padding: 0;
+    color: #2d373c;
+    opacity: .6;
+    background-color: white;
+    border: none;
+}
+
+.card .btn:hover {
+    background-color: white;
+    border-color: #4e555b;
+}
+.card .btn:active {
+	background-color: white!important;
+	border-color: white!important;
+}
+.card .btn:focus {
+	background-color: white!important;
+	border-color: white!important;
+	box-shadow:  none!important;
+}
+.card .btn .arrow-btn {
+    height: 1.25em;
+    width: 1.25em;
+    opacity: 0.7;
+}
+
+.card .btn .arrow-btn:hover {
+    opacity: 1;
+}
+.card .btn .arrow-btn:focus {
+	outline: none;
+}
+.footer-distributed{
+	background-color: #292c2f;
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+	box-sizing: border-box;
+	width: 100%;
+	text-align: left;
+	font: bold 16px sans-serif;
+
+	padding: 55px 50px;
+	margin-top: 80px;
+}
+
+.footer-distributed .footer-left,
+.footer-distributed .footer-center,
+.footer-distributed .footer-right{
+	display: inline-block;
+	vertical-align: top;
+}
+
+/* Footer left */
+
+.footer-distributed .footer-left{
+	width: 40%;
+}
+
+/* The company logo */
+
+.footer-distributed h3{
+	color:  #ffffff;
+	font: normal 36px 'Cookie', cursive;
+	margin: 0;
+}
+
+.footer-distributed h3 span{
+	color:  #5383d3;
+}
+
+/* Footer links */
+
+.footer-distributed .footer-links{
+	color:  #ffffff;
+	margin: 20px 0 12px;
+	padding: 0;
+}
+
+.footer-distributed .footer-links a{
+	display:inline-block;
+	line-height: 1.8;
+	text-decoration: none;
+	color:  inherit;
+}
+
+.footer-distributed .footer-company-name{
+	color:  #8f9296;
+	font-size: 14px;
+	font-weight: normal;
+	margin: 0;
+}
+
+/* Footer Center */
+
+.footer-distributed .footer-center{
+    width: 35%;
+    margin-right: 2rem;
+}
+
+.footer-distributed .footer-center i{
+	background-color:  #33383b;
+	color: #ffffff;
+	font-size: 25px;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 42px;
+	margin: 10px 15px;
+	vertical-align: middle;
+}
+
+.footer-distributed .footer-center i.fa-envelope{
+	font-size: 17px;
+	line-height: 38px;
+}
+
+.footer-distributed .footer-center p{
+	display: inline-block;
+	color: #ffffff;
+	vertical-align: middle;
+	margin:0;
+}
+
+.footer-distributed .footer-center p span{
+	display:block;
+	font-weight: normal;
+	font-size:14px;
+	line-height:2;
+}
+
+.footer-distributed .footer-center p a{
+	color:  #5383d3;
+	text-decoration: none;;
+}
+
+
+/* Footer Right */
+
+.footer-distributed .footer-right{
+	width: 20%;
+}
+
+.footer-distributed .footer-company-about{
+	line-height: 20px;
+	color:  #92999f;
+	font-size: 13px;
+	font-weight: normal;
+	margin: 0;
+}
+
+.footer-distributed .footer-company-about span{
+	display: block;
+	color:  #ffffff;
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.footer-distributed .footer-icons{
+	margin-top: 25px;
+}
+
+.footer-distributed .footer-icons a{
+	display: inline-block;
+	width: 35px;
+	height: 35px;
+	cursor: pointer;
+	background-color:  #33383b;
+	border-radius: 2px;
+
+	font-size: 20px;
+	color: #ffffff;
+	text-align: center;
+	line-height: 35px;
+
+	margin-right: 3px;
+	margin-bottom: 5px;
+}
+
+/* If you don't want the footer to be responsive, remove these media queries */
+
+@media (max-width: 880px) {
+
+	.footer-distributed{
+		font: bold 14px sans-serif;
+	}
+
+	.footer-distributed .footer-left,
+	.footer-distributed .footer-center,
+	.footer-distributed .footer-right{
+		display: block;
+		width: 100%;
+		margin-bottom: 40px;
+		text-align: center;
+	}
+
+	.footer-distributed .footer-center i{
+		margin-left: 0;
+	}
+
+}

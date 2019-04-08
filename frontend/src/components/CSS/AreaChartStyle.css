@@ -1,0 +1,19 @@
+.xAxis-name {
+    position: absolute;
+    top: 14em;
+    left: 16.8em;
+    font-weight: bolder;
+}
+.yAxis-name {
+    position: absolute;
+    top: 0.6em;
+    left: 3em;
+    font-weight: bolder;
+}
+.recharts-cartesian-axis-ticks text {
+    stroke-width: 0;
+    fill: white;
+}
+.tc-box .recharts-wrapper {
+    padding-top: 20px;
+}
