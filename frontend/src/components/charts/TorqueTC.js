@@ -24,7 +24,7 @@ export default class TorqueTC extends Component {
   }
 
   componentDidMount() {
-    this.socket = io("http://localhost:5000", {transports: ['websocket']}); 
+    this.socket = io("http://localhost:5000", { transports: ['websocket'] });
     this.socket.on(this.props.ioTopic, function (torqueBuffer) {
 
       this.setState((state) => {
@@ -37,9 +37,9 @@ export default class TorqueTC extends Component {
 
   componentWillUnmount() {
     this.socket.disconnect();
-    this.socket.on("connect_error", function(error) {
+    this.socket.on("connect_error", function (error) {
       console.log(error);
       this.socket.disconnect();
-  })
+    })
   };
 }
