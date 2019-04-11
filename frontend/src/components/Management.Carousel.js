@@ -11,8 +11,6 @@ import {
 } from 'reactstrap';
 
 import "./CSS/CarouselStyle.css";
-import ManagementChart from './Management.Chart';
-import ManagementControlPanel from './Management.ControlPanel';
 
 const items = [
   {
