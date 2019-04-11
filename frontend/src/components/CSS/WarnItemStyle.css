@@ -1,0 +1,13 @@
+.warn-item {
+    display: grid;
+    grid-template-columns: 20% 15% 30% 32%;
+    justify-content: center;
+    place-items: center;
+    align-content: center;
+    margin-bottom: 1em;
+    width: 97%;
+    height: 12%;
+    border: 0.8px solid #9BA2FFDD;
+    border-radius: 0.2em;
+    color: white;
+}

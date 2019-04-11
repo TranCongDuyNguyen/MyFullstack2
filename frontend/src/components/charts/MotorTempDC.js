@@ -62,7 +62,9 @@ class MotorTempDC extends Component {
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
-            console.log(error);
+            if (error) {
+                console.log(error);    
+            }
             this.socket.disconnect();
         })
     };

@@ -25,12 +25,12 @@ app.use('/api/motors', require('./routes/api/route.motors'));
 
 //Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
-    //Set static folder
-    app.use(express.static('frontend/build'));
+	//Set static folder
+	app.use(express.static('frontend/build'));
 
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-    })
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+	})
 }
 
 
@@ -102,22 +102,23 @@ client.subscribe('n/motor2/oTime', function (err) {
 	}
 })
 
-//trending initial var
-//+Motor 1
+//initial variables
+//-Motor 1
+//+trend arr
 let torque1Buffer = [{ torque: 0, time: "00:00:00" }]; let amp1Buffer = [{ amp: 0, time: "00:00:00" }];
 let motor1TBuffer = [{ motorT: 0, time: "00:00:00" }]; let drive1TBuffer = [{ driveT: 0, time: "00:00:00" }];
 let power1Buffer = [{ power: 0, time: "00:00:00" }];
-//+Motor 2
+//+notification arr
+let notiesArr1 = [];
+let notiesArr2 = []
+//-Motor 2
+//+trend arr
 let torque2Buffer = [{ torque: 0, time: "00:00:00" }]; let amp2Buffer = [{ amp: 0, time: "00:00:00" }];
 let motor2TBuffer = [{ motorT: 0, time: "00:00:00" }]; let drive2TBuffer = [{ driveT: 0, time: "00:00:00" }];
 let power2Buffer = [{ power: 0, time: "00:00:00" }];
-let torqueObj = {};
-let ampObj = {};
-let motorTObj = {};
-let driveTObj = {};
-let powerObj = {};
-var time;
 
+
+//get real time
 function getTime() {
 	let now = new Date();
 	let hours = (("0" + now.getHours()).slice(-2));
@@ -125,43 +126,92 @@ function getTime() {
 	let seconds = (("0" + now.getSeconds()).slice(-2));
 	return hours + ":" + minutes + ":" + seconds;
 }
-
+let time;
 setInterval(() => {
 	time = getTime();
-}, 200);
-
+}, 1000);
+//-FUNCTION
+//+ create trend buffer
+function objToBuffer(obj, arr, amount) {
+	let buffer = arr;
+	buffer.push(obj);
+	if (amount) {
+		if (buffer.length > amount) {
+			buffer.splice(0, 1)
+		}
+	}
+}
+//+ create alarm list
+function generateAlarm(type, comparedData, warnObj, warnStr, dangerStr, notiesArr) {
+	if (type == "more") {
+		if (comparedData > 60 && comparedData <= 80) {
+			warnObj = {
+				notiId: '',
+				type: "Warning",
+				warnTime: null,
+				warnMsg: warnStr
+			}
+		}
+		else if (comparedData > 80) {
+			warnObj = {
+				notiId: '',
+				type: "Danger",
+				warnTime: null,
+				warnMsg: dangerStr
+			}
+		}
+	}
+	else if (type == "less") {
+		if (comparedData < 60 ) {
+			warnObj = {
+				notiId: '',
+				type: "Warning",
+				warnTime: null,
+				warnMsg: warnStr
+			}
+		}
+		else if (comparedData >= 60 && comparedData >= 100) {
+			warnObj = {
+				notiId: '',
+				type: "Danger",
+				warnTime: null,
+				warnMsg: dangerStr
+			}
+		}
+	}
+	if (warnObj && time) {
+		warnObj.warnTime = time;
+		objToBuffer(warnObj, notiesArr, 200);
+		let index = notiesArr.indexOf(warnObj);
+		warnObj.notiId = `Alarm ${index}`;
+	}
+}
 //trending MQTT transfer
 client.on("message", function (topic, message) {
 	try {
 		if (topic === "n/motor1") {
-
+			let motorData = JSON.parse(message.toString());
 			let torque1Obj = {
-				...torqueObj,
-				torque: JSON.parse(message.toString()).torque,
+				torque: motorData.torque,
 				time: ''
 			};
-
 			let amp1Obj = {
-				...ampObj,
-				amp: JSON.parse(message.toString()).amp,
+				amp: motorData.amp,
 				time: ''
 			};
 
 			let motor1TObj = {
-				...motorTObj,
-				motorT: JSON.parse(message.toString()).motorT,
+				motorT: motorData.motorT,
 				time: ''
 			};
 
 			let drive1TObj = {
-				...driveTObj,
-				driveT: JSON.parse(message.toString()).driveT,
+				driveT: motorData.driveT,
 				time: ''
 			};
 
 			let power1Obj = {
-				...powerObj,
-				power: JSON.parse(message.toString()).power,
+				power: motorData.power,
 				time: ''
 			};
 
@@ -172,31 +222,16 @@ client.on("message", function (topic, message) {
 				drive1TObj.time = time;
 				power1Obj.time = time;
 			}
+			//create trend buffer
+			objToBuffer(torque1Obj, torque1Buffer, 10);
 
-			torque1Buffer.push(torque1Obj);
-			if (torque1Buffer.length > 10) {
-				torque1Buffer.splice(0, 1)
-			}
+			objToBuffer(amp1Obj, amp1Buffer, 10);
 
-			amp1Buffer.push(amp1Obj);
-			if (amp1Buffer.length >= 10) {
-				amp1Buffer.splice(0, 1)
-			}
+			objToBuffer(motor1TObj, motor1TBuffer, 10);
 
-			motor1TBuffer.push(motor1TObj);
-			if (motor1TBuffer.length > 10) {
-				motor1TBuffer.splice(0, 1)
-			}
+			objToBuffer(drive1TObj, drive1TBuffer, 10);
 
-			drive1TBuffer.push(drive1TObj);
-			if (drive1TBuffer.length >= 10) {
-				drive1TBuffer.splice(0, 1)
-			}
-
-			power1Buffer.push(power1Obj);
-			if (power1Buffer.length >= 10) {
-				power1Buffer.splice(0, 1)
-			}
+			objToBuffer(power1Obj, power1Buffer, 10);
 		}
 	} catch (e) {
 		console.log(e);
@@ -204,34 +239,29 @@ client.on("message", function (topic, message) {
 	}
 	try {
 		if (topic === "n/motor2") {
-
+			let motorData = JSON.parse(message.toString());
 			let torque2Obj = {
-				...torqueObj,
-				torque: JSON.parse(message.toString()).torque,
+				torque: motorData.torque,
 				time: ''
 			};
 
 			let amp2Obj = {
-				...ampObj,
-				amp: JSON.parse(message.toString()).amp,
+				amp: motorData.amp,
 				time: ''
 			};
 
 			let motor2TObj = {
-				...motorTObj,
-				motorT: JSON.parse(message.toString()).motorT,
+				motorT: motorData.motorT,
 				time: ''
 			};
 
 			let drive2TObj = {
-				...driveTObj,
-				driveT: JSON.parse(message.toString()).driveT,
+				driveT: motorData.driveT,
 				time: ''
 			};
 
 			let power2Obj = {
-				...powerObj,
-				power: JSON.parse(message.toString()).power,
+				power: motorData.power,
 				time: ''
 			};
 
@@ -242,38 +272,23 @@ client.on("message", function (topic, message) {
 				drive2TObj.time = time;
 				power2Obj.time = time;
 			}
+			//create trend buffer
+			objToBuffer(torque2Obj, torque2Buffer, 10);
 
-			torque2Buffer.push(torque2Obj);
-			if (torque2Buffer.length > 10) {
-				torque2Buffer.splice(0, 1)
-			}
+			objToBuffer(amp2Obj, amp2Buffer, 10);
 
-			amp2Buffer.push(amp2Obj);
-			if (amp2Buffer.length >= 10) {
-				amp2Buffer.splice(0, 1)
-			}
+			objToBuffer(motor2TObj, motor2TBuffer, 10);
 
-			motor2TBuffer.push(motor2TObj);
-			if (motor2TBuffer.length > 10) {
-				motor2TBuffer.splice(0, 1)
-			}
+			objToBuffer(drive2TObj, drive2TBuffer, 10);
 
-			drive2TBuffer.push(drive2TObj);
-			if (drive2TBuffer.length >= 10) {
-				drive2TBuffer.splice(0, 1)
-			}
-
-			power2Buffer.push(power2Obj);
-			if (power2Buffer.length >= 10) {
-				power2Buffer.splice(0, 1)
-			}
+			objToBuffer(power2Obj, power2Buffer, 10);
 		}
 	} catch (e) {
 		console.log(e);
 		console.log("because of undefined data from mqtt fake client");
 	}
 
-	
+
 
 })
 //doughnut MQTT, io transfer and trend io transfer
@@ -285,11 +300,20 @@ io.on('connection', function (socket) {
 		}
 		socket.disconnect();
 	})
-	//doughnut
+	//doughnut and warning
+
 	client.on("message", function (topic, message) {
 		if (topic === "n/motor1") {
 			try {
-				socket.emit("motor1DCData", JSON.parse(message.toString()));
+				let motorData = JSON.parse(message.toString());
+				let ampWarn, torWarn, motorTWarn, driveTWarn, powerWarn = null;
+				generateAlarm("more", motorData.amp, ampWarn, 'Current is above 60%', 'Current is above 80%', notiesArr1);
+				generateAlarm("more", motorData.torque, torWarn, 'Torque is above 60%', 'Torque is above 80%', notiesArr1);
+				generateAlarm("more", motorData.motorT, motorTWarn, 'Motor Thermal is above 60', 'Motor Thermal is above 80', notiesArr1);
+				generateAlarm("more", motorData.driveT, driveTWarn, 'Drive Thermal is above 60', 'Drive Thermal is above 80', notiesArr1);
+				generateAlarm("less", motorData.power, powerWarn, 'Power is under 60%', 'Power is above 100%', notiesArr1);
+				socket.emit("warnList1", notiesArr1);
+				socket.emit("motor1DCData", motorData);
 			} catch (e) {
 				console.log("because of undefined data from mqtt fake client");
 			}
@@ -298,7 +322,15 @@ io.on('connection', function (socket) {
 	client.on("message", function (topic, message) {
 		if (topic === "n/motor2") {
 			try {
-				socket.emit("motor2DCData", JSON.parse(message.toString()));
+				let motorData = JSON.parse(message.toString());
+				let ampWarn, torWarn, motorTWarn, driveTWarn, powerWarn = null;
+				generateAlarm("more", motorData.amp, ampWarn, 'Current is above 60%', 'Current is above 80%', notiesArr2);
+				generateAlarm("more", motorData.torque, torWarn, 'Torque is above 60%', 'Torque is above 80%', notiesArr2);
+				generateAlarm("more", motorData.motorT, motorTWarn, 'Motor Thermal is above 60', 'Motor Thermal is above 80', notiesArr2);
+				generateAlarm("more", motorData.driveT, driveTWarn, 'Drive Thermal is above 60', 'Drive Thermal is above 80', notiesArr2);
+				generateAlarm("less", motorData.power, powerWarn, 'Power is under 60%', 'Power is above 100%', notiesArr2);
+				socket.emit("warnList2", notiesArr2);
+				socket.emit("motor2DCData", motorData);
 			} catch (e) {
 				console.log("because of undefined data from mqtt fake client");
 			}
@@ -366,6 +398,8 @@ io.on('connection', function (socket) {
 		time = 0;
 		clearInterval(id1);
 		clearInterval(id2);
+		notiesArr1 = [];
+		notiesArr2 = [];
 		console.log("Disconnect");
 	});
 });

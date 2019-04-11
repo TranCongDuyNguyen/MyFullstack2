@@ -17,6 +17,8 @@ import MotorTempTC from '../charts/MotorTempTC';
 import DriveTempTC from '../charts/DriveTempTC';
 import PowerTC from '../charts/PowerTC';
 import OperatingTime from '../OperatingTime';
+import MotorInfo from '../MotorInfo';
+import WarnPanel from '../WarnPanel';
 import "../CSS/MonitorPageStyle.css";
 
 export default class Motor2Page extends Component {
@@ -132,8 +134,10 @@ export default class Motor2Page extends Component {
                                 <a href="/monitor/2" alt="">2</a>
                             </div>
                             <div className="motor-1-pic">
-                                
+                                <img className="motor-image" src="https://via.placeholder.com/150" alt=""/>
+                                <MotorInfo ioTopic="motor2DCData" />
                             </div>
+                            <WarnPanel ioTopic="warnList2"/>
                         </Col>
                         <Col md="6" className="rightside">
                             <Row className="current-and-torque">

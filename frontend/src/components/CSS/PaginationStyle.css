@@ -1,0 +1,31 @@
+.pagination {
+    font-size: 0.8em;
+    font-weight: 500;
+    position: absolute;
+    right: 2em;
+    top: 44em;
+}
+
+a.page-link {
+    color: #eeeeeedd;
+    background: none;
+    border: none;
+}
+
+a.page-link:focus {
+    box-shadow: none;
+}
+a.page-link:hover {
+    background: #48556366;
+    color: #eeeeee;
+}
+
+li.page-item.active a.page-link{
+    color: white;
+    background: #48556388;
+    outline:none;
+}
+li.page-item:focus {
+    outline: none;
+    border: none;
+}

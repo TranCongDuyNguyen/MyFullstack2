@@ -133,11 +133,11 @@
 
 .tc-box {
     border: solid 0.5px #eeeeee55;
+    background: linear-gradient(0deg, rgba(0,0,0,0.1) 0%, rgba(221,221,238,0.4) 100%);
     border-radius: 1.2em;
     width: 33em;
     height: 16em;
-    padding: 1em 1em 1em 1em;
-    background: linear-gradient(0deg, rgba(0,0,0,0.1) 0%, rgba(221,221,238,0.4) 100%);
+    padding: 1em 1em 1em 1em; 
 }
 .hide {
     display: none;
@@ -165,4 +165,10 @@
 }
 .temp .yAxis-name {
     left: 4.4em;
+}
+.motor-1-pic {
+    width: 10em;
+}
+.motor-1-pic:hover .motor-info {
+    visibility: unset;
 }

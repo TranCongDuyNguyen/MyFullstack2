@@ -26,7 +26,6 @@ export default class DriveTempTC extends Component {
     componentDidMount() {
         this.socket = io("http://localhost:5000", {transports: ['websocket']});
         this.socket.on(this.props.ioTopic, function (driveTBuffer) {
-            console.log(driveTBuffer);
             this.setState((state) => {
                 return {
                     data: driveTBuffer
@@ -38,7 +37,9 @@ export default class DriveTempTC extends Component {
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function(error) {
-            console.log(error);
+            if (error) {
+                console.log(error);    
+            }
             this.socket.disconnect();
         })
     };

@@ -77,12 +77,6 @@ export default class ManagementCarousel extends Component {
         >
           {(item.id !== 2) && (
             <Container style={{height: "100%", width: "100%"}}>
-              <Row style={{height: "60%", width: "100%"}}>
-                <ManagementChart key={item.id} />
-              </Row>
-              <Row style={{height: "40%", width: "100%"}}>
-                <ManagementControlPanel key={item.id} />
-              </Row>
             </Container>
           )}
 

@@ -26,7 +26,6 @@ export default class MotorTempTC extends Component {
     componentDidMount() {
         this.socket = io("http://localhost:5000", {transports: ['websocket']});
         this.socket.on(this.props.ioTopic, function (motorTBuffer) {
-            console.log(motorTBuffer);
             this.setState((state) => {
                 return {
                     data: motorTBuffer
@@ -38,7 +37,9 @@ export default class MotorTempTC extends Component {
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function(error) {
-            console.log(error);
+            if (error) {
+                console.log(error);    
+            }
             this.socket.disconnect();
         })
     };

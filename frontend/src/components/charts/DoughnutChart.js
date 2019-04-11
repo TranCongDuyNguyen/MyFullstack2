@@ -12,7 +12,6 @@ export default class DoughnutChart extends Component {
 
     CustomBar = () => {
         const { data, dataKey, threshold, offset, flash } = this.props;
-        console.log(flash);
         let value = data[0][dataKey];
         if (value > threshold && value <= threshold + offset) {
             return <Cell fill="#DD403A"></Cell>
