@@ -26,7 +26,7 @@ export default class WarnPanel extends Component {
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000", { transports: ['websocket'] });
+        this.socket = io("http://localhost:5000");
         this.socket.on(this.props.ioTopic, function (notiesArr) {
             length = notiesArr.length;
             this.setState({

@@ -1,23 +1,10 @@
-.container-box p{
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: auto;
-    margin-top: 0.5em;
-    border: solid 0.04em rgba(255, 255, 255, 0.452); 
-    border-radius: 1.4em;
-    background-size: cover;
-    height: 2em;
-    width: 6.5em;
-    background-color: rgb(226,226,226);
-    color: #111;
-    font-weight: bold;
-    font-family: Helvetica;
-    margin-top: 0.4em;
-}
 .led {
     width: 2em;
     height: 2em;
+    border: 1px solid #FFF;
+}
+.led-text {
+    cursor: pointer;
 }
 @media screen and (max-width: 480px) {
     .led {

@@ -30,7 +30,7 @@ export default class CurrentDC extends Component {
                     colorId="current"
                     startGradColor="#FFF275"
                     endGradColor="#d0ed57"
-                    theUnit = "A"
+                    theUnit="A"
                     flash={this.state.flash}>
                 </DoughnutChart>
             </div>
@@ -38,7 +38,7 @@ export default class CurrentDC extends Component {
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000", { transports: ['websocket'] }).connect();
+        this.socket = io("http://localhost:5000").connect();
         this.socket.on(this.props.ioTopic, function (motorObj) {
             this.newData[0].amp = motorObj.amp;
             this.setState((state) => {
@@ -46,7 +46,7 @@ export default class CurrentDC extends Component {
                     data: this.newData
                 }
             });
-            if(motorObj.amp > 80) {
+            if (motorObj.amp > 80) {
                 this.setState({
                     flash: !this.state.flash
                 })
@@ -55,13 +55,11 @@ export default class CurrentDC extends Component {
     };
 
     componentWillUnmount() {
-       this.socket.disconnect();
-       this.socket.on("connect_error", function(error) {
-        if (error) {
-            console.log(error);    
-        }
         this.socket.disconnect();
-    })
+        this.socket.on("connect_error", function (error) {
+            console.log(error);
+            this.socket.disconnect();
+        })
     };
 
 }

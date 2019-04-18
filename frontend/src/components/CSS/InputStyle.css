@@ -28,8 +28,6 @@ input::before {
     box-sizing: border-box;
 }
 
-
-
 .form-input {
     display: block;
     width: 100%;

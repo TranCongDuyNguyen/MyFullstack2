@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import io from 'socket.io-client';
 
 import './CSS/FrequencyInputStyle.css';
-import ArrowButton from '../images/arrow-button-frequency.svg';
 
 export default class FrequencyInput extends Component {
 
@@ -39,45 +38,36 @@ export default class FrequencyInput extends Component {
 
     render() {
         return (
-            <div style={{ fontFamily: "Helvetica" }}>
+            <div className="freq-input" style={{ fontFamily: "Helvetica"}}>
                 <div className="f-box">
                     <input type="number"
                         className="f-input"
                         value={this.state.text}
                         onChange={this.onChange}
                         onKeyUp={this.onKeyUp} />
-
-                    <img className="f-button"
-                        src={ArrowButton} alt=""
-                        style={{ height: "100%" }}
-                        onClick={this.onClick}></img>
-
+                    
+                    <div className="f-button" onClick={this.onClick}> 
+                        <i className="fas fa-angle-right" style={{margin:"auto", height:"0.8em"}}>
+                    </i>
+                    </div>
+                   
                 </div>
                 <div className="f-box" style={{ width: "10rem" }}>
                     <span className="f-txt">{this.state.frequency + " Hz"}</span>>
-                </div>
-                <div className="otime-box" style={{ width: "15rem" }}>
-                    {this.state.otime}
                 </div>
             </div>
         )
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000", {transports: ['websocket']})
+        this.socket = io("http://localhost:5000")
         this.socket.on("realFrequency", function (frequency) {
             console.log(frequency);
             this.setState({
                 frequency
             })
         }.bind(this));
-        this.socket.on("oTime", function (otime) {
-            console.log(otime);
-            this.setState({
-                otime
-            })
-        }.bind(this))
-    }
+    };
 
     componentWillUnmount() {
         this.socket.disconnect();

@@ -31,15 +31,17 @@
     color: #aaaaaa;
     border-width: 2px;
 }
-.current-and-torque .current-box, .torque-box {
+.motorT-box, .driveT-box, .current-box, .torque-box, .power-box, .otime-box {
     color: white;
-    border: solid 0.04em #8ec5fc; 
-    margin: 2rem 4rem 2rem 1rem;
+    margin: 1rem 4rem 2rem 1rem;
     height: 8.8em;
     width: 12em;
     border-radius: 1.4em;
-    box-shadow: 0 0 0.4em 0.1em #e0c3fc;
     position: relative;
+} 
+.current-and-torque .current-box, .torque-box {
+    border: solid 0.04em #8ec5fc; 
+    box-shadow: 0 0 0.4em 0.1em #e0c3fc;
 }
 .current-and-torque .current-box .dc, .torque-box .dc{
     display: flex;
@@ -48,14 +50,8 @@
 }
 
 .thermal .motorT-box, .driveT-box {
-    color: white;
     border: solid 0.04em #43e97b; 
-    margin: 2rem 4rem 2rem 1rem;
-    height: 8.8em;
-    width: 12em;
-    border-radius: 1.4em;
     box-shadow: 0 0 0.4em 0.1em #38f9d7;
-    position: relative;
 }
 
 .thermal .motorT-box .dc, .driveT-box .dc{
@@ -65,14 +61,8 @@
 }
 
 .power-box {
-    color: white;
     border: solid 0.04em #4facfe; 
-    margin: 2rem 4rem 2rem 1rem;
-    height: 8.8em;
-    width: 12em;
-    border-radius: 1.4em;
     box-shadow: 0 0 0.4em 0.1em #00f2fe;
-    position: relative;
 }
 
 .power-box .dc{
@@ -169,6 +159,7 @@
 .motor-1-pic {
     width: 10em;
 }
-.motor-1-pic:hover .motor-info {
-    visibility: unset;
+.motor-image {
+    width: 316px;
+    height: 267px;
 }

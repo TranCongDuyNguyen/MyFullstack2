@@ -13,6 +13,7 @@ import ListItemPage from './components/pages/ListItemPage';
 import ManagementPage from './components/pages/ManagementPage';
 import Motor1Page from './components/pages/Motor1Page';
 import Motor2Page from './components/pages/Motor2Page';
+import VirtualPage from './components/pages/VirtualPage';
 
 class App extends Component {
   
@@ -30,6 +31,7 @@ class App extends Component {
             <Route exact path="/" component={Landing} />
             <Route exact path="/monitor/1" component={Motor1Page}/>
             <Route exact path="/monitor/2" component={Motor2Page}/>
+            <Route exact path="/virtualization" component={VirtualPage}/>
             <PrivateRoute exact path="/itemlist" component={ListItemPage}/>
             <PrivateRoute exact path="/management" component={ManagementPage}/> 
           </div>

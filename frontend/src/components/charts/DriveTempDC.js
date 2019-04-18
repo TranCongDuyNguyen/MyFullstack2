@@ -30,14 +30,14 @@ export default class DriveTempDC extends Component {
                     colorId="driveT"
                     startGradColor="#FFF275"
                     endGradColor="#fd1d1d"
-                    theUnit = "&deg;C"
+                    theUnit="&deg;C"
                     flash={this.state.flash}></DoughnutChart>
             </div>
         )
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000", { transports: ['websocket'] }).connect();
+        this.socket = io("http://localhost:5000").connect();
         this.socket.on(this.props.ioTopic, function (motorObj) {
             this.newData[0].driveT = motorObj.driveT;
             this.setState((state) => {
@@ -54,13 +54,11 @@ export default class DriveTempDC extends Component {
     };
 
     componentWillUnmount() {
-       this.socket.disconnect();
-       this.socket.on("connect_error", function(error) {
-        if (error) {
-            console.log(error);    
-        }
         this.socket.disconnect();
-    })
+        this.socket.on("connect_error", function (error) {
+            console.log(error);
+            this.socket.disconnect();
+        })
     };
 
 }

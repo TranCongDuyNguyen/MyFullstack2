@@ -1,0 +1,24 @@
+.review-btn {
+    position: absolute;
+    top: 2em;
+    left: 5.8em;
+    width: 3em;
+    height: 10.8em;
+    background: rgba(255,255,255,0.02);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999999;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+.tc-box .fas.fa-angle-left {
+    font-size: 1.2em;
+    transition: color 0.3s;
+}
+.review-btn:hover {
+    opacity: 1;
+}
+.review-btn:active .fas.fa-angle-left {
+    color: white;
+}

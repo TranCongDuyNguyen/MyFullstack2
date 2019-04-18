@@ -20,7 +20,7 @@ app.use(express.json()); // for parsing application/json, express provide its ow
 app.use('/api/users', require('./routes/api/route.users'));
 app.use('/api/items', require('./routes/api/route.items'));
 app.use('/api/auth', require('./routes/api/route.auth'));
-app.use('/api/motors', require('./routes/api/route.motors'));
+
 
 
 //Serve static assets if in production
@@ -43,7 +43,7 @@ mongoose.connect(process.env.mongo_url, {
 	.catch(err => console.log(err));
 
 /*<===========================================IO SOCKET=======================================================>*/
-/*<============================================MQTT CONNECTION AND SUBSCRIBE==================================> */
+/*<============================================MQTT CONNECTION============================================> */
 
 const client = mqtt.connect('mqtt://127.0.0.1:1883', {
 	clientId: "my-client",
@@ -61,7 +61,7 @@ client.on("error", function (err) {
 	}
 	client.end();
 })
-//-SUBSCRIBE
+//-MQTT SUBSCRIBE----------------------------------------------------------------------------
 //+data
 client.subscribe('n/motor1', function (err) {
 	if (err) {
@@ -74,7 +74,7 @@ client.subscribe('n/motor2', function (err) {
 	}
 })
 //+status
-client.subscribe('n/motor1/status', function (err) {
+client.subscribe('n/status', function (err) {
 	if (err) {
 		console.log(err);
 	}
@@ -101,24 +101,39 @@ client.subscribe('n/motor2/oTime', function (err) {
 		console.log(err);
 	}
 })
+//+ Image
+client.subscribe('n/image', function (err) {
+	if (err) {
+		console.log(err);
+	}
+})
 
-//initial variables
-//-Motor 1
+//initial variables----------------------------------------------------------------------------
+//-Motor 1----------------------------------------------------------------------------
 //+trend arr
 let torque1Buffer = [{ torque: 0, time: "00:00:00" }]; let amp1Buffer = [{ amp: 0, time: "00:00:00" }];
 let motor1TBuffer = [{ motorT: 0, time: "00:00:00" }]; let drive1TBuffer = [{ driveT: 0, time: "00:00:00" }];
 let power1Buffer = [{ power: 0, time: "00:00:00" }];
+let amp1Store = [{ amp: 0, time: "00:00:00" }]; let amp1StoreCopy = [];
+let torque1Store = [{ torque: 0, time: "00:00:00" }]; let torque1StoreCopy = [];
+let motor1TStore = [{ motorT: 0, time: "00:00:00" }]; let motor1TStoreCopy = [];
+let drive1TStore = [{ driveT: 0, time: "00:00:00" }]; let drive1TStoreCopy = [];
+let power1Store = [{ power: 0, time: "00:00:00" }]; let power1StoreCopy = [];
 //+notification arr
 let notiesArr1 = [];
 let notiesArr2 = []
-//-Motor 2
+//-Motor 2----------------------------------------------------------------------------
 //+trend arr
 let torque2Buffer = [{ torque: 0, time: "00:00:00" }]; let amp2Buffer = [{ amp: 0, time: "00:00:00" }];
 let motor2TBuffer = [{ motorT: 0, time: "00:00:00" }]; let drive2TBuffer = [{ driveT: 0, time: "00:00:00" }];
 let power2Buffer = [{ power: 0, time: "00:00:00" }];
+let amp2Store = [{ amp: 0, time: "00:00:00" }]; let amp2StoreCopy = [];
+let torque2Store = [{ torque: 0, time: "00:00:00" }]; let torque2StoreCopy = [];
+let motor2TStore = [{ motorT: 0, time: "00:00:00" }]; let motor2TStoreCopy = [];
+let drive2TStore = [{ driveT: 0, time: "00:00:00" }]; let drive2TStoreCopy = [];
+let power2Store = [{ power: 0, time: "00:00:00" }]; let power2StoreCopy = [];
 
-
-//get real time
+//+get real time
 function getTime() {
 	let now = new Date();
 	let hours = (("0" + now.getHours()).slice(-2));
@@ -130,8 +145,19 @@ let time;
 setInterval(() => {
 	time = getTime();
 }, 1000);
-//-FUNCTION
+//+ count
+let countAmp1 = 0; let countTor1 = 0; let countMotorT1 = 0; let countDriveT1 = 0; let countPower1 = 0;
+let countAmp2 = 0; let countTor2 = 0; let countMotorT2 = 0; let countDriveT2 = 0; let countPower2 = 0;
+//+ flags
+
+//-EXECUTING FUNCTIONS----------------------------------------------------------------------------
 //+ create trend buffer
+function createObj(type, data) {
+	let obj = {};
+	obj[type] = data;
+	obj.time = time;
+	return obj;
+}
 function objToBuffer(obj, arr, amount) {
 	let buffer = arr;
 	buffer.push(obj);
@@ -162,7 +188,7 @@ function generateAlarm(type, comparedData, warnObj, warnStr, dangerStr, notiesAr
 		}
 	}
 	else if (type == "less") {
-		if (comparedData < 60 ) {
+		if (comparedData < 60) {
 			warnObj = {
 				notiId: '',
 				type: "Warning",
@@ -191,47 +217,28 @@ client.on("message", function (topic, message) {
 	try {
 		if (topic === "n/motor1") {
 			let motorData = JSON.parse(message.toString());
-			let torque1Obj = {
-				torque: motorData.torque,
-				time: ''
-			};
-			let amp1Obj = {
-				amp: motorData.amp,
-				time: ''
-			};
-
-			let motor1TObj = {
-				motorT: motorData.motorT,
-				time: ''
-			};
-
-			let drive1TObj = {
-				driveT: motorData.driveT,
-				time: ''
-			};
-
-			let power1Obj = {
-				power: motorData.power,
-				time: ''
-			};
 
 			if (time) {
-				torque1Obj.time = time;
-				amp1Obj.time = time;
-				motor1TObj.time = time;
-				drive1TObj.time = time;
-				power1Obj.time = time;
+				let torque1Obj = createObj("torque", motorData.torque);
+				let amp1Obj = createObj("amp", motorData.amp);
+				let motor1TObj = createObj("motorT", motorData.motorT);
+				let drive1TObj = createObj("driveT", motorData.driveT);
+				let power1Obj = createObj("power", motorData.power);
+				objToBuffer(torque1Obj, torque1Buffer, 10);
+				objToBuffer(torque1Obj, torque1Store, 1000);
+				objToBuffer(amp1Obj, amp1Buffer, 10);
+				objToBuffer(amp1Obj, amp1Store, 1000);
+				objToBuffer(motor1TObj, motor1TBuffer, 10);
+				objToBuffer(motor1TObj, motor1TStore, 1000);
+				objToBuffer(drive1TObj, drive1TBuffer, 10);
+				objToBuffer(drive1TObj, drive1TStore, 1000);
+				objToBuffer(power1Obj, power1Buffer, 10);
+				objToBuffer(power1Obj, power1Store, 1000);
+
+
 			}
 			//create trend buffer
-			objToBuffer(torque1Obj, torque1Buffer, 10);
 
-			objToBuffer(amp1Obj, amp1Buffer, 10);
-
-			objToBuffer(motor1TObj, motor1TBuffer, 10);
-
-			objToBuffer(drive1TObj, drive1TBuffer, 10);
-
-			objToBuffer(power1Obj, power1Buffer, 10);
 		}
 	} catch (e) {
 		console.log(e);
@@ -240,48 +247,26 @@ client.on("message", function (topic, message) {
 	try {
 		if (topic === "n/motor2") {
 			let motorData = JSON.parse(message.toString());
-			let torque2Obj = {
-				torque: motorData.torque,
-				time: ''
-			};
-
-			let amp2Obj = {
-				amp: motorData.amp,
-				time: ''
-			};
-
-			let motor2TObj = {
-				motorT: motorData.motorT,
-				time: ''
-			};
-
-			let drive2TObj = {
-				driveT: motorData.driveT,
-				time: ''
-			};
-
-			let power2Obj = {
-				power: motorData.power,
-				time: ''
-			};
 
 			if (time) {
-				torque2Obj.time = time;
-				amp2Obj.time = time;
-				motor2TObj.time = time;
-				drive2TObj.time = time;
-				power2Obj.time = time;
+				let torque2Obj = createObj("torque", motorData.torque);
+				let amp2Obj = createObj("amp", motorData.amp);
+				let motor2TObj = createObj("motorT", motorData.motorT);
+				let drive2TObj = createObj("driveT", motorData.driveT);
+				let power2Obj = createObj("power", motorData.power);
+				//create trend buffer
+				objToBuffer(torque2Obj, torque2Buffer, 10);
+				objToBuffer(torque2Obj, torque2Store, 1000);
+				objToBuffer(amp2Obj, amp2Buffer, 10);
+				objToBuffer(amp2Obj, amp2Store, 1000);
+				objToBuffer(motor2TObj, motor2TBuffer, 10);
+				objToBuffer(motor2TObj, motor2TStore, 1000);
+				objToBuffer(drive2TObj, drive2TBuffer, 10);
+				objToBuffer(drive2TObj, drive2TStore, 1000);
+				objToBuffer(power2Obj, power2Buffer, 10);
+				objToBuffer(power2Obj, power2Store, 1000);
 			}
-			//create trend buffer
-			objToBuffer(torque2Obj, torque2Buffer, 10);
 
-			objToBuffer(amp2Obj, amp2Buffer, 10);
-
-			objToBuffer(motor2TObj, motor2TBuffer, 10);
-
-			objToBuffer(drive2TObj, drive2TBuffer, 10);
-
-			objToBuffer(power2Obj, power2Buffer, 10);
 		}
 	} catch (e) {
 		console.log(e);
@@ -291,7 +276,8 @@ client.on("message", function (topic, message) {
 
 
 })
-//doughnut MQTT, io transfer and trend io transfer
+
+//TRANSFER BETWEEN FE AND PLC WITH IO & MQTT----------------------------------------------------------------------------
 io.on('connection', function (socket) {
 	console.log('server-side socket connected');
 	socket.on("error", (err) => {
@@ -300,8 +286,8 @@ io.on('connection', function (socket) {
 		}
 		socket.disconnect();
 	})
-	//doughnut and warning
-
+	//-fe client receiving----------------------------------------------------------------------------
+	//+doughnut and warning
 	client.on("message", function (topic, message) {
 		if (topic === "n/motor1") {
 			try {
@@ -336,24 +322,19 @@ io.on('connection', function (socket) {
 			}
 		}
 	});
-	//status
+	//+status
 	client.on("message", function (topic, message) {
-		if (topic === "n/motor1/status") {
-			socket.emit("motor1Status", JSON.parse(message.toString()));
+		if (topic === "n/status") {
+			socket.emit("motorStatus", JSON.parse(message.toString()));
 		}
 	})
-	client.on("message", function (topic, message) {
-		if (topic === "n/motor2/status") {
-			socket.emit("motor2Status", JSON.parse(message.toString()));
-		}
-	})
-	//frequency
+	//+frequency
 	client.on("message", function (topic, message) {
 		if (topic === "n/motor1/realFreq") {
 			socket.emit("realFrequency", message.toString());
 		}
 	})
-	//otime
+	//+otime
 	client.on("message", function (topic, message) {
 		if (topic === "n/motor1/oTime") {
 			socket.emit("motor1OTime", message.toString());
@@ -364,7 +345,7 @@ io.on('connection', function (socket) {
 			socket.emit("motor2OTime", message.toString());
 		}
 	})
-	//trending
+	//+trending
 	let id1 = setInterval(function () {
 		//console.log(torqueBuffer);
 		socket.emit("motor1TCTor", torque1Buffer);
@@ -381,13 +362,59 @@ io.on('connection', function (socket) {
 		socket.emit("motor2TCDriveT", drive2TBuffer);
 		socket.emit("motor2TCPower", power2Buffer);
 	}, 10000);
-	//client publishing
+	//+image
+	client.on("message", function (topic, message) {
+		if (topic === "n/image") {
+			console.log("sent");
+			socket.emit("picture", message.toString());
+		}
+	})
+	//+flag
+	socket.on("stopStoring", function (stopFlag) {
+		if (stopFlag === "amp1StopFlag") {
+			countAmp1 = 0;
+			amp1StoreCopy = amp1Store.concat();
+		}
+		if (stopFlag === "torque1StopFlag") {
+			countTor1 = 0;
+			amp1StoreCopy = amp1Store.concat();
+		}
+	})
+	socket.on("reviewStore", function (reviewFlag) {
+		if (reviewFlag === "amp1ReviewFlag") {
+			countAmp1+=9;
+			let currentIdx = amp1StoreCopy.length;
+			if (currentIdx > 10 && currentIdx >= countAmp1) {
+				let reviewData = amp1StoreCopy.slice(currentIdx - countAmp1, currentIdx - countAmp1 + 9 );
+				socket.emit("reviewAmp1", reviewData);
+			}
+		}
+	})
+	//-fe client publishing----------------------------------------------------------------------------
+	//+ send freq
 	socket.on("setFrequency", function (frequency) {
 		client.publish("n/motor1/setFreq", frequency, function (err) {
 			if (err) {
 				console.log(err);
 			}
 			console.log(frequency);
+		})
+	})
+	//+ virtual btn send for,rev,stop,service CMD
+	socket.on("vCmdToPLC", function (cmd) {
+		client.publish("n/virtualPLCCmd", cmd, function (err) {
+			if (err) {
+				console.log(err);
+			}
+			console.log(cmd);
+		})
+	})
+	socket.on("vCmdToNX", function (cmd) {
+		client.publish("n/virtualNXCmd", cmd, function (err) {
+			if (err) {
+				console.log(err);
+			}
+			console.log(cmd);
 		})
 	})
 	socket.on("disconnect", (reason) => {

@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import io from "socket.io-client";
 
 import DoughnutChart from './DoughnutChart';
-import { getMotor } from '../../actions/motorAction';
 
-class MotorTempDC extends Component {
+
+export default class MotorTempDC extends Component {
 
     state = {
         data: [
@@ -42,8 +40,7 @@ class MotorTempDC extends Component {
     }
 
     componentDidMount() {
-        this.props.getMotor();
-        this.socket = io("http://localhost:5000", { transports: ['websocket'] })
+        this.socket = io("http://localhost:5000")
         this.socket.on(this.props.ioTopic, function (motorObj) {
             this.newData[0].motorT = motorObj.motorT;
             this.setState((state) => {
@@ -62,22 +59,12 @@ class MotorTempDC extends Component {
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
-            if (error) {
                 console.log(error);    
-            }
             this.socket.disconnect();
         })
     };
 }
 
-MotorTempDC.propTypes = {
-    getMotor: PropTypes.func.isRequired,
-    motor: PropTypes.object.isRequired
-}
-
-const mapStateToProps = state => {
-    return { motor: state.motor };
-}
 
 
-export default connect(mapStateToProps, { getMotor })(MotorTempDC);
+

@@ -20,6 +20,7 @@ import OperatingTime from '../OperatingTime';
 import MotorInfo from '../MotorInfo';
 import WarnPanel from '../WarnPanel';
 import "../CSS/MonitorPageStyle.css";
+import MotorPic from "../../images/motor.png";
 
 export default class Motor2Page extends Component {
     state = {
@@ -134,13 +135,13 @@ export default class Motor2Page extends Component {
                                 <a href="/monitor/2" alt="">2</a>
                             </div>
                             <div className="motor-1-pic">
-                                <img className="motor-image" src="https://via.placeholder.com/150" alt=""/>
-                                <MotorInfo ioTopic="motor2DCData" />
+                                <img className="motor-image" src={MotorPic} alt=""/>
+                                <MotorInfo ioTopic="motor2DCData">Motor 2</MotorInfo>
                             </div>
                             <WarnPanel ioTopic="warnList2"/>
                         </Col>
-                        <Col md="6" className="rightside">
-                            <Row className="current-and-torque">
+                        <Col md="6" className="rightside" >
+                            <Row className="current-and-torque" style={{justifyContent: "center"}}>
                                 <div className="current-box" >
                                     <CurrentDC ioTopic="motor2DCData" />
                                     <div className="trend-button"
@@ -166,7 +167,7 @@ export default class Motor2Page extends Component {
                                     </div>
                                 </div>
                             </Row>
-                            <Row className="thermal">
+                            <Row className="thermal" style={{justifyContent: "center"}}>
                                 <div className="motorT-box" >
                                     <MotorTempDC ioTopic="motor2DCData" />
                                     <div className="trend-button"
@@ -192,7 +193,7 @@ export default class Motor2Page extends Component {
                                     </div>
                                 </div>
                             </Row>
-                            <Row className="otime-and-setting">
+                            <Row className="otime-and-setting" style={{justifyContent: "center"}}>
                                 <div className="power-box" >
                                     <PowerDC ioTopic="motor2DCData" />
                                     <div className="trend-button"
@@ -205,7 +206,7 @@ export default class Motor2Page extends Component {
                                         ></i>
                                     </div>
                                 </div>
-                                <div>
+                                <div className="otime-box">
                                     <OperatingTime ioTopic={["motor2Status", "motor2OTime"]} />
                                 </div>
                             </Row>

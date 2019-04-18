@@ -15,6 +15,7 @@ export default class MotorInfo extends Component {
     const { amp, tor, motorT, driveT, power } = this.state;
     return (
       <div className="motor-info">
+      <div className="title"><pre>{this.props.children}</pre></div>
         <div>
           <pre>Current:       {amp}   A</pre>
         </div>
@@ -38,7 +39,7 @@ export default class MotorInfo extends Component {
   }
 
   componentDidMount() {
-    this.socket = io("http://localhost:5000", { transports: ['websocket'] }).connect();
+    this.socket = io("http://localhost:5000").connect();
     this.socket.on(this.props.ioTopic, function (motorObj) {
       this.setState({
         amp: motorObj.amp,

@@ -30,7 +30,7 @@ export default class TorqueDC extends Component {
                     colorId="torque"
                     startGradColor="#56bc2f"
                     endGradColor="#a8e063"
-                    theUnit = "Nm"
+                    theUnit="Nm"
                     flash={this.state.flash}>
                 </DoughnutChart>
             </div>
@@ -38,7 +38,7 @@ export default class TorqueDC extends Component {
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000", { transports: ['websocket'] }).connect();
+        this.socket = io("http://localhost:5000").connect();
         this.socket.on(this.props.ioTopic, function (motorObj) {
             this.newData[0].torque = motorObj.torque;
             this.setState((state) => {
@@ -57,9 +57,7 @@ export default class TorqueDC extends Component {
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
-            if (error) {
-                console.log(error);    
-            }
+            console.log(error);
             this.socket.disconnect();
         })
     };

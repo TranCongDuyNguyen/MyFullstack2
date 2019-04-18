@@ -3,7 +3,8 @@
     border-radius: 1em;
     height: 22.4rem;
     width: 40rem;
-    margin-top: 4rem;
+    margin-top: 0.6rem;
+    margin-bottom: 1em;
     padding: 0.5rem 0.5rem;
 }
 .warn-panel .warn-panel-header {
@@ -19,7 +20,7 @@
     color: #E9E3B4;
     font-size: 18px;
     position: absolute;
-    top: 14.1em;
+    top: 17.6em;
     left: 2em;
 }
 .warn-panel-header .class-title {
@@ -30,13 +31,13 @@
 }
 .warn-panel-header .current-page {
     font-size: 14px;
-    top: 18.3em;
+    top: 22.8em;
     left: 30em;
 }
 .warn-panel-header .fault-filt-btn, .warn-filt-btn, .all-filt-btn {
     position: absolute;
     left: 15.4em;
-    top: 15.9em;
+    top: 19.8em;
     width: 1.8em;
     height: 1.8em;
     border: 1px solid #eeeeee;

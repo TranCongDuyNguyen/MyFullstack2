@@ -20,6 +20,7 @@ import OperatingTime from '../OperatingTime';
 import MotorInfo from '../MotorInfo';
 import WarnPanel from '../WarnPanel';
 import "../CSS/MonitorPageStyle.css";
+import MotorPic from "../../images/motor.png";
 
 export default class Motor1Page extends Component {
     state = {
@@ -134,15 +135,15 @@ export default class Motor1Page extends Component {
                                 <a href="/monitor/1" alt="">1</a>
                                 <a href="/monitor/2" alt="">2</a>
                             </div>
-                            
+
                             <div className="motor-1-pic">
-                                <img className="motor-image" src="https://via.placeholder.com/150" alt=""/>
-                                <MotorInfo ioTopic="motor1DCData" />
+                                <img className="motor-image" src={MotorPic} alt="" />
+                                <MotorInfo ioTopic="motor1DCData" >Motor 1</MotorInfo>
                             </div>
-                            <WarnPanel ioTopic="warnList1"/>
+                            <WarnPanel ioTopic="warnList1" />
                         </Col>
-                        <Col md="6" className="rightside">
-                            <Row className="current-and-torque">
+                        <Col md="6" className="rightside" >
+                            <Row className="current-and-torque" style={{ justifyContent: "center" }}>
                                 <div className="current-box" >
                                     <CurrentDC ioTopic="motor1DCData" />
                                     <div className="trend-button"
@@ -155,7 +156,7 @@ export default class Motor1Page extends Component {
                                         ></i>
                                     </div>
                                 </div>
-                                <div className="torque-box">
+                                <div className="torque-box" >
                                     <TorqueDC ioTopic="motor1DCData" />
                                     <div className="trend-button"
                                         onClick={this.onAddTor}>
@@ -168,7 +169,7 @@ export default class Motor1Page extends Component {
                                     </div>
                                 </div>
                             </Row>
-                            <Row className="thermal">
+                            <Row className="thermal" style={{ justifyContent: "center" }}>
                                 <div className="motorT-box" >
                                     <MotorTempDC ioTopic="motor1DCData" />
                                     <div className="trend-button"
@@ -194,7 +195,7 @@ export default class Motor1Page extends Component {
                                     </div>
                                 </div>
                             </Row>
-                            <Row className="otime-and-setting">
+                            <Row className="otime-and-setting" style={{ justifyContent: "center" }}>
                                 <div className="power-box" >
                                     <PowerDC ioTopic="motor1DCData" />
                                     <div className="trend-button"
@@ -207,7 +208,7 @@ export default class Motor1Page extends Component {
                                         ></i>
                                     </div>
                                 </div>
-                                <div>
+                                <div className="otime-box" style={{ width: "192px" }}>
                                     <OperatingTime ioTopic={["motor1Status", "motor1OTime"]} />
                                 </div>
                             </Row>
@@ -221,7 +222,10 @@ export default class Motor1Page extends Component {
                             <div className={curState}>
                                 <button className="exit-button"
                                     onClick={this.onDeleteCur}>&times;</button>
-                                <CurrentTC ioTopic="motor1TCAmp" />
+                                <CurrentTC ioTopic="motor1TCAmp" 
+                                            stopFlag="amp1StopFlag"
+                                            reviewFlag="amp1ReviewFlag"
+                                            reviewData="reviewAmp1"/>
                             </div>
                         </Col>
                         <Col md="6">

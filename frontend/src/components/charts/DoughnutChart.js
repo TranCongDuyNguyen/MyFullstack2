@@ -85,6 +85,4 @@ export default class DoughnutChart extends Component {
             </div>
         )
     }
-
-
 }

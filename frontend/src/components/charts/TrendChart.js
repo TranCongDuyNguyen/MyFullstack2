@@ -11,13 +11,16 @@ import "../CSS/AreaChartStyle.css";
 
 export default class TrendChart extends Component {
   render() {
-    const { data, dataKey, yAxisName, customColor, colorId } = this.props
+    const { data, dataKey, yAxisName, customColor, colorId, onStopClick } = this.props
     return (
-      <div>
+      <div className="area-chart-wrapper" onClick={onStopClick}>
+        <i class="fas fa-pause"></i>
         <p className="yAxis-name" style={{color: customColor}}>{yAxisName}</p>
         <AreaChart width={450} height={200} data={data}
           padding={{ top: 0, right: 0, left: 0, bottom: 0 }}
-          margin={{ top: 0, right: 0 }}>
+          margin={{ top: 0, right: 0 }}
+          >
+
           <defs>
             <linearGradient id={colorId} x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={customColor} stopOpacity={0.8} />
@@ -43,7 +46,6 @@ export default class TrendChart extends Component {
             dataKey={dataKey}
             stroke={customColor}
             fillOpacity={1} fill={`url(#${colorId})`} />
-
         </AreaChart>
         <p className="xAxis-name" style={{color: customColor}} >Time </p>
       </div>
