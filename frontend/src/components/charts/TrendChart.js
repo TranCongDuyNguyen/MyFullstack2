@@ -14,7 +14,7 @@ export default class TrendChart extends Component {
     const { data, dataKey, yAxisName, customColor, colorId, onStopClick } = this.props
     return (
       <div className="area-chart-wrapper" onClick={onStopClick}>
-        <i class="fas fa-pause"></i>
+        <i class="fas fa-pause" ></i>
         <p className="yAxis-name" style={{color: customColor}}>{yAxisName}</p>
         <AreaChart width={450} height={200} data={data}
           padding={{ top: 0, right: 0, left: 0, bottom: 0 }}

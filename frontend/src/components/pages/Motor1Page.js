@@ -225,6 +225,7 @@ export default class Motor1Page extends Component {
                                 <CurrentTC ioTopic="motor1TCAmp" 
                                             stopFlag="amp1StopFlag"
                                             reviewFlag="amp1ReviewFlag"
+                                            forwFlag="amp1ForwFlag"
                                             reviewData="reviewAmp1"/>
                             </div>
                         </Col>
@@ -232,7 +233,11 @@ export default class Motor1Page extends Component {
                             <div className={torState}>
                                 <button className="exit-button"
                                     onClick={this.onDeleteTor}>&times;</button>
-                                <TorqueTC ioTopic="motor1TCTor" />
+                                <TorqueTC ioTopic="motor1TCTor" 
+                                 stopFlag="torque1StopFlag"
+                                 reviewFlag="torque1ReviewFlag"
+                                 forwFlag="torque1ForwFlag"
+                                 reviewData="reviewTorque1"/>
                             </div>
                         </Col>
                     </Row>
@@ -241,14 +246,22 @@ export default class Motor1Page extends Component {
                             <div className={motorTState}>
                                 <button className="exit-button"
                                     onClick={this.onDeleteMotorT}>&times;</button>
-                                <MotorTempTC ioTopic="motor1TCMotorT" />
+                                <MotorTempTC ioTopic="motor1TCMotorT" 
+                                 stopFlag="motor1TStopFlag"
+                                 reviewFlag="motor1TReviewFlag"
+                                 forwFlag="motor1TForwFlag"
+                                 reviewData="reviewMotor1T"/>
                             </div>
                         </Col>
                         <Col md="6">
                             <div className={driveTState}>
                                 <button className="exit-button"
                                     onClick={this.onDeleteDriveT}>&times;</button>
-                                <DriveTempTC ioTopic="motor1TCDriveT" />
+                                <DriveTempTC ioTopic="motor1TCDriveT" 
+                                 stopFlag="drive1TStopFlag"
+                                 reviewFlag="drive1TReviewFlag"
+                                 forwFlag="drive1TForwFlag"
+                                 reviewData="reviewDrive1T"/>
                             </div>
                         </Col>
                     </Row>
@@ -257,7 +270,11 @@ export default class Motor1Page extends Component {
                             <div className={powerState}>
                                 <button className="exit-button"
                                     onClick={this.onDeletePower}>&times;</button>
-                                <PowerTC ioTopic="motor1TCPower" />
+                                <PowerTC ioTopic="motor1TCPower" 
+                                  stopFlag="power1StopFlag"
+                                  reviewFlag="power1ReviewFlag"
+                                  forwFlag="power1ForwFlag"
+                                  reviewData="reviewPower1"/>
                             </div>
                         </Col>
                     </Row>

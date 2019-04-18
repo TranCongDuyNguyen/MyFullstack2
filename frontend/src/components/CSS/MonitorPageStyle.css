@@ -146,6 +146,7 @@
     right: 1.0em;
     transition: color 100ms ease-in-out;
     color: #111111dd;
+    z-index: 9999999;
 }
 .tc-box .exit-button:hover {
     color: #eeeeee;

@@ -1,24 +1,35 @@
-.review-btn {
+.review-btn, .forw-btn {
     position: absolute;
-    top: 2em;
-    left: 5.8em;
+    top: 0em;
+    left: 0.9em;
     width: 3em;
-    height: 10.8em;
-    background: rgba(255,255,255,0.02);
+    height: 16em;
+    background: rgba(255,255,255,0.03);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999999;
     opacity: 0;
     transition: all 0.3s ease-in-out;
+    border-radius: 1.2em 0em 0em 1.2em;
+
 }
-.tc-box .fas.fa-angle-left {
+.review-btn {
+    z-index: 9999;
+}
+.forw-btn {
+    left: 31em;
+    border-radius: 0em 1.2em 1.2em 0em;
+}
+.tc-box .fas.fa-angle-left, .fas.fa-angle-right {
     font-size: 1.2em;
     transition: color 0.3s;
 }
-.review-btn:hover {
+.review-btn:hover, .forw-btn:hover {
     opacity: 1;
 }
 .review-btn:active .fas.fa-angle-left {
+    color: white;
+}
+.forw-btn:active .fas.fa-angle-right {
     color: white;
 }

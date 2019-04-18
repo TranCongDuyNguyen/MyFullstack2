@@ -146,8 +146,8 @@ setInterval(() => {
 	time = getTime();
 }, 1000);
 //+ count
-let countAmp1 = 0; let countTor1 = 0; let countMotorT1 = 0; let countDriveT1 = 0; let countPower1 = 0;
-let countAmp2 = 0; let countTor2 = 0; let countMotorT2 = 0; let countDriveT2 = 0; let countPower2 = 0;
+let countAmp1 = 0; let countTorque1 = 0; let countMotor1T = 0; let countDrive1T = 0; let countPower1 = 0;
+let countAmp2 = 0; let countTorque2 = 0; let countMotor2T = 0; let countDrive2T = 0; let countPower2 = 0;
 //+ flags
 
 //-EXECUTING FUNCTIONS----------------------------------------------------------------------------
@@ -212,6 +212,7 @@ function generateAlarm(type, comparedData, warnObj, warnStr, dangerStr, notiesAr
 		warnObj.notiId = `Alarm ${index}`;
 	}
 }
+
 //trending MQTT transfer
 client.on("message", function (topic, message) {
 	try {
@@ -279,6 +280,7 @@ client.on("message", function (topic, message) {
 
 //TRANSFER BETWEEN FE AND PLC WITH IO & MQTT----------------------------------------------------------------------------
 io.on('connection', function (socket) {
+
 	console.log('server-side socket connected');
 	socket.on("error", (err) => {
 		if (err) {
@@ -347,7 +349,7 @@ io.on('connection', function (socket) {
 	})
 	//+trending
 	let id1 = setInterval(function () {
-		//console.log(torqueBuffer);
+
 		socket.emit("motor1TCTor", torque1Buffer);
 		socket.emit("motor1TCAmp", amp1Buffer);
 		socket.emit("motor1TCMotorT", motor1TBuffer);
@@ -355,7 +357,7 @@ io.on('connection', function (socket) {
 		socket.emit("motor1TCPower", power1Buffer);
 	}, 10000);
 	let id2 = setInterval(function () {
-		//console.log(torqueBuffer);
+
 		socket.emit("motor2TCTor", torque2Buffer);
 		socket.emit("motor2TCAmp", amp2Buffer);
 		socket.emit("motor2TCMotorT", motor2TBuffer);
@@ -372,21 +374,385 @@ io.on('connection', function (socket) {
 	//+flag
 	socket.on("stopStoring", function (stopFlag) {
 		if (stopFlag === "amp1StopFlag") {
-			countAmp1 = 0;
+			countAmp1 = 10;
 			amp1StoreCopy = amp1Store.concat();
 		}
 		if (stopFlag === "torque1StopFlag") {
-			countTor1 = 0;
-			amp1StoreCopy = amp1Store.concat();
+			countTor1 = 10;
+			torque1StoreCopy = torque1Store.concat();
+		}
+		if (stopFlag === "motor1TStopFlag") {
+			countMotor1T = 10;
+			motor1TStoreCopy = motor1TStore.concat();
+		}
+		if (stopFlag === "drive1TStopFlag") {
+			countDrive1T = 10;
+			drive1TStoreCopy = drive1TStore.concat();
+		}
+		if (stopFlag === "power1StopFlag") {
+			countPower1 = 10;
+			power1StoreCopy = power1Store.concat();
+		}
+		if (stopFlag === "amp2StopFlag") {
+			countAmp2 = 10;
+			amp2StoreCopy = amp2Store.concat();
+		}
+		if (stopFlag === "torque2StopFlag") {
+			countTor2 = 10;
+			torque2StoreCopy = torque2Store.concat();
+		}
+		if (stopFlag === "motor2TStopFlag") {
+			countMotor2T = 10;
+			motor2TStoreCopy = motor2TStore.concat();
+		}
+		if (stopFlag === "drive2TStopFlag") {
+			countDrive2T = 10;
+			drive2TStoreCopy = drive2TStore.concat();
+		}
+		if (stopFlag === "power2StopFlag") {
+			countPower2 = 10;
+			power2StoreCopy = power2Store.concat();
 		}
 	})
 	socket.on("reviewStore", function (reviewFlag) {
 		if (reviewFlag === "amp1ReviewFlag") {
-			countAmp1+=9;
+			countAmp1 += 10;
 			let currentIdx = amp1StoreCopy.length;
-			if (currentIdx > 10 && currentIdx >= countAmp1) {
-				let reviewData = amp1StoreCopy.slice(currentIdx - countAmp1, currentIdx - countAmp1 + 9 );
+			if (currentIdx - countAmp1 < -10) {
+				countAmp1 -= 10;
+			}
+			if (currentIdx >= 10 && ((currentIdx - countAmp1) >= 10)) {
+				let reviewData = amp1StoreCopy.slice(currentIdx - countAmp1, currentIdx - countAmp1 + 10);
 				socket.emit("reviewAmp1", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countAmp1) < 10)) {
+				let reviewData = amp1StoreCopy.slice(0, countAmp1 - currentIdx + 1);
+				socket.emit("reviewAmp1", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewAmp1", amp1StoreCopy);
+			}
+		}
+		if (reviewFlag === "amp1ForwFlag") {
+			if (countAmp1 === 0) {
+				countAmp1 = 0;
+			}
+			else {
+				countAmp1 -= 10;
+			}
+			let currentIdx = amp1StoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countAmp1) {
+				let reviewData = amp1StoreCopy.slice(currentIdx - countAmp1, currentIdx - countAmp1 + 10);
+				socket.emit("reviewAmp1", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewAmp1", amp1StoreCopy);
+			}
+		}
+		if (reviewFlag === "torque1ReviewFlag") {
+			countTorque1 += 10;
+			let currentIdx = torque1StoreCopy.length;
+			if (currentIdx - countTorque1 < -10) {
+				countTorque1 -= 10;
+			}
+			if (currentIdx >= 10 && currentIdx >= countTorque1) {
+				let reviewData = torque1StoreCopy.slice(currentIdx - countTorque1, currentIdx - countTorque1 + 10);
+				socket.emit("reviewTorque1", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countTorque1) < 10)) {
+				let reviewData = torque1StoreCopy.slice(0, countTorque1 - currentIdx + 1);
+				socket.emit("reviewTorque1", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewTorque1", torque1StoreCopy);
+			}
+		}
+		if (reviewFlag === "torque1ForwFlag") {
+			if (countTorque1 === 0) {
+				countTorque1 = 0;
+			}
+			else {
+				countTorque1 -= 10;
+			}
+			let currentIdx = torque1StoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countTorque1) {
+				let reviewData = torque1StoreCopy.slice(currentIdx - countTorque1, currentIdx - countTorque1 + 10);
+				socket.emit("reviewTorque1", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewTorque1", torque1StoreCopy);
+			}
+		}
+		if (reviewFlag === "motor1TReviewFlag") {
+			countMotor1T += 10;
+			let currentIdx = motor1TStoreCopy.length;
+			if (currentIdx - countMotor1T < -10) {
+				countMotor1T -= 10;
+			}
+			if (currentIdx >= 10 && ((currentIdx - countMotor1T) >= 10)) {
+				let reviewData = motor1TStoreCopy.slice(currentIdx - countMotor1T, currentIdx - countMotor1T + 10);
+				socket.emit("reviewMotor1T", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countMotor1T) < 10)) {
+				let reviewData = motor1TStoreCopy.slice(0, countMotor1T - currentIdx + 1);
+				socket.emit("reviewMotor1T", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewMotor1T", motor1TStoreCopy);
+			}
+		}
+		if (reviewFlag === "motor1TForwFlag") {
+			if (countMotor1T === 0) {
+				countMotor1T = 0;
+			}
+			else {
+				countMotor1T -= 10;
+			}
+			let currentIdx = motor1TStoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countMotor1T) {
+				let reviewData = motor1TStoreCopy.slice(currentIdx - countMotor1T, currentIdx - countMotor1T + 10);
+				socket.emit("reviewMotor1T", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewMotor1T", motor1TStoreCopy);
+			}
+		}
+		if (reviewFlag === "drive1TReviewFlag") {
+			countDrive1T += 10;
+			let currentIdx = drive1TStoreCopy.length;
+			if (currentIdx - countDrive1T < -10) {
+				countDrive1T -= 10;
+			}
+			if (currentIdx >= 10 && ((currentIdx - countDrive1T) >= 10)) {
+				let reviewData = drive1TStoreCopy.slice(currentIdx - countDrive1T, currentIdx - countDrive1T + 10);
+				socket.emit("reviewDrive1T", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countDrive1T) < 10)) {
+				let reviewData = drive1TStoreCopy.slice(0, countDrive1T - currentIdx + 1);
+				socket.emit("reviewDrive1T", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewDrive1T", drive1TStoreCopy);
+			}
+		}
+		if (reviewFlag === "drive1TForwFlag") {
+			if (countDrive1T === 0) {
+				countDrive1T = 0;
+			}
+			else {
+				countDrive1T -= 10;
+			}
+			let currentIdx = drive1TStoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countDrive1T) {
+				let reviewData = drive1TStoreCopy.slice(currentIdx - countDrive1T, currentIdx - countDrive1T + 10);
+				socket.emit("reviewDrive1T", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewDrive1T", drive1TStoreCopy);
+			}
+		}
+		if (reviewFlag === "power1ReviewFlag") {
+			countPower1 += 10;
+			let currentIdx = power1StoreCopy.length;
+			if (currentIdx - countPower1 < -10) {
+				countPower1 -= 10;
+			}
+			if (currentIdx >= 10 && ((currentIdx - countPower1) >= 10)) {
+				let reviewData = power1StoreCopy.slice(currentIdx - countPower1, currentIdx - countPower1 + 10);
+				socket.emit("reviewPower1", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countPower1) < 10)) {
+				let reviewData = power1StoreCopy.slice(0, countPower1 - currentIdx + 1);
+				socket.emit("reviewPower1", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewPower1", power1StoreCopy);
+			}
+		}
+		if (reviewFlag === "power1ForwFlag") {
+			if (countPower1 === 0) {
+				countPower1 = 0;
+			}
+			else {
+				countPower1 -= 10;
+			}
+			let currentIdx = power1StoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countPower1) {
+				let reviewData = power1StoreCopy.slice(currentIdx - countPower1, currentIdx - countPower1 + 10);
+				socket.emit("reviewPower1", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewPower1", power1StoreCopy);
+			}
+		}
+		if (reviewFlag === "amp2ReviewFlag") {
+			countAmp2 += 10;
+			let currentIdx = amp2StoreCopy.length;
+			if (currentIdx - countAmp2 < -10) {
+				countAmp2 -= 10;
+			}
+			if (currentIdx >= 10 && ((currentIdx - countAmp2) >= 10)) {
+				let reviewData = amp2StoreCopy.slice(currentIdx - countAmp2, currentIdx - countAmp2 + 10);
+				socket.emit("reviewAmp2", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countAmp2) < 10)) {
+				let reviewData = amp2StoreCopy.slice(0, countAmp2 - currentIdx + 1);
+				socket.emit("reviewAmp2", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewAmp2", amp2StoreCopy);
+			}
+		}
+		if (reviewFlag === "amp2ForwFlag") {
+			if (countAmp2 === 0) {
+				countAmp2 = 0;
+			}
+			else {
+				countAmp2 -= 10;
+			}
+			let currentIdx = amp2StoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countAmp2) {
+				let reviewData = amp2StoreCopy.slice(currentIdx - countAmp2, currentIdx - countAmp2 + 10);
+				socket.emit("reviewAmp2", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewAmp2", amp2StoreCopy);
+			}
+		}
+		if (reviewFlag === "torque2ReviewFlag") {
+			countTorque2 += 10;
+			let currentIdx = torque2StoreCopy.length;
+			if (currentIdx - countTorque2 < -10) {
+				countTorque2 -= 10;
+			}
+			if (currentIdx >= 10 && currentIdx >= countTorque2) {
+				let reviewData = torque2StoreCopy.slice(currentIdx - countTorque2, currentIdx - countTorque2 + 10);
+				socket.emit("reviewTorque2", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countTorque2) < 10)) {
+				let reviewData = torque2StoreCopy.slice(0, countTorque2 - currentIdx + 1);
+				socket.emit("reviewTorque2", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewTorque2", torque2StoreCopy);
+			}
+		}
+		if (reviewFlag === "torque2ForwFlag") {
+			if (countTorque2 === 0) {
+				countTorque2 = 0;
+			}
+			else {
+				countTorque2 -= 10;
+			}
+			let currentIdx = torque2StoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countTorque2) {
+				let reviewData = torque2StoreCopy.slice(currentIdx - countTorque2, currentIdx - countTorque2 + 10);
+				socket.emit("reviewTorque2", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewTorque2", torque2StoreCopy);
+			}
+		}
+		if (reviewFlag === "motor2TReviewFlag") {
+			countMotor2T += 10;
+			let currentIdx = motor2TStoreCopy.length;
+			if (currentIdx - countMotor2T < -10) {
+				countMotor2T -= 10;
+			}
+			if (currentIdx >= 10 && ((currentIdx - countMotor2T) >= 10)) {
+				let reviewData = motor2TStoreCopy.slice(currentIdx - countMotor2T, currentIdx - countMotor2T + 10);
+				socket.emit("reviewMotor2T", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countMotor2T) < 10)) {
+				let reviewData = motor2TStoreCopy.slice(0, countMotor2T - currentIdx + 1);
+				socket.emit("reviewMotor2T", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewMotor2T", motor2TStoreCopy);
+			}
+		}
+		if (reviewFlag === "motor2TForwFlag") {
+			if (countMotor2T === 0) {
+				countMotor2T = 0;
+			}
+			else {
+				countMotor2T -= 10;
+			}
+			let currentIdx = motor2TStoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countMotor2T) {
+				let reviewData = motor2TStoreCopy.slice(currentIdx - countMotor2T, currentIdx - countMotor2T + 10);
+				socket.emit("reviewMotor2T", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewMotor2T", motor2TStoreCopy);
+			}
+		}
+		if (reviewFlag === "drive2TReviewFlag") {
+			countDrive2T += 10;
+			let currentIdx = drive2TStoreCopy.length;
+			if (currentIdx - countDrive2T < -10) {
+				countDrive2T -= 10;
+			}
+			if (currentIdx >= 10 && ((currentIdx - countDrive2T) >= 10)) {
+				let reviewData = drive2TStoreCopy.slice(currentIdx - countDrive2T, currentIdx - countDrive2T + 10);
+				socket.emit("reviewDrive2T", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countDrive2T) < 10)) {
+				let reviewData = drive2TStoreCopy.slice(0, countDrive2T - currentIdx + 1);
+				socket.emit("reviewDrive2T", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewDrive2T", drive2TStoreCopy);
+			}
+		}
+		if (reviewFlag === "drive2TForwFlag") {
+			if (countDrive2T === 0) {
+				countDrive2T = 0;
+			}
+			else {
+				countDrive2T -= 10;
+			}
+			let currentIdx = drive2TStoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countDrive2T) {
+				let reviewData = drive2TStoreCopy.slice(currentIdx - countDrive2T, currentIdx - countDrive2T + 10);
+				socket.emit("reviewDrive2T", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewDrive2T", drive2TStoreCopy);
+			}
+		}
+		if (reviewFlag === "power2ReviewFlag") {
+			countPower2 += 10;
+			let currentIdx = power2StoreCopy.length;
+			if (currentIdx - countPower2 < -10) {
+				countPower2 -= 10;
+			}
+			if (currentIdx >= 10 && ((currentIdx - countPower2) >= 10)) {
+				let reviewData = power2StoreCopy.slice(currentIdx - countPower2, currentIdx - countPower2 + 10);
+				socket.emit("reviewPower2", reviewData);
+			}
+			else if (currentIdx >= 10 && ((currentIdx - countPower2) < 10)) {
+				let reviewData = power2StoreCopy.slice(0, countPower2 - currentIdx + 1);
+				socket.emit("reviewPower2", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewPower2", power2StoreCopy);
+			}
+		}
+		if (reviewFlag === "power2ForwFlag") {
+			if (countPower2 === 0) {
+				countPower2 = 0;
+			}
+			else {
+				countPower2 -= 10;
+			}
+			let currentIdx = power2StoreCopy.length;
+			if (currentIdx >= 10 && currentIdx >= countPower2) {
+				let reviewData = power2StoreCopy.slice(currentIdx - countPower2, currentIdx - countPower2 + 10);
+				socket.emit("reviewPower2", reviewData);
+			}
+			else if (currentIdx < 10) {
+				socket.emit("reviewPower2", power2StoreCopy);
 			}
 		}
 	})

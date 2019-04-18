@@ -220,14 +220,22 @@ export default class Motor2Page extends Component {
                             <div className={curState}>
                                 <button className="exit-button"
                                     onClick={this.onDeleteCur}>&times;</button>
-                                <CurrentTC ioTopic="motor2TCAmp" />
+                                <CurrentTC ioTopic="motor2TCAmp" 
+                                 stopFlag="amp2StopFlag"
+                                 reviewFlag="amp2ReviewFlag"
+                                 forwFlag="amp2ForwFlag"
+                                 reviewData="reviewAmp2"/>
                             </div>
                         </Col>
                         <Col md="6">
                             <div className={torState}>
                                 <button className="exit-button"
                                     onClick={this.onDeleteTor}>&times;</button>
-                                <TorqueTC ioTopic="motor2TCTor" />
+                                <TorqueTC ioTopic="motor2TCTor" 
+                                 stopFlag="torque2StopFlag"
+                                 reviewFlag="torque2ReviewFlag"
+                                 forwFlag="torque2ForwFlag"
+                                 reviewData="reviewTorque2"/>
                             </div>
                         </Col>
                     </Row>
@@ -236,14 +244,22 @@ export default class Motor2Page extends Component {
                             <div className={motorTState}>
                                 <button className="exit-button"
                                     onClick={this.onDeleteMotorT}>&times;</button>
-                                <MotorTempTC ioTopic="motor2TCMotorT" />
+                                <MotorTempTC ioTopic="motor2TCMotorT" 
+                                stopFlag="motor2TStopFlag"
+                                reviewFlag="motor2TReviewFlag"
+                                forwFlag="motor2TForwFlag"
+                                reviewData="reviewMotor2T"/>
                             </div>
                         </Col>
                         <Col md="6">
                             <div className={driveTState}>
                                 <button className="exit-button"
                                     onClick={this.onDeleteDriveT}>&times;</button>
-                                <DriveTempTC ioTopic="motor2TCDriveT" />
+                                <DriveTempTC ioTopic="motor2TCDriveT" 
+                                 stopFlag="drive2TStopFlag"
+                                 reviewFlag="drive2TReviewFlag"
+                                 forwFlag="drive2TForwFlag"
+                                 reviewData="reviewDrive2T"/>
                             </div>
                         </Col>
                     </Row>
@@ -252,7 +268,11 @@ export default class Motor2Page extends Component {
                             <div className={powerState}>
                                 <button className="exit-button"
                                     onClick={this.onDeletePower}>&times;</button>
-                                <PowerTC ioTopic="motor2TCPower" />
+                                <PowerTC ioTopic="motor2TCPower" 
+                                 stopFlag="power2StopFlag"
+                                 reviewFlag="power2ReviewFlag"
+                                 forwFlag="power2ForwFlag"
+                                 reviewData="reviewPower2"/>
                             </div>
                         </Col>
                     </Row>

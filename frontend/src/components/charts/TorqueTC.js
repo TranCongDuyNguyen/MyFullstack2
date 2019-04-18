@@ -29,10 +29,24 @@ export default class TorqueTC extends Component {
       }.bind(this));
     }
   }
+  onForwClick = () => {
+    if (isStop) {
+        this.socket.emit("reviewStore", this.props.forwFlag);
+        this.socket.on(this.props.reviewData, function (reviewData) {
+                this.setState((state) => {
+                    return {
+                        data: reviewData
+                    }
+                });
+            
+        }.bind(this));
+    }
+}
   render() {
     return (
       <div>
         <div className="review-btn" onClick={this.onReviewClick}><i class="fas fa-angle-left"></i></div>
+        <div className="forw-btn" onClick={this.onForwClick}><i class="fas fa-angle-right"></i></div>
         <TrendChart data={this.state.data}
           dataKey="torque"
           yAxisName="Torque (N/m)"
