@@ -27,7 +27,17 @@ class Landing extends Component {
         <Row className="mb-5">
           <h4 className="sub-headline">Graduation Thesis</h4>
         </Row>
-
+        <Row className="mt-3 entry-row" >
+          <a className="sub-headline entry" href="/entry">Entry</a>
+        </Row>
+        <div className="vertical-line"></div>
+        <div className="horizontal-line"></div>
+        <div className="ver-line-box">
+          <div className="vertical-line"></div>
+          <div className="vertical-line" style={{width: "2.4%"}}></div>
+          <div className="vertical-line" style={{width: "0%", marginRight:"-0.5px"}}></div>
+        </div>
+       
         <Row>
           <Col md="4">
             <Card>

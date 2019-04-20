@@ -28,7 +28,8 @@ export default class Motor2Page extends Component {
         isHideCur: false,
         isHideMotorT: false,
         isHideDriveT: false,
-        isHidePower: false
+        isHidePower: false,
+        isPauseAllTrend: false
     }
     onDeleteCur = () => {
         if (this.state.isHideCur) {
@@ -100,8 +101,13 @@ export default class Motor2Page extends Component {
             })
         }
     }
+    onPauseAllTrend = () => {
+        this.setState({
+            isPauseAllTrend: !this.state.isPauseAllTrend
+        })
+    }
     render() {
-        let { isHideCur, isHideDriveT, isHideMotorT, isHidePower, isHideTor } = this.state;
+        let { isHideCur, isHideDriveT, isHideMotorT, isHidePower, isHideTor, isPauseAllTrend } = this.state;
         let curState = classNames({
             "tc-box": true,
             "hide": !isHideCur
@@ -208,6 +214,9 @@ export default class Motor2Page extends Component {
                                 </div>
                                 <div className="otime-box">
                                     <OperatingTime ioTopic={["motor2Status", "motor2OTime"]} />
+                                    <div className="stop-all-trend" 
+                                    onClick={this.onPauseAllTrend}
+                                    >Pause all <i className="fas fa-chart-line"></i></div>
                                 </div>
                             </Row>
                         </Col>
@@ -224,7 +233,8 @@ export default class Motor2Page extends Component {
                                  stopFlag="amp2StopFlag"
                                  reviewFlag="amp2ReviewFlag"
                                  forwFlag="amp2ForwFlag"
-                                 reviewData="reviewAmp2"/>
+                                 reviewData="reviewAmp2"
+                                 allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                         <Col md="6">
@@ -235,7 +245,8 @@ export default class Motor2Page extends Component {
                                  stopFlag="torque2StopFlag"
                                  reviewFlag="torque2ReviewFlag"
                                  forwFlag="torque2ForwFlag"
-                                 reviewData="reviewTorque2"/>
+                                 reviewData="reviewTorque2"
+                                 allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                     </Row>
@@ -248,7 +259,8 @@ export default class Motor2Page extends Component {
                                 stopFlag="motor2TStopFlag"
                                 reviewFlag="motor2TReviewFlag"
                                 forwFlag="motor2TForwFlag"
-                                reviewData="reviewMotor2T"/>
+                                reviewData="reviewMotor2T"
+                                allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                         <Col md="6">
@@ -259,7 +271,8 @@ export default class Motor2Page extends Component {
                                  stopFlag="drive2TStopFlag"
                                  reviewFlag="drive2TReviewFlag"
                                  forwFlag="drive2TForwFlag"
-                                 reviewData="reviewDrive2T"/>
+                                 reviewData="reviewDrive2T"
+                                 allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                     </Row>
@@ -272,7 +285,8 @@ export default class Motor2Page extends Component {
                                  stopFlag="power2StopFlag"
                                  reviewFlag="power2ReviewFlag"
                                  forwFlag="power2ForwFlag"
-                                 reviewData="reviewPower2"/>
+                                 reviewData="reviewPower2"
+                                 allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                     </Row>

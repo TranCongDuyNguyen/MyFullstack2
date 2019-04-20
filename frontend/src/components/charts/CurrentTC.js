@@ -35,6 +35,7 @@ export default class CurrentTC extends Component {
     onStopClick = () => {
         isStop = !isStop;
         this.socket.emit("stopStoring", this.props.stopFlag);
+        console.log("a");
     }
     onReviewClick = () => {
         if (isStop) {
@@ -45,7 +46,6 @@ export default class CurrentTC extends Component {
                             data: reviewData
                         }
                     });
-                
             }.bind(this));
         }
     }
@@ -62,11 +62,16 @@ export default class CurrentTC extends Component {
             }.bind(this));
         }
     }
+    componentWillReceiveProps(nxtProps) {
+        if(nxtProps.allPauseState !== this.props.allPauseState) {
+            this.onStopClick();
+        }
+    }
     render() {
         return (
             <div>
-                <div className="review-btn" onClick={this.onReviewClick}><i class="fas fa-angle-left"></i></div>
-                <div className="forw-btn" onClick={this.onForwClick}><i class="fas fa-angle-right"></i></div>
+                <div className="review-btn" onClick={this.onReviewClick}><i className="fas fa-angle-left"></i></div>
+                <div className="forw-btn" onClick={this.onForwClick}><i className="fas fa-angle-right"></i></div>
                 <TrendChart data={this.state.data}
                     dataKey="amp"
                     yAxisName="Current (A)"

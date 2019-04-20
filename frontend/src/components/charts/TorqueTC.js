@@ -42,11 +42,16 @@ export default class TorqueTC extends Component {
         }.bind(this));
     }
 }
+componentWillReceiveProps(nxtProps) {
+  if(nxtProps.allPauseState !== this.props.allPauseState) {
+      this.onStopClick();
+  }
+}
   render() {
     return (
       <div>
-        <div className="review-btn" onClick={this.onReviewClick}><i class="fas fa-angle-left"></i></div>
-        <div className="forw-btn" onClick={this.onForwClick}><i class="fas fa-angle-right"></i></div>
+        <div className="review-btn" onClick={this.onReviewClick}><i className="fas fa-angle-left"></i></div>
+        <div className="forw-btn" onClick={this.onForwClick}><i className="fas fa-angle-right"></i></div>
         <TrendChart data={this.state.data}
           dataKey="torque"
           yAxisName="Torque (N/m)"

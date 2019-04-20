@@ -88,7 +88,10 @@
 .dc .text .blink {
     color: #D60000;
 }
-
+.otime-box {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 .trend-button {
     position: absolute;
     top: 6.4em;
@@ -163,4 +166,31 @@
 .motor-image {
     width: 316px;
     height: 267px;
+}
+.stop-all-trend {
+    margin: auto;
+    margin-top: 1em;
+    padding-top: 0.1em;
+    letter-spacing: 1px;
+    font-size: 1.2em;
+    text-align: center;
+    border: solid 1px white;
+    border-radius: 8px;
+    height: 2.4rem;
+    width: 8rem;
+    cursor: pointer;
+    transition: all 0.3s; 
+}
+.stop-all-trend:hover {
+    background-color: #eeeeff;
+    border-color: #eeeeee;
+    color: #485563;
+}
+
+.stop-all-trend:active {
+    background-color: #CDD5D1;
+    border-color: #E85F5C;
+    color: #E85F5C;
+    border-width: 2px;
+    font-weight: 700;
 }

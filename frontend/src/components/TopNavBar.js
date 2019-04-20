@@ -92,7 +92,7 @@ class TopNavBar extends Component {
 
               </NavbarBrand>
               <NavItem style={{ margin: "auto 0" }}>
-                <NavLink href="/" style={{ color: "#FFF", padding: "0", margin: "0 0.5em 0 0.5em" }}>
+                <NavLink href="/" style={{ color: "#FFF", padding: "0 8px", margin: "0 0.5em 0 0.5em" }}>
                   <i className="fas fa-home" style={{ margin: "0 auto", fontSize: "1.5em", color: "#FBFCFF" }}></i>
                   <h2 style={{ margin: "0 auto", fontSize: "1em", color: "#FBFCFF" }}>Home</h2>
                 </NavLink>
@@ -101,6 +101,12 @@ class TopNavBar extends Component {
                 <NavLink href="/monitor/1" style={{ color: "#FFF", padding: "0" }}>
                   <img src={TrendIcon} alt="" style={{ margin: "0 auto", fontSize: "1.5em" }}></img>
                   <h2 style={{ margin: "0 auto", fontSize: "1em", color: "#FBFCFF" }}>Monitor</h2>
+                </NavLink>
+              </NavItem>
+              <NavItem style={{ margin: "auto 0" }}>
+                <NavLink href="/virtualization" style={{  color: "#FFF", padding: "0px 15.5px", margin: "0 0.5em 0 0.5em" }}>
+                <i className="fas fa-glasses" style={{ margin: "0 auto", fontSize: "1.5em", color: "#FBFCFF" }}></i>
+                  <h2 style={{ margin: "0 auto", fontSize: "1em", color: "#FBFCFF" }}>Live</h2>
                 </NavLink>
               </NavItem>
             </Nav>

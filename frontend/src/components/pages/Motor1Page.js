@@ -28,7 +28,8 @@ export default class Motor1Page extends Component {
         isHideCur: false,
         isHideMotorT: false,
         isHideDriveT: false,
-        isHidePower: false
+        isHidePower: false,
+        isPauseAllTrend: false
     }
     onDeleteCur = () => {
         if (this.state.isHideCur) {
@@ -100,8 +101,13 @@ export default class Motor1Page extends Component {
             })
         }
     }
+    onPauseAllTrend = () => {
+        this.setState({
+            isPauseAllTrend: !this.state.isPauseAllTrend
+        })
+    }
     render() {
-        let { isHideCur, isHideDriveT, isHideMotorT, isHidePower, isHideTor } = this.state;
+        let { isHideCur, isHideDriveT, isHideMotorT, isHidePower, isHideTor, isPauseAllTrend } = this.state;
         let curState = classNames({
             "tc-box": true,
             "hide": !isHideCur
@@ -210,6 +216,9 @@ export default class Motor1Page extends Component {
                                 </div>
                                 <div className="otime-box" style={{ width: "192px" }}>
                                     <OperatingTime ioTopic={["motor1Status", "motor1OTime"]} />
+                                    <div className="stop-all-trend" 
+                                    onClick={this.onPauseAllTrend}
+                                    >Pause all <i className="fas fa-chart-line"></i></div>
                                 </div>
                             </Row>
                         </Col>
@@ -226,7 +235,8 @@ export default class Motor1Page extends Component {
                                             stopFlag="amp1StopFlag"
                                             reviewFlag="amp1ReviewFlag"
                                             forwFlag="amp1ForwFlag"
-                                            reviewData="reviewAmp1"/>
+                                            reviewData="reviewAmp1"
+                                            allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                         <Col md="6">
@@ -237,7 +247,8 @@ export default class Motor1Page extends Component {
                                  stopFlag="torque1StopFlag"
                                  reviewFlag="torque1ReviewFlag"
                                  forwFlag="torque1ForwFlag"
-                                 reviewData="reviewTorque1"/>
+                                 reviewData="reviewTorque1"
+                                 allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                     </Row>
@@ -250,7 +261,8 @@ export default class Motor1Page extends Component {
                                  stopFlag="motor1TStopFlag"
                                  reviewFlag="motor1TReviewFlag"
                                  forwFlag="motor1TForwFlag"
-                                 reviewData="reviewMotor1T"/>
+                                 reviewData="reviewMotor1T"
+                                 allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                         <Col md="6">
@@ -261,7 +273,8 @@ export default class Motor1Page extends Component {
                                  stopFlag="drive1TStopFlag"
                                  reviewFlag="drive1TReviewFlag"
                                  forwFlag="drive1TForwFlag"
-                                 reviewData="reviewDrive1T"/>
+                                 reviewData="reviewDrive1T"
+                                 allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                     </Row>
@@ -274,7 +287,8 @@ export default class Motor1Page extends Component {
                                   stopFlag="power1StopFlag"
                                   reviewFlag="power1ReviewFlag"
                                   forwFlag="power1ForwFlag"
-                                  reviewData="reviewPower1"/>
+                                  reviewData="reviewPower1"
+                                  allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
                     </Row>
