@@ -73,6 +73,8 @@ export default class DriveTempTC extends Component {
                 <div className="review-btn" onClick={this.onReviewClick}><i className="fas fa-angle-left"></i></div>
                 <div className="forw-btn" onClick={this.onForwClick}><i className="fas fa-angle-right"></i></div>
                 <TrendChart data={this.state.data}
+                    width={450}
+                    height={200}
                     dataKey="driveT"
                     yAxisName="&deg;C"
                     customColor="#F7A072"

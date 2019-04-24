@@ -39,7 +39,7 @@ export default class OperatingTime extends Component {
         this.socket.on(ioApi[0], function (statusObj) {
             console.log(statusObj);
             this.setState({
-                maintenance: statusObj.maintenance
+                maintenance: statusObj.maint
             })
         }.bind(this))
     }

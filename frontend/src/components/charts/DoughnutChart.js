@@ -53,7 +53,7 @@ export default class DoughnutChart extends Component {
                     </defs>
                     
                     <svg height="230" width="230" x="0" y="0">
-                        <path d="M 61.2,115
+                        <path className="dc-background"d="M 61.2,115
                             A 53.8,53.8,0,
                             0,1,
                             168.8,115
@@ -68,7 +68,7 @@ export default class DoughnutChart extends Component {
                                 style={{"fill": `${(data[0][dataKey]>(threshold+offset))?"red":"lime"}`}} />
                         Sorry, your browser does not support inline SVG.
                         </g>
-                        </svg>
+                    </svg>
                     <RadialBar minAngle={15}
                         clockWise={true}
                         dataKey="refKey"

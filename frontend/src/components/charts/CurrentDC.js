@@ -40,13 +40,13 @@ export default class CurrentDC extends Component {
     componentDidMount() {
         this.socket = io("http://localhost:5000").connect();
         this.socket.on(this.props.ioTopic, function (motorObj) {
-            this.newData[0].amp = motorObj.amp;
+            this.newData[0].amp = motorObj[this.props.valKey];
             this.setState((state) => {
                 return {
                     data: this.newData
                 }
             });
-            if (motorObj.amp > 80) {
+            if (motorObj[this.props.valKey] > 80) {
                 this.setState({
                     flash: !this.state.flash
                 })

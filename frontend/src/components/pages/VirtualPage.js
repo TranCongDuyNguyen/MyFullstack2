@@ -33,10 +33,10 @@ export default class VirtualPage extends Component {
     
     this.socket.on("motorStatus", function (status) {
       this.setState({
-        forw: status.forw,
+        forw: status.run,
         rev: status.rev,
         stop: status.stop,
-        maintenance: status.maintenance,
+        maintenance: status.maint,
         fault: status.fault,
         service: status.service
       });

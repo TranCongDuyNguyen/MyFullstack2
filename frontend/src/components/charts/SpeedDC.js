@@ -1,37 +1,37 @@
 import React, { Component } from 'react'
+
 import io from "socket.io-client";
 
 import DoughnutChart from './DoughnutChart';
 
-export default class DriveTempDC extends Component {
+export default class SpeedDC extends Component {
     state = {
         data: [
             {
-                name: "DriveTemp",
-                driveT: 40
+                name: "Speed",
+                freq: 80
             },
             {
                 name: "Ref",
                 refKey: 100
             }
-        ],
-        flash: false
+        ]
     }
     newData = JSON.parse(JSON.stringify(this.state.data)); //deep clone
 
     render() {
         const { data } = this.state;
         return (
-            <div className="driveT-dc">
+            <div className="speed-dc">
                 <DoughnutChart data={data.concat([])}
-                    dataKey="driveT"
-                    threshold={60}
+                    dataKey="freq"
+                    threshold={80}
                     offset={20}
-                    colorId="driveT"
-                    startGradColor="#FFF275"
-                    endGradColor="#fd1d1d"
-                    theUnit="&deg;C"
-                    flash={this.state.flash}></DoughnutChart>
+                    colorId="speed"
+                    startGradColor="#7161EF"
+                    endGradColor="#957FEF"
+                    theUnit="Hz">
+                </DoughnutChart>
             </div>
         )
     }
@@ -39,13 +39,13 @@ export default class DriveTempDC extends Component {
     componentDidMount() {
         this.socket = io("http://localhost:5000").connect();
         this.socket.on(this.props.ioTopic, function (motorObj) {
-            this.newData[0].driveT = motorObj[this.props.valKey];
+            this.newData[0].amp = motorObj.amp;
             this.setState((state) => {
                 return {
                     data: this.newData
                 }
             });
-            if (motorObj[this.props.valKey] > 80) {
+            if (motorObj.amp > 80) {
                 this.setState({
                     flash: !this.state.flash
                 })
@@ -60,5 +60,4 @@ export default class DriveTempDC extends Component {
             this.socket.disconnect();
         })
     };
-
 }

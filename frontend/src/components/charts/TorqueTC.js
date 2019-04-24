@@ -9,7 +9,7 @@ export default class TorqueTC extends Component {
   state = {
     data: [{
       time: "00:00:00",
-      torque: 0
+      tor: 0
     }]
   }
   onStopClick = () => {
@@ -20,6 +20,7 @@ export default class TorqueTC extends Component {
     if (isStop) {
       this.socket.emit("reviewStore", this.props.reviewFlag);
       this.socket.on(this.props.reviewData, function (reviewData) {
+        console.log(reviewData);
         this.setState((state) => {
           return {
             data: reviewData
@@ -33,6 +34,7 @@ export default class TorqueTC extends Component {
     if (isStop) {
         this.socket.emit("reviewStore", this.props.forwFlag);
         this.socket.on(this.props.reviewData, function (reviewData) {
+         
                 this.setState((state) => {
                     return {
                         data: reviewData
@@ -53,7 +55,9 @@ componentWillReceiveProps(nxtProps) {
         <div className="review-btn" onClick={this.onReviewClick}><i className="fas fa-angle-left"></i></div>
         <div className="forw-btn" onClick={this.onForwClick}><i className="fas fa-angle-right"></i></div>
         <TrendChart data={this.state.data}
-          dataKey="torque"
+          width={450}
+          height={200}
+          dataKey="tor"
           yAxisName="Torque (N/m)"
           customColor="#BC96E6"
           colorId="torqueTC"
@@ -64,11 +68,11 @@ componentWillReceiveProps(nxtProps) {
 
   componentDidMount() {
     this.socket = io("http://localhost:5000");
-    this.socket.on(this.props.ioTopic, function (torqueBuffer) {
+    this.socket.on(this.props.ioTopic, function (torBuffer) {
       if (!isStop) {
         this.setState((state) => {
           return {
-            data: torqueBuffer
+            data: torBuffer
           }
         });
       }

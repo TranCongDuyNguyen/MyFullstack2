@@ -5,20 +5,20 @@ import TrendChart from './TrendChart';
 import '../CSS/TrendChartStyle.css';
 let isStop = false;
 
-export default class CurrentTC extends Component {
+export default class HeightTC extends Component {
     state = {
         data: [{
             time: "00:00:00",
-            amp: 0
+            h: 0
         }]
     }
     componentDidMount() {
         this.socket = io("http://localhost:5000");
-        this.socket.on(this.props.ioTopic, function (ampereBuffer) {
+        this.socket.on(this.props.ioTopic, function (hBuffer) {
             if (!isStop) {
                 this.setState((state) => {
                     return {
-                        data: ampereBuffer
+                        data: hBuffer
                     }
                 });
             }
@@ -35,7 +35,6 @@ export default class CurrentTC extends Component {
     onStopClick = () => {
         isStop = !isStop;
         this.socket.emit("stopStoring", this.props.stopFlag);
-        console.log("a");
     }
     onReviewClick = () => {
         if (isStop) {
@@ -69,15 +68,15 @@ export default class CurrentTC extends Component {
     }
     render() {
         return (
-            <div>
+            <div className="height-tc">
                 <div className="review-btn" onClick={this.onReviewClick}><i className="fas fa-angle-left"></i></div>
                 <div className="forw-btn" onClick={this.onForwClick}><i className="fas fa-angle-right"></i></div>
                 <TrendChart data={this.state.data}
-                    dataKey="amp"
-                    yAxisName="Current (A)"
-                    customColor="#45F0DF"
-                    colorId="currentTC"
-                    width={450}
+                    dataKey="h"
+                    yAxisName="Height (cm)"
+                    customColor="#1985A1"
+                    colorId="heightTC"
+                    width={425}
                     height={200}
                     onStopClick={this.onStopClick} >
                 </TrendChart>

@@ -1,0 +1,47 @@
+.h-bar-box {
+    position: absolute;
+    left: 40%;
+    top: 14em;
+}
+.unit{
+    position: absolute;
+    color: #aaa; 
+    font-size: 1.5em;
+    top: -6.6em;
+    left: 45%;
+}
+.progress{
+    transform: rotate(-90deg);
+    width: 300px;
+    height: 3rem!important;
+    background-color: #0000!important;
+    /* box-shadow: 0 7px 4px #777; */
+    border: 2px solid #bbbb!important;
+    border-radius: 0.3rem!important;
+}
+.progress .progress-bar {
+    background: linear-gradient(90deg, #000428 0%, #004e92 100%)!important;
+}
+.scale-box {
+    position: absolute;
+    left: 41.6%;
+    top: -145px;
+    height: 300px;
+    color: #aaa;  
+}
+.scale-line {
+    height: 20px;
+    padding-top: 16px;
+    font-size: 1.5em;
+}
+
+.scale-line .numb {
+    font-size: 20px;
+    position: absolute;
+    top: 14em;
+    left: 100%;
+}
+.scale-line.top .numb {
+    top: 1em;
+    left: 100%;
+}

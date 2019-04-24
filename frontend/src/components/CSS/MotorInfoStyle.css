@@ -1,21 +1,21 @@
 .motor-info {
     position: absolute;
-    top: -0.8em;
-    right: 12em;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 14em;
     width: 14em;
-    border: solid 0.1px #eeeeee55;
-    background: linear-gradient(0deg, rgba(220,220,220,0.1) 0%, rgba(221,221,238,0.4) 100%);
-    border-radius: 0.6em;
+    background: linear-gradient(90deg, #136a8a 0%, #267871 80%);
+    border-radius: 0.5em;
     transition: all 500ms ease-in-out;
 }
 .motor-info pre{
     font-weight: 500;
     font-size: 16px;
-    color: rgb(176, 236, 218);
+    color: #efede1;
     margin-bottom: 1em;
+}
+.motor-info .title{
+    height: 1.2em;
 }

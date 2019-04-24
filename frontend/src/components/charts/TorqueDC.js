@@ -8,7 +8,7 @@ export default class TorqueDC extends Component {
         data: [
             {
                 name: "Torque",
-                torque: 60
+                tor: 60
             },
             {
                 name: "Ref",
@@ -24,7 +24,7 @@ export default class TorqueDC extends Component {
         return (
             <div className="torque-dc">
                 <DoughnutChart data={data.concat([])}
-                    dataKey="torque"
+                    dataKey="tor"
                     threshold={60}
                     offset={20}
                     colorId="torque"
@@ -40,13 +40,13 @@ export default class TorqueDC extends Component {
     componentDidMount() {
         this.socket = io("http://localhost:5000").connect();
         this.socket.on(this.props.ioTopic, function (motorObj) {
-            this.newData[0].torque = motorObj.torque;
+            this.newData[0].tor = motorObj[this.props.valKey];
             this.setState((state) => {
                 return {
                     data: this.newData
                 }
             });
-            if (motorObj.torque > 80) {
+            if (motorObj[this.props.valKey] > 80) {
                 this.setState({
                     flash: !this.state.flash
                 })

@@ -17,7 +17,6 @@ import MotorTempTC from '../charts/MotorTempTC';
 import DriveTempTC from '../charts/DriveTempTC';
 import PowerTC from '../charts/PowerTC';
 import OperatingTime from '../OperatingTime';
-import MotorInfo from '../MotorInfo';
 import WarnPanel from '../WarnPanel';
 import "../CSS/MonitorPageStyle.css";
 import MotorPic from "../../images/motor.png";
@@ -31,74 +30,80 @@ export default class Motor2Page extends Component {
         isHidePower: false,
         isPauseAllTrend: false
     }
-    onDeleteCur = () => {
-        if (this.state.isHideCur) {
-            this.setState({
-                isHideCur: !this.state.isHideCur
-            })
+    onDeleteTrend = (e) => {
+        let eclass = e.target.className;
+        if(eclass === "exit-button cur") {
+            if (this.state.isHideCur) {
+                this.setState({
+                    isHideCur: !this.state.isHideCur
+                })
+            }
+        }
+        if(eclass === "exit-button tor") {
+            if (this.state.isHideTor) {
+                this.setState({
+                    isHideTor: !this.state.isHideTor
+                })
+            }
+        }
+        if(eclass === "exit-button motorT") {
+            if (this.state.isHideMotorT) {
+                this.setState({
+                    isHideMotorT: !this.state.isHideMotorT
+                })
+            }
+        }
+        if(eclass === "exit-button driveT") {
+            if (this.state.isHideDriveT) {
+                this.setState({
+                    isHideDriveT: !this.state.isHideDriveT
+                })
+            }
+        }
+        if(eclass === "exit-button pow") {
+            if (this.state.isHidePower) {
+                this.setState({
+                    isHidePower: !this.state.isHidePower
+                })
+            }
         }
     }
-    onAddCur = () => {
-        if (!this.state.isHideCur) {
-            this.setState({
-                isHideCur: !this.state.isHideCur
-            })
+    onAddTrend = (e) => {
+        let eclass = e.target.className;
+        if(eclass === "trend-button cur" || eclass === "fas fa-chart-line cur"){
+            if (!this.state.isHideCur) {
+                this.setState({
+                    isHideCur: !this.state.isHideCur
+                })
+            }
         }
-    }
-    onDeleteTor = () => {
-        if (this.state.isHideTor) {
-            this.setState({
-                isHideTor: !this.state.isHideTor
-            })
+        if(eclass === "trend-button tor" || eclass === "fas fa-chart-line tor"){
+            if (!this.state.isHideTor) {
+                this.setState({
+                    isHideTor: !this.state.isHideTor
+                })
+            }
         }
-    }
-    onAddTor = () => {
-        if (!this.state.isHideTor) {
-            this.setState({
-                isHideTor: !this.state.isHideTor
-            })
+        if(eclass === "trend-button motorT" || eclass === "fas fa-chart-line motorT"){
+            if (!this.state.isHideMotorT) {
+                this.setState({
+                    isHideMotorT: !this.state.isHideMotorT
+                })
+            }
         }
-    }
-    onDeleteMotorT = () => {
-        if (this.state.isHideMotorT) {
-            this.setState({
-                isHideMotorT: !this.state.isHideMotorT
-            })
+        if(eclass === "trend-button driveT" || eclass === "fas fa-chart-line driveT"){
+            if (!this.state.isHideDriveT) {
+                this.setState({
+                    isHideDriveT: !this.state.isHideDriveT
+                })
+            }
         }
-    }
-    onAddMotorT = () => {
-        if (!this.state.isHideMotorT) {
-            this.setState({
-                isHideMotorT: !this.state.isHideMotorT
-            })
-        }
-    }
-    onDeleteDriveT = () => {
-        if (this.state.isHideDriveT) {
-            this.setState({
-                isHideDriveT: !this.state.isHideDriveT
-            })
-        }
-    }
-    onAddDriveT = () => {
-        if (!this.state.isHideDriveT) {
-            this.setState({
-                isHideDriveT: !this.state.isHideDriveT
-            })
-        }
-    }
-    onDeletePower = () => {
-        if (this.state.isHidePower) {
-            this.setState({
-                isHidePower: !this.state.isHidePower
-            })
-        }
-    }
-    onAddPower = () => {
-        if (!this.state.isHidePower) {
-            this.setState({
-                isHidePower: !this.state.isHidePower
-            })
+        if(eclass === "trend-button pow" || eclass === "fas fa-chart-line pow"){
+            if (!this.state.isHidePower) {
+                this.setState({
+                    isHidePower: !this.state.isHidePower
+                })
+            }
         }
     }
     onPauseAllTrend = () => {
@@ -142,17 +147,16 @@ export default class Motor2Page extends Component {
                             </div>
                             <div className="motor-1-pic">
                                 <img className="motor-image" src={MotorPic} alt=""/>
-                                <MotorInfo ioTopic="motor2DCData">Motor 2</MotorInfo>
                             </div>
                             <WarnPanel ioTopic="warnList2"/>
                         </Col>
                         <Col md="6" className="rightside" >
                             <Row className="current-and-torque" style={{justifyContent: "center"}}>
                                 <div className="current-box" >
-                                    <CurrentDC ioTopic="motor2DCData" />
-                                    <div className="trend-button"
-                                        onClick={this.onAddCur}>
-                                        <i className="fas fa-chart-line"
+                                    <CurrentDC ioTopic="motor2DCData" valKey="amp2"/>
+                                    <div className="trend-button cur"
+                                        onClick={this.onAddTrend}>
+                                        <i className="fas fa-chart-line cur"
                                             style={{
                                                 margin: "0 auto",
                                                 fontSize: "1.5em"
@@ -161,10 +165,10 @@ export default class Motor2Page extends Component {
                                     </div>
                                 </div>
                                 <div className="torque-box">
-                                    <TorqueDC ioTopic="motor2DCData" />
-                                    <div className="trend-button"
-                                        onClick={this.onAddTor}>
-                                        <i className="fas fa-chart-line"
+                                    <TorqueDC ioTopic="motor2DCData" valKey="tor2"/>
+                                    <div className="trend-button tor"
+                                        onClick={this.onAddTrend}>
+                                        <i className="fas fa-chart-line tor"
                                             style={{
                                                 margin: "0 auto",
                                                 fontSize: "1.5em"
@@ -175,10 +179,10 @@ export default class Motor2Page extends Component {
                             </Row>
                             <Row className="thermal" style={{justifyContent: "center"}}>
                                 <div className="motorT-box" >
-                                    <MotorTempDC ioTopic="motor2DCData" />
-                                    <div className="trend-button"
-                                        onClick={this.onAddMotorT}>
-                                        <i className="fas fa-chart-line"
+                                    <MotorTempDC ioTopic="motor2DCData" valKey="motor2T"/>
+                                    <div className="trend-button motorT"
+                                        onClick={this.onAddTrend}>
+                                        <i className="fas fa-chart-line motorT"
                                             style={{
                                                 margin: "0 auto",
                                                 fontSize: "1.5em"
@@ -187,10 +191,10 @@ export default class Motor2Page extends Component {
                                     </div>
                                 </div>
                                 <div className="driveT-box">
-                                    <DriveTempDC ioTopic="motor2DCData" />
-                                    <div className="trend-button"
-                                        onClick={this.onAddDriveT}>
-                                        <i className="fas fa-chart-line"
+                                    <DriveTempDC ioTopic="motor2DCData" valKey="drive2T"/>
+                                    <div className="trend-button driveT"
+                                        onClick={this.onAddTrend}>
+                                        <i className="fas fa-chart-line driveT"
                                             style={{
                                                 margin: "0 auto",
                                                 fontSize: "1.5em"
@@ -201,10 +205,10 @@ export default class Motor2Page extends Component {
                             </Row>
                             <Row className="otime-and-setting" style={{justifyContent: "center"}}>
                                 <div className="power-box" >
-                                    <PowerDC ioTopic="motor2DCData" />
-                                    <div className="trend-button"
-                                        onClick={this.onAddPower}>
-                                        <i className="fas fa-chart-line"
+                                    <PowerDC ioTopic="motor2DCData" valKey="power2"/>
+                                    <div className="trend-button pow"
+                                        onClick={this.onAddTrend}>
+                                        <i className="fas fa-chart-line pow"
                                             style={{
                                                 margin: "0 auto",
                                                 fontSize: "1.5em"
@@ -227,8 +231,8 @@ export default class Motor2Page extends Component {
                     <Row style={{ marginBottom: "1em" }}>
                         <Col md="6">
                             <div className={curState}>
-                                <button className="exit-button"
-                                    onClick={this.onDeleteCur}>&times;</button>
+                                <button className="exit-button cur"
+                                    onClick={this.onDeleteTrend}>&times;</button>
                                 <CurrentTC ioTopic="motor2TCAmp" 
                                  stopFlag="amp2StopFlag"
                                  reviewFlag="amp2ReviewFlag"
@@ -239,13 +243,13 @@ export default class Motor2Page extends Component {
                         </Col>
                         <Col md="6">
                             <div className={torState}>
-                                <button className="exit-button"
-                                    onClick={this.onDeleteTor}>&times;</button>
+                                <button className="exit-button tor"
+                                    onClick={this.onDeleteTrend}>&times;</button>
                                 <TorqueTC ioTopic="motor2TCTor" 
-                                 stopFlag="torque2StopFlag"
-                                 reviewFlag="torque2ReviewFlag"
-                                 forwFlag="torque2ForwFlag"
-                                 reviewData="reviewTorque2"
+                                 stopFlag="tor2StopFlag"
+                                 reviewFlag="tor2ReviewFlag"
+                                 forwFlag="tor2ForwFlag"
+                                 reviewData="reviewTor2"
                                  allPauseState={isPauseAllTrend}/>
                             </div>
                         </Col>
@@ -253,8 +257,8 @@ export default class Motor2Page extends Component {
                     <Row style={{ marginBottom: "1em" }}>
                         <Col md="6">
                             <div className={motorTState}>
-                                <button className="exit-button"
-                                    onClick={this.onDeleteMotorT}>&times;</button>
+                                <button className="exit-button motorT"
+                                    onClick={this.onDeleteTrend}>&times;</button>
                                 <MotorTempTC ioTopic="motor2TCMotorT" 
                                 stopFlag="motor2TStopFlag"
                                 reviewFlag="motor2TReviewFlag"
@@ -265,8 +269,8 @@ export default class Motor2Page extends Component {
                         </Col>
                         <Col md="6">
                             <div className={driveTState}>
-                                <button className="exit-button"
-                                    onClick={this.onDeleteDriveT}>&times;</button>
+                                <button className="exit-button driveT"
+                                    onClick={this.onDeleteTrend}>&times;</button>
                                 <DriveTempTC ioTopic="motor2TCDriveT" 
                                  stopFlag="drive2TStopFlag"
                                  reviewFlag="drive2TReviewFlag"
@@ -279,8 +283,8 @@ export default class Motor2Page extends Component {
                     <Row style={{ justifyContent: "center" }}>
                         <Col md="6">
                             <div className={powerState}>
-                                <button className="exit-button"
-                                    onClick={this.onDeletePower}>&times;</button>
+                                <button className="exit-button pow"
+                                    onClick={this.onDeleteTrend}>&times;</button>
                                 <PowerTC ioTopic="motor2TCPower" 
                                  stopFlag="power2StopFlag"
                                  reviewFlag="power2ReviewFlag"

@@ -260,13 +260,13 @@
 
 }
 .vertical-line {
-	border-left: 3px solid #C8D5B9;
+	border-left: 2px solid #C8D5B9;
 	height: 4rem;
 	width: 1%;
 	margin: auto;
 }
 .horizontal-line {
-	border-bottom: 3px solid #C8D5B9;	
+	border-bottom: 2px solid #C8D5B9;	
 	width: 80%;
 	margin: auto;
 }
@@ -305,15 +305,15 @@
 	transform: scale(1.15);
 }
 .entry-row:hover ~ .vertical-line {
-	border-left: 3px solid #8FC0A9;
+	border-left: 2px solid #8FC0A9;
 	animation: flash linear 1s infinite;
 }
 .entry-row:hover  ~ .horizontal-line {
-	border-bottom: 3px solid #8FC0A9;
+	border-bottom: 2px solid #8FC0A9;
 	animation: flash linear 1s infinite;
 }
 .entry-row:hover ~ .ver-line-box > .vertical-line {
-	border-left: 3px solid #8FC0A9;
+	border-left: 2px solid #8FC0A9;
 	animation: flash linear 1s infinite;
 }
 @-webkit-keyframes flash {
