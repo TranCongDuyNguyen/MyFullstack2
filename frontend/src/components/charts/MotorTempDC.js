@@ -14,13 +14,20 @@ export default class MotorTempDC extends Component {
             },
             {
                 name: "Ref",
-                refKey: 100
+                refKey: this.props.maxScale
             }
         ],
         flash: false
     }
     newData = JSON.parse(JSON.stringify(this.state.data)); //deep clone
-
+    componentWillReceiveProps(nxtProps) {
+        if(nxtProps.maxScale !== this.props.maxScale) {
+            this.newData[1].refKey = nxtProps.maxScale;
+            this.setState({
+                data: this.newData
+            })
+        }
+    }
     render() {
         const { data } = this.state;
         return (
@@ -34,7 +41,12 @@ export default class MotorTempDC extends Component {
                     endGradColor="#fd1d1d"
                     theUnit = "&deg;C"
                     flash={this.state.flash}
-                ></DoughnutChart>
+                    onAdjTriClick={this.props.onAdjTriClick}
+                    id={this.props.id}
+                    triBtnPos={this.props.triBtnPos}
+                    maxScale={this.props.maxScale}
+                    sSize={this.props.sSize}
+                    ssSize={this.props.ssSize}></DoughnutChart>
             </div>
         )
     }

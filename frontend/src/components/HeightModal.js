@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 
 import HeightTC from "./charts/HeightTC";
-import './CSS/FrequencyInputStyle.css';
+import './CSS/FreHeightInputStyle.css';
 
 export default class HeightModal extends Component {
     state = {

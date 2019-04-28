@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import io from 'socket.io-client';
 
-import './CSS/FrequencyInputStyle.css';
+import './CSS/FreHeightInputStyle.css';
 
 export default class FrequencyInput extends Component {
 
@@ -12,16 +12,38 @@ export default class FrequencyInput extends Component {
     }
 
     onChange = (e) => {
+        if (parseInt(e.target.value) > 100) {
+            e.target.value = '100';
+        }
+        else if (parseInt(e.target.value) < 0) {
+            e.target.value = '0';
+        }
+        if (e.target.value.length > 4) {
+            let newS = e.target.value.slice(0, 4);
+            e.target.value = newS;
+        }
         this.setState({
             text: e.target.value
         })
     }
-
-    onClick = () => {
-        this.socket.emit("setFrequency", this.state.text);
-        this.setState({
-            text: ""
-        })
+    onIncClick = () => {
+        if (!this.state.text) {
+            this.setState({
+                text: "10"
+            })
+        }
+        else if(parseInt(this.state.text) < 100) {
+            this.setState({
+                text: (parseInt(this.state.text) + 10).toString()
+            })
+        }
+    }
+    onDecClick = () => {
+        if(parseInt(this.state.text) > 0) {
+            this.setState({
+                text: (parseInt(this.state.text) - 10).toString()
+            })
+        } 
     }
 
     onKeyUp = (e) => {
@@ -37,22 +59,24 @@ export default class FrequencyInput extends Component {
 
     render() {
         return (
-            <div className="freq-input" style={{ fontFamily: "Helvetica"}}>
+            <div className="freq-input" style={{ fontFamily: "Helvetica" }}>
                 <div className="f-box">
                     <input type="number"
                         className="f-input"
                         value={this.state.text}
                         onChange={this.onChange}
-                        onKeyUp={this.onKeyUp} />
-                    
-                    <div className="f-button" onClick={this.onClick}> 
-                        <i className="fas fa-angle-right" style={{margin:"auto", height:"0.8em"}}>
-                    </i>
+                        onKeyUp={this.onKeyUp}
+                        min="0"
+                        max="100"
+                        placeholder="Speed">
+                    </input>
+                    <div className="spin-btn">
+                        <i className="fas fa-chevron-up" onClick={this.onIncClick}></i>
+                        <i className="fas fa-chevron-down" onClick={this.onDecClick}></i>
                     </div>
-                   
                 </div>
-                <div className="f-box" style={{ width: "10rem" }}>
-                    <span className="f-txt">{this.state.frequency + " Hz"}</span>>
+                <div className="f-box" style={{ width: "6rem" }}>
+                    <span className="f-txt">{this.state.frequency }</span>
                 </div>
             </div>
         )
@@ -70,7 +94,7 @@ export default class FrequencyInput extends Component {
 
     componentWillUnmount() {
         this.socket.disconnect();
-        this.socket.on("connect_error", function(error) {
+        this.socket.on("connect_error", function (error) {
             console.log(error);
             this.socket.disconnect();
         })

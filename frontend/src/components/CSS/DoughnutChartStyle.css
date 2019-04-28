@@ -13,3 +13,24 @@
             0,0,
             71.1,115 Z;
 }
+.dc-tribtn-box {
+  position: absolute;
+  top: -1em;
+  left: 1.4em;
+  z-index: 2;
+}
+.dc-tribtn {
+  z-index: 3;
+}
+.dc-tribtn:active {
+  fill: #CDD5D1!important;
+}
+.bigchar {
+  font-size: 0.8em;
+}
+.smallchar {
+  font-size: 1.5em;
+  position: absolute;
+  top: -0.28em;
+  left: -1.7em;
+}

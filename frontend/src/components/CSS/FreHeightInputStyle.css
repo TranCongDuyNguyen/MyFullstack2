@@ -1,0 +1,91 @@
+* {
+    box-sizing: border-box;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+      /* display: none; <- Crashes Chrome on hover */
+      -webkit-appearance: none;
+      margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  }
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+.freq-input {
+  display: flex;
+  margin: 0;
+}
+.f-box {
+  border: solid 0.04em rgba(255, 255, 255, 0.7);
+  border-radius: 0.4em;
+  width: 10rem;
+  height: 2.6rem;
+  position: relative;
+  display:flex;
+  align-items: center;
+  transition: all 0.5s ease;
+  margin-right: 3em;
+  padding-left: 1em;
+  }
+
+.f-input {
+    width: 3.6em;
+    height: 100%;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    color:  rgba(255, 255, 255, 0.8);
+    font-size: 1.8em;
+}
+.f-input::placeholder {
+  opacity: 0.8;
+  font-size: 0.8em;
+  font: italic;
+  color:rgba(255, 255, 255, 0.4);
+}
+.f-input:focus {
+  outline: none;
+}
+.f-box .spin-btn {
+  display:flex;
+  flex-direction: column;
+  margin-left: 0.5em;
+  transition: all 0.3s;
+}
+.spin-btn .fas.fa-chevron-up, .fas.fa-chevron-down {
+  color: rgba(255, 255, 255, 0.8);
+}
+.spin-btn .fas.fa-chevron-up:hover {
+   color: #ffffff;
+}
+.spin-btn .fas.fa-chevron-down:hover {
+  color: #ffffff;
+}
+.spin-btn .fas.fa-chevron-up:active {
+  color:rgba(255, 255, 255, 0.4);
+}
+.spin-btn .fas.fa-chevron-down:active {
+  color:rgba(255, 255, 255, 0.4);
+}
+.f-txt {
+    letter-spacing: -0.05em;
+    position: absolute;
+    height: 0.6em;
+    width: 3em;
+    top: -0.14em;
+    right: -0.2em;
+}
+.set-height {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5em;
+}
+.height-input {
+  width: 1.8em;
+  margin-left: 0.5em;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px solid #1985A1;
+  outline: none;
+}

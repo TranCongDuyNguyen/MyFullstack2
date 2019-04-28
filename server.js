@@ -20,6 +20,7 @@ app.use(express.json()); // for parsing application/json, express provide its ow
 app.use('/api/users', require('./routes/api/route.users'));
 app.use('/api/items', require('./routes/api/route.items'));
 app.use('/api/auth', require('./routes/api/route.auth'));
+app.use('/api/maxscale1', require('./routes/api/route.maxscale1'));
 
 
 
@@ -68,18 +69,6 @@ client.subscribe('n/motorData', function (err) {
 		console.log(err);
 	}
 });
-
-//+Operate Time
-// client.subscribe('n/motor1/oTime', function (err) {
-// 	if (err) {
-// 		console.log(err);
-// 	}
-// })
-// client.subscribe('n/motor2/oTime', function (err) {
-// 	if (err) {
-// 		console.log(err);
-// 	}
-// })
 //+ Image
 client.subscribe('n/image', function (err) {
 	if (err) {
@@ -91,16 +80,10 @@ client.subscribe('test', function (err) {
 		console.log(err);
 	}
 })
-//+ Height
-// client.subscribe('n/height', function (err) {
-// 	if (err) {
-// 		console.log(err);
-// 	}
-// })
-//initial variables----------------------------------------------------------------------------
+
+//INITIAL VARIABLES----------------------------------------------------------------------------
 //+height
-let hBuffer = [{ h: 0, time: "00:00:00" }]; let hStore = [{ h: 0, time: "00:00:00" }];
-let hStoreCopy = [];
+let hBuffer = [{ h: 0, time: "00:00:00" }]; let hStore = [{ h: 0, time: "00:00:00" }];	let hStoreCopy = [];
 //-Motor 1----------------------------------------------------------------------------
 //+trend arr
 let tor1Buffer = [{ tor: 0, time: "00:00:00" }]; let amp1Buffer = [{ amp: 0, time: "00:00:00" }];
@@ -113,7 +96,7 @@ let drive1TStore = [{ driveT: 0, time: "00:00:00" }]; let drive1TStoreCopy = [];
 let power1Store = [{ power: 0, time: "00:00:00" }]; let power1StoreCopy = [];
 //+notification arr
 let notiesArr1 = [];
-let notiesArr2 = []
+let notiesArr2 = [];
 //-Motor 2----------------------------------------------------------------------------
 //+trend arr
 let tor2Buffer = [{ tor: 0, time: "00:00:00" }]; let amp2Buffer = [{ amp: 0, time: "00:00:00" }];
@@ -137,8 +120,7 @@ let time;
 setInterval(() => {
 	time = getTime();
 }, 1000);
-//+ count
-let countH = 0;
+//+ counter
 let counter = {
 	countAmp1: 0,
 	countAmp2: 0,
@@ -149,10 +131,11 @@ let counter = {
 	countDrive1T: 0,
 	countDrive2T: 0,
 	countPower1:0,
-	countPower2:0
+	countPower2:0,
+	countH:0
 }
-//+ flags
-
+//+data to send to PLC
+let toPLCData = [false, false, false, false, 0, 0, 0, 0, 0, 0, 0];
 //-EXECUTING FUNCTIONS----------------------------------------------------------------------------
 //+ create trend buffer
 function createObj(type, data) {
@@ -282,22 +265,6 @@ client.on("message", function (topic, message) {
 		}
 	}
 })
-//client.on("message", function (topic, message) {
-
-// 	try {
-// 		if (topic === "n/height") {
-// 			let hData = parseInt(message.toString());
-// 			if (time) {
-// 				let hObj = createObj("h", hData);
-// 				objToBuffer(hObj, hBuffer, 10);
-// 				objToBuffer(hObj, hStore, 1000);
-// 			}
-// 		}
-// 	} catch (e) {
-// 		console.log(e);
-// 		console.log("because of undefined data from mqtt fake client");
-// 	}
-// })
 
 //TRANSFER BETWEEN FE AND PLC WITH IO & MQTT----------------------------------------------------------------------------
 io.on('connection', function (socket) {
@@ -374,7 +341,6 @@ io.on('connection', function (socket) {
 		}
 	})
 	//+flag
-	let {countAmp1, countAmp2, countDrive1T, countDrive2T, countMotor1T, countMotor2T, countPower1, countPower2} = counter;
 	socket.on("stopStoring", function (stopFlag) {
 		if (stopFlag === "amp1StopFlag") {
 			counter.countAmp1 = 0;
@@ -421,7 +387,7 @@ io.on('connection', function (socket) {
 			hStoreCopy = hStore.concat();
 		}
 	})
-	//---x---
+	//-----------------------------------------------xFUNCTIONx------------------------------------------------
 	let firstForwFlag = null;
 		function slideBackTrend(type, countName, counter, copyStore) {
 			let currentIdx = copyStore.length;
@@ -467,41 +433,13 @@ io.on('connection', function (socket) {
 				socket.emit(type, copyStore);
 			}
 		}
-	//---x---
+	//------------------------------------------------------x--------------------------------------------------
 	socket.on("reviewStore", function (reviewFlag) {
 		if (reviewFlag === "hReviewFlag") {
-			countH += 10;
-			let currentIdx = hStoreCopy.length;
-			if (currentIdx - countH < -10) {
-				countH -= 10;
-			}
-			if (currentIdx >= 10 && ((currentIdx - countH) >= 10)) {
-				let reviewData = hStoreCopy.slice(currentIdx - countH, currentIdx - countH + 10);
-				socket.emit("reviewH", reviewData);
-			}
-			else if (currentIdx >= 10 && ((currentIdx - countH) < 10)) {
-				let reviewData = hStoreCopy.slice(0, countH - currentIdx + 1);
-				socket.emit("reviewH", reviewData);
-			}
-			else if (currentIdx < 10) {
-				socket.emit("reviewH", hStoreCopy);
-			}
+			slideBackTrend("reviewH", "countH", counter, hStoreCopy);
 		}
 		if (reviewFlag === "hForwFlag") {
-			if (countH === 0) {
-				countH = 0;
-			}
-			else {
-				countH -= 10;
-			}
-			let currentIdx = hStoreCopy.length;
-			if (currentIdx >= 10 && currentIdx >= countH) {
-				let reviewData = hStoreCopy.slice(currentIdx - countH, currentIdx - countH + 10);
-				socket.emit("reviewH", reviewData);
-			}
-			else if (currentIdx < 10) {
-				socket.emit("reviewH", hStoreCopy);
-			}
+			slideForwTrend("reviewH", "countH", counter, hStoreCopy);
 		}
 		if (reviewFlag === "amp1ReviewFlag") {
 			slideBackTrend("reviewAmp1", "countAmp1", counter, amp1StoreCopy);
@@ -568,32 +506,62 @@ io.on('connection', function (socket) {
 	//- PLC
 	//+ send freq
 	socket.on("setFrequency", function (frequency) {
-		client.publish("n/motor1/setFreq", frequency, function (err) {
+		toPLCData[10] = parseInt(frequency);
+		client.publish("n/toPLC", toPLCData.toString(), function (err) {
 			if (err) {
 				console.log(err);
 			}
-			console.log(frequency);
+			console.log(toPLCData);
 		})
 	})
 	//+ send height
 	socket.on("setHeight", function (height) {
-		client.publish("n/setHeight", height, function (err) {
+		toPLCData[9] = parseFloat(height);
+		client.publish("n/toPLC", toPLCData.toString(), function (err) {
 			if (err) {
 				console.log(err);
 			}
-			console.log(height);
+			console.log(toPLCData);
+		})
+	})
+	//+ virtual btn send for,rev,stop,service CMD
+	socket.on("vCmdToPLC", function (cmd) {
+		if(cmd==="onForward") {
+			if(!toPLCData[0]){
+				toPLCData[0] = true;
+			} else {
+				toPLCData[0] = false;
+			}
+		}
+		else if(cmd==="onStop") {
+			if(!toPLCData[1]){
+				toPLCData[1] = true;
+			} else {
+				toPLCData[1] = false;
+			}
+		}
+		else if(cmd==="onReverse") {
+			if(!toPLCData[2]){
+				toPLCData[2] = true;
+			} else {
+				toPLCData[2] = false;
+			}
+		}
+		else if(cmd==="onService") {
+			if(!toPLCData[3]){
+				toPLCData[3] = true;
+			} else {
+				toPLCData[3] = false;
+			}
+		}
+		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+			if (err) {
+				console.log(err);
+			}
+			console.log(toPLCData);
 		})
 	})
 	//- NX
-	//+ virtual btn send for,rev,stop,service CMD
-	socket.on("vCmdToPLC", function (cmd) {
-		client.publish("n/virtualPLCCmd", cmd, function (err) {
-			if (err) {
-				console.log(err);
-			}
-			console.log(cmd);
-		})
-	})
 	socket.on("vCmdToNX", function (cmd) {
 		client.publish("n/virtualNXCmd", cmd, function (err) {
 			if (err) {

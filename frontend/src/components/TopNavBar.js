@@ -126,8 +126,8 @@ class TopNavBar extends Component {
                   Management
                             </DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem>
-                  Reset
+                <DropdownItem href="/entry">
+                  Entry
                             </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>

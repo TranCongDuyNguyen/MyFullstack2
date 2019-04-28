@@ -15,7 +15,8 @@ export default class SpeedDC extends Component {
                 name: "Ref",
                 refKey: 100
             }
-        ]
+        ],
+        flash: false
     }
     newData = JSON.parse(JSON.stringify(this.state.data)); //deep clone
 
@@ -25,12 +26,13 @@ export default class SpeedDC extends Component {
             <div className="speed-dc">
                 <DoughnutChart data={data.concat([])}
                     dataKey="freq"
-                    threshold={80}
+                    threshold={60}
                     offset={20}
                     colorId="speed"
                     startGradColor="#7161EF"
                     endGradColor="#957FEF"
-                    theUnit="Hz">
+                    theUnit="Hz"
+                    flash={this.state.flash}>
                 </DoughnutChart>
             </div>
         )
@@ -39,13 +41,13 @@ export default class SpeedDC extends Component {
     componentDidMount() {
         this.socket = io("http://localhost:5000").connect();
         this.socket.on(this.props.ioTopic, function (motorObj) {
-            this.newData[0].amp = motorObj.amp;
+            this.newData[0].freq = motorObj[this.props.valKey];
             this.setState((state) => {
                 return {
                     data: this.newData
                 }
             });
-            if (motorObj.amp > 80) {
+            if (motorObj[this.props.valKey] > 80) {
                 this.setState({
                     flash: !this.state.flash
                 })

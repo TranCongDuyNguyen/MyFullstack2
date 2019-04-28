@@ -104,12 +104,14 @@ export default class EntryPage extends Component {
                         </div>
                     </div>
                     <Col md={{ size: 4, offset: 1 }}>
-                        <SpeedDC></SpeedDC>
+                        <div className="dc-tribtn-adjust"></div>
+                        <SpeedDC ioTopic="motor1DCData" valKey="fre1"></SpeedDC>
                         <img className="motor-image for" src={MotorPic} alt="" onClick={this.onInfoPopup}/>
                         {info1 && <MotorInfo ioTopic="motor1Info" >Motor 1</MotorInfo>}
                     </Col>
                     <Col md={{ size: 4, offset: 3 }}>
-                        <SpeedDC></SpeedDC>
+                        <div className="dc-tribtn-adjust"></div>
+                        <SpeedDC ioTopic="motor2DCData" valKey="fre2"></SpeedDC>
                         <img className="motor-image rev" src={MotorPic} alt="" onClick={this.onInfoPopup}/>
                         {info2 && <MotorInfo ioTopic="motor2Info">Motor 2</MotorInfo>}
                     </Col>

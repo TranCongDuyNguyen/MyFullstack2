@@ -8,17 +8,24 @@ export default class PowerDC extends Component {
         data: [
             {
                 name: "Power",
-                power: 50
+                power: 90
             },
             {
                 name: "Ref",
-                refKey: 100
+                refKey: this.props.maxScale
             }
         ],
         flash: false
     }
     newData = JSON.parse(JSON.stringify(this.state.data)); //deep clone
-
+    componentWillReceiveProps(nxtProps) {
+        if(nxtProps.maxScale !== this.props.maxScale) {
+            this.newData[1].refKey = nxtProps.maxScale;
+            this.setState({
+                data: this.newData
+            })
+        }
+    }
     render() {
         const { data } = this.state;
         return (
@@ -31,7 +38,13 @@ export default class PowerDC extends Component {
                     startGradColor="#84fab0"
                     endGradColor="#8fd3f4"
                     theUnit="W"
-                    flash={this.state.flash}>
+                    flash={this.state.flash}
+                    onAdjTriClick={this.props.onAdjTriClick}
+                    id={this.props.id}
+                    triBtnPos={this.props.triBtnPos}
+                    maxScale={this.props.maxScale}
+                    sSize={this.props.sSize}
+                    ssSize={this.props.ssSize}>
                 </DoughnutChart>
             </div>
         )

@@ -23,15 +23,26 @@ export default class DoughnutChart extends Component {
 
     render() {
         let textClass = classNames({
-            blink: this.props.flash
+            blink: this.props.flash,
+            bigchar: this.props.sSize,
+            smallchar: this.props.ssSize
         })
         const { data, dataKey, colorId, startGradColor, endGradColor, theUnit, threshold, offset } = this.props;
         return (
             <div className="dc" style={{height:"140px"}}>
+                <div className="dc-tribtn-box">
+                        <svg height="140" width="140">
+                            <polygon points={this.props.triBtnPos}
+                                    onClick={e => this.props.onAdjTriClick(e)}
+                                    id={this.props.id} 
+                                    className="dc-tribtn"
+                                    style={{"fill": `${(data[0][dataKey]>(threshold+offset))?"red":`url(#${colorId})`}`}} />
+                        </svg>
+                </div>
                 <div className="text">
                     <div className={textClass}>
                         <sup className="number">{data[0][dataKey].toString().slice(0, 4)}</sup>&frasl;
-                        <sub className="under">100</sub>
+                        <sub className="under">{this.props.maxScale}</sub>
                     </div>
                     <div className="unitText">{theUnit}</div>
                 </div>
@@ -61,13 +72,6 @@ export default class DoughnutChart extends Component {
                                     A 43.9,43.9,0,
                                     0,0,
             71.1,115 Z"  fill="#6969B3" />
-                    </svg>
-                    <svg height="60" width="60" x="140" y="28">
-                        <g transform="rotate(50)">
-                        <polygon points="50,10 60,10 55,20" 
-                                style={{"fill": `${(data[0][dataKey]>(threshold+offset))?"red":"lime"}`}} />
-                        Sorry, your browser does not support inline SVG.
-                        </g>
                     </svg>
                     <RadialBar minAngle={15}
                         clockWise={true}
