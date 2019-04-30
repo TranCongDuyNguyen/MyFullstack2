@@ -362,19 +362,17 @@ export default class Motor2Page extends Component {
                 if (e.target.value.length > 3) {
                     maxscale1[0].bs = true;
                     maxscale1[0].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 else if (e.target.value.length < 3) {
                     maxscale1[0].bs = false;
                     maxscale1[0].ss = true;
-                    this.putHandler(maxscale1, config);
                 }
                 else {
                     maxscale1[0].bs = false;
                     maxscale1[0].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 maxscale1[0].val = text;
+                this.putHandler(maxscale1, config);
                 this.setState(() => ({
                     textcurM: ""
                 }))
@@ -383,17 +381,14 @@ export default class Motor2Page extends Component {
                 if (e.target.value.length > 3) {
                     maxscale1[1].bs = true;
                     maxscale1[1].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 else if (e.target.value.length < 3) {
                     maxscale1[1].bs = false;
                     maxscale1[1].ss = true;
-                    this.putHandler(maxscale1, config);
                 }
                 else {
                     maxscale1[1].bs = false;
                     maxscale1[1].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 maxscale1[1].val = text;
                 this.putHandler(maxscale1, config);
@@ -405,17 +400,14 @@ export default class Motor2Page extends Component {
                 if (e.target.value.length > 3) {
                     maxscale1[2].bs = true;
                     maxscale1[2].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 else if (e.target.value.length < 3) {
                     maxscale1[2].bs = false;
                     maxscale1[2].ss = true;
-                    this.putHandler(maxscale1, config);
                 }
                 else {
                     maxscale1[2].bs = false;
                     maxscale1[2].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 maxscale1[2].val = text;
                 this.putHandler(maxscale1, config);
@@ -427,17 +419,14 @@ export default class Motor2Page extends Component {
                 if (e.target.value.length > 3) {
                     maxscale1[3].bs = true;
                     maxscale1[3].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 else if (e.target.value.length < 3) {
                     maxscale1[3].bs = false;
                     maxscale1[3].ss = true;
-                    this.putHandler(maxscale1, config);
                 }
                 else {
                     maxscale1[3].bs = false;
                     maxscale1[3].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 maxscale1[3].val = text;
                 this.putHandler(maxscale1, config);
@@ -449,17 +438,14 @@ export default class Motor2Page extends Component {
                 if (e.target.value.length > 3) {
                     maxscale1[4].bs = true;
                     maxscale1[4].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 else if (e.target.value.length < 3) {
                     maxscale1[4].bs = false;
                     maxscale1[4].ss = true;
-                    this.putHandler(maxscale1, config);
                 }
                 else {
                     maxscale1[4].bs = false;
                     maxscale1[4].ss = false;
-                    this.putHandler(maxscale1, config);
                 }
                 maxscale1[4].val = text;
                 this.putHandler(maxscale1, config);
@@ -516,14 +502,14 @@ export default class Motor2Page extends Component {
                                 <div className="current-box" >
                                     {isCurAdj && <div className="dc-tribtn-adjust"
                                         style={{ border: "2px solid #d0ed57" }}>
-                                        <div>Max:</div>
+                                        <div>Max Value:</div>
                                         <input type="number"
                                             id="curmax"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.textcurM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Set:</div>
+                                        <div>Threshold:</div>
                                         <input type="number"
                                             id="curset"
                                             className="dc-adjust-tribtn-input"
@@ -553,14 +539,14 @@ export default class Motor2Page extends Component {
                                 <div className="torque-box">
                                     {isTorAdj && <div className="dc-tribtn-adjust"
                                         style={{ border: "2px solid #a8e063" }}>
-                                        <div>Max:</div>
+                                        <div>Max Value:</div>
                                         <input type="number"
                                             id="tormax"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.texttorM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Set:</div>
+                                        <div>Threshold:</div>
                                         <input type="number"
                                             id="torset"
                                             className="dc-adjust-tribtn-input"
@@ -591,14 +577,14 @@ export default class Motor2Page extends Component {
                                 <div className="motorT-box" >
                                     {isMotorTAdj && <div className="dc-tribtn-adjust"
                                         style={{ border: "2px solid #fd1d1d" }}>
-                                        <div>Max:</div>
+                                        <div>Max Value:</div>
                                         <input type="number"
                                             id="motorTmax"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.textmotorTM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Set:</div>
+                                        <div>Threshold:</div>
                                         <input type="number"
                                             id="motorTset"
                                             className="dc-adjust-tribtn-input"
@@ -627,14 +613,14 @@ export default class Motor2Page extends Component {
                                 <div className="driveT-box">
                                     {isDriveTAdj && <div className="dc-tribtn-adjust"
                                         style={{ border: "2px solid #fd1d1d" }}>
-                                        <div>Max:</div>
+                                        <div>Max Value:</div>
                                         <input type="number"
                                             id="driveTmax"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.textdriveTM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Set:</div>
+                                        <div>Threshold:</div>
                                         <input type="number"
                                             id="driveTset"
                                             className="dc-adjust-tribtn-input"
@@ -665,14 +651,14 @@ export default class Motor2Page extends Component {
                                 <div className="power-box" >
                                     {isPowerAdj && <div className="dc-tribtn-adjust"
                                         style={{ border: "2px solid #8fd3f4" }}>
-                                        <div>Max:</div>
+                                        <div>Max Value:</div>
                                         <input type="number"
                                             id="powmax"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.textpowM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Set:</div>
+                                        <div>Threshold:</div>
                                         <input type="number"
                                             id="powset"
                                             className="dc-adjust-tribtn-input"

@@ -6,7 +6,7 @@
     align-items: center;
     height: 14em;
     width: 14em;
-    background: linear-gradient(90deg, #136a8a 0%, #267871 80%);
+    background: linear-gradient(90deg, #136a8a99 0%, #267871ee 80%);
     border-radius: 0.5em;
     transition: all 500ms ease-in-out;
 }

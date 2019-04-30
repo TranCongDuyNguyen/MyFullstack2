@@ -9,7 +9,7 @@ export default class SpeedDC extends Component {
         data: [
             {
                 name: "Speed",
-                freq: 80
+                freq: 40
             },
             {
                 name: "Ref",
@@ -29,10 +29,16 @@ export default class SpeedDC extends Component {
                     threshold={60}
                     offset={20}
                     colorId="speed"
-                    startGradColor="#7161EF"
-                    endGradColor="#957FEF"
+                    startGradColor="#141e30"
+                    endGradColor="#243b55"
                     theUnit="Hz"
-                    flash={this.state.flash}>
+                    flash={this.state.flash}
+                    onAdjTriClick={this.props.onAdjTriClick}
+                    id={this.props.id}
+                    triBtnPos={this.props.triBtnPos}
+                    maxScale={this.props.maxScale}
+                    sSize={this.props.sSize}
+                    ssSize={this.props.ssSize}>
                 </DoughnutChart>
             </div>
         )

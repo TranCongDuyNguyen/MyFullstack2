@@ -1,10 +1,14 @@
 .speed-dc .dc .text {
-    right: 11.5em;
+    right: 11.8em;
     top: 3.2em;
+}
+.speed-dc .dc .text .smallchar {
+    top: 0em;
+    left: -2.2em;
 }
 .speed-dc .dc .unitText {
     right: 0.8em;
-    top: 1em;
+    top: 1.2em;
 }
 .motor-info {
     right: 1em;
@@ -79,3 +83,32 @@
     height: 5rem;
     width: 5rem;
 }
+.entry-page .dc-tribtn-box {
+    position: absolute;
+    top: 1.78em;
+    left: 4.8em;
+    z-index: 2;
+}
+.entry-page .dc-fre-adj {
+    position: absolute;
+    top: -2em;
+    left: -0.5em;    
+    width: 6em;
+    height: 6.4em;
+    border: 1px solid #ccc;
+    border-radius: 0.4em;
+    z-index: 9999999!important;
+    background: #243b55dd;
+}
+.entry-page .dc-fre-adj-input {
+    width: 100%;
+    border: none;
+    color: black;
+}
+.entry-page .dc-fre-adj-input.th {
+    border-bottom-left-radius: 0.3em;
+    border-bottom-right-radius: 0.3em;
+}
+.dc-fre-adj div {
+    color: #ffe;
+} 

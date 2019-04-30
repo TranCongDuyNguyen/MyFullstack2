@@ -75,11 +75,7 @@ client.subscribe('n/image', function (err) {
 		console.log(err);
 	}
 })
-client.subscribe('test', function (err) {
-	if (err) {
-		console.log(err);
-	}
-})
+
 
 //INITIAL VARIABLES----------------------------------------------------------------------------
 //+height
