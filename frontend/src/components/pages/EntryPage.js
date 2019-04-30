@@ -10,8 +10,12 @@ import TriangleBtn from "../TriangleBtn";
 import HeightModal from "../HeightModal";
 import "../CSS/ProgressStyle.css";
 import "../CSS/EntryPageStyle.css";
-let maxscale1 = [];
-let maxscale2 = [];
+let maxscale1 = [{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
+    { val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
+    { val: null, bs: false, ss: false }, { val: null, bs: false, ss: false }];
+let maxscale2 = [{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
+    { val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
+    { val: null, bs: false, ss: false }, { val: null, bs: false, ss: false }];
 export default class EntryPage extends Component {
     state = {
         isModal: false,
@@ -234,7 +238,7 @@ export default class EntryPage extends Component {
                 bsFre1: maxscale1[5].bs,
                 ssFre1: maxscale1[5].ss
             });
-        })
+        }).catch(err => console.log(err));
         axios.get("/api/maxscale1/2").then(res => {
             maxscale2 = res.data.maxscale1;
             this.setState({
@@ -242,7 +246,7 @@ export default class EntryPage extends Component {
                 bsFre2: maxscale2[5].bs,
                 ssFre2: maxscale2[5].ss
             });
-        })
+        }).catch(err => console.log(err));
     }
     componentDidMount() {
         this.socket = io("http://localhost:5000");

@@ -7,13 +7,16 @@ var maxscale1Schema = mongoose.Schema({
     maxscale1 : {
         type: Array,
         val: {
-            type: String
+            type: String,
+            default: "100"
         },
         bs: {
-            type: Boolean
+            type: Boolean,
+            default: false
         },
         ss: {
-            type:Boolean
+            type:Boolean,
+            default: false
         }
     },
      date: {
