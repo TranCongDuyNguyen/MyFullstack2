@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
+import axios from 'axios';
 
 import WarnItem from './WarnItem';
 import Pagination from './Pagination';
@@ -12,12 +13,7 @@ export default class WarnPanel extends Component {
             , {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
             , {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
             , {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
-        currentNoties: [{
-            notiId: null,
-            type: null,
-            warnTime: null,
-            warnMsg: null
-        }],
+        currentNoties: [],
         currentPage: null,
         totalPages: null,
         isDangerFilting: false,
@@ -25,16 +21,6 @@ export default class WarnPanel extends Component {
         isAllFilting: true
     }
 
-    componentDidMount() {
-        this.socket = io("http://localhost:5000");
-        this.socket.on(this.props.ioTopic, function (notiesArr) {
-            length = notiesArr.length;
-            this.setState({
-                allNoties: notiesArr
-            })
-        }.bind(this));
-
-    }
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
@@ -43,16 +29,17 @@ export default class WarnPanel extends Component {
         })
     };
     onPageChanged = data => {
-        const { allNoties } = this.state;
         const { currentPage, totalPages, pageLimit } = data;
-        const offset = (currentPage - 1) * pageLimit;
-        const currentNoties = allNoties.slice(offset, offset + pageLimit);
-
-        this.setState({
-            currentPage,
-            currentNoties,
-            totalPages
-        });
+        axios.get(`/api/monitorNoties/${this.props.reqId}?page=${currentPage}&limit=${pageLimit}`)
+        .then(res => {
+            const currentNoties = res.data.noties;
+            length = res.data.length;
+            this.setState({
+                currentPage,
+                currentNoties,
+                totalPages
+            });
+        }).catch(err => console.log(err));
     }
     onClickFiltDanger = () => {
         this.setState({
@@ -75,6 +62,7 @@ export default class WarnPanel extends Component {
             isAllFilting: true
         })
     }
+    
     render() {
         const { currentPage, totalPages, currentNoties, allNoties, isDangerFilting, isWarnFilting, isAllFilting } = this.state;
         const totalNoties = allNoties.length;

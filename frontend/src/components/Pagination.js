@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react';
+import {Popover, PopoverBody} from 'reactstrap';
 
 import './CSS/PaginationStyle.css';
 
@@ -25,7 +26,8 @@ export default class Pagination extends Component {
         this.pageNeighbours = typeof pageNeighbours === 'number' ? Math.max(0, Math.min(pageNeighbours, 2)) : 0;
         this.totalPages = Math.ceil(this.totalItems / this.pageLimit);
         this.state = {
-            currentPage: 1
+            currentPage: 1,
+            popoverOpen: false
         };
     };
     componentDidMount() {
@@ -94,7 +96,11 @@ export default class Pagination extends Component {
         this.gotoPage(this.state.currentPage + (this.pageNeighbours * 2) + 1);
     }
 
-
+    toggle = () => {
+        this.setState({
+            popoverOpen: !this.state.popoverOpen
+        });
+    }
     render() {
         const { currentPage } = this.state;
         const pages = this.fetchPageNumbers();
@@ -122,8 +128,12 @@ export default class Pagination extends Component {
                             );
 
                             return (
-                                <li key={index} className={`page-item${currentPage === page ? ' active' : ''}`}>
+                                <li key={index} className={`page-item${currentPage === page ? ' active' : ''}`}
+                                    id="Popover1">
                                     <a className="page-link" href="#" onClick={this.handleClick(page)}>{page}</a>
+                                    <Popover placement="bottom" isOpen={this.state.popoverOpen} target="Popover1" toggle={this.toggle}>
+                                        <PopoverBody>{this.props.pageLimit} items/ page</PopoverBody>
+                                    </Popover>
                                 </li>
                             )
                         })}

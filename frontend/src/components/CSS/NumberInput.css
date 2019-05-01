@@ -1,0 +1,20 @@
+.numb-input-box {
+    display: flex;
+    border: 1px solid #aaa;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    border-radius: 0.3em;
+    transition: all 0.3s;
+}
+.numb-input-box .spin-btn {
+    height: 2em;
+    display: flex;
+    flex-direction: column;
+}
+.numb-input {
+    height: 2em;
+    color:white;
+    background: #0000;
+    border: none;
+    outline: none;
+}

@@ -1,4 +1,5 @@
 require('dotenv').config();
+const MonitorNoties = require("./models/model.monitorNoties");
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -79,7 +80,7 @@ client.subscribe('n/image', function (err) {
 
 //INITIAL VARIABLES----------------------------------------------------------------------------
 //+height
-let hBuffer = [{ h: 0, time: "00:00:00" }]; let hStore = [{ h: 0, time: "00:00:00" }];	let hStoreCopy = [];
+let hBuffer = [{ h: 0, time: "00:00:00" }]; let hStore = [{ h: 0, time: "00:00:00" }]; let hStoreCopy = [];
 //-Motor 1----------------------------------------------------------------------------
 //+trend arr
 let tor1Buffer = [{ tor: 0, time: "00:00:00" }]; let amp1Buffer = [{ amp: 0, time: "00:00:00" }];
@@ -126,12 +127,15 @@ let counter = {
 	countMotor2T: 0,
 	countDrive1T: 0,
 	countDrive2T: 0,
-	countPower1:0,
-	countPower2:0,
-	countH:0
+	countPower1: 0,
+	countPower2: 0,
+	countH: 0
 }
 //+data to send to PLC
 let toPLCData = [false, false, false, false, 0, 0, 0, 0, 0, 0, 0];
+//+ max perfomance paras
+let mp1 = [0, 0, 0, 0, 0];
+let mp2 = [0, 0, 0, 0, 0];
 //-EXECUTING FUNCTIONS----------------------------------------------------------------------------
 //+ create trend buffer
 function createObj(type, data) {
@@ -194,13 +198,23 @@ function generateAlarm(type, comparedData, warnObj, warnStr, dangerStr, notiesAr
 		warnObj.notiId = `Alarm ${index}`;
 	}
 }
+//+ max performance filter
+function maxFilter(arr, key) {
+	let max = 0;
+	for (let obj of arr) {
+		if (obj[key] > max) {
+			max = obj[key];
+		}
+	}
+	return max;
+}
 //- RECEIVE DATA FROM PLC VIA MQTT
 client.on("message", function (topic, message) {
 	if (topic === "n/motorData") {
 		let motorData = JSON.parse(message.toString());
-	//+create trend buffer
-	if(time) {
-		try {
+		//+create trend buffer
+		if (time) {
+			try {
 				let tor1Obj = createObj("tor", motorData.tor1);
 				let amp1Obj = createObj("amp", motorData.amp1);
 				let motor1TObj = createObj("motorT", motorData.motor1T);
@@ -216,6 +230,9 @@ client.on("message", function (topic, message) {
 				objToBuffer(drive1TObj, drive1TStore, 1000);
 				objToBuffer(power1Obj, power1Buffer, 10);
 				objToBuffer(power1Obj, power1Store, 1000);
+				mp1[0] = maxFilter(amp1Buffer, "amp"); mp1[1] = maxFilter(tor1Buffer, "tor");
+				mp1[2] = maxFilter(motor1TBuffer, "motorT"); mp1[3] = maxFilter(drive1TBuffer, "driveT");
+				mp1[4] = maxFilter(power1Buffer, "power");
 				let tor2Obj = createObj("tor", motorData.tor2);
 				let amp2Obj = createObj("amp", motorData.amp2);
 				let motor2TObj = createObj("motorT", motorData.motor2T);
@@ -231,17 +248,20 @@ client.on("message", function (topic, message) {
 				objToBuffer(drive2TObj, drive2TStore, 1000);
 				objToBuffer(power2Obj, power2Buffer, 10);
 				objToBuffer(power2Obj, power2Store, 1000);
+				mp2[0] = maxFilter(amp2Buffer, "amp"); mp2[1] = maxFilter(tor2Buffer, "tor");
+				mp2[2] = maxFilter(motor2TBuffer, "motorT"); mp2[3] = maxFilter(drive2TBuffer, "driveT");
+				mp2[4] = maxFilter(power2Buffer, "power");
 				let hObj = createObj("h", motorData.h);
 				objToBuffer(hObj, hBuffer, 10);
 				objToBuffer(hObj, hStore, 1000);
-			
+
+			}
+			catch (e) {
+				console.log(e);
+				console.log("because of undefined data from mqtt fake client");
+			}
 		}
-		catch (e) {
-			console.log(e);
-			console.log("because of undefined data from mqtt fake client");
-		}
-	}
-	//+ Create monitor warning list
+		//+ Create monitor warning list
 		try {
 			let ampWarn1, torWarn1, motorTWarn1, driveTWarn1, powerWarn1 = null;
 			generateAlarm("more", motorData.amp1, ampWarn1, 'Current is above 60%', 'Current is above 80%', notiesArr1);
@@ -249,19 +269,62 @@ client.on("message", function (topic, message) {
 			generateAlarm("more", motorData.motor1T, motorTWarn1, 'Motor Thermal is above 60', 'Motor Thermal is above 80', notiesArr1);
 			generateAlarm("more", motorData.drive1T, driveTWarn1, 'Drive Thermal is above 60', 'Drive Thermal is above 80', notiesArr1);
 			generateAlarm("less", motorData.power1, powerWarn1, 'Power is under 60%', 'Power is above 100%', notiesArr1);
+			updateMonitorNoties(1, notiesArr1);
 			let ampWarn2, torWarn2, motorTWarn2, driveTWarn2, powerWarn2 = null;
 			generateAlarm("more", motorData.amp2, ampWarn2, 'Current is above 60%', 'Current is above 80%', notiesArr2);
 			generateAlarm("more", motorData.tor2, torWarn2, 'Torque is above 60%', 'Torque is above 80%', notiesArr2);
 			generateAlarm("more", motorData.motor2T, motorTWarn2, 'Motor Thermal is above 60', 'Motor Thermal is above 80', notiesArr2);
 			generateAlarm("more", motorData.drive2T, driveTWarn2, 'Drive Thermal is above 60', 'Drive Thermal is above 80', notiesArr2);
 			generateAlarm("less", motorData.power2, powerWarn2, 'Power is under 60%', 'Power is above 100%', notiesArr2);
+			updateMonitorNoties(2, notiesArr2);
 		} catch (e) {
 			console.log(e);
 			console.log("because of undefined data from mqtt fake client");
 		}
 	}
 })
-
+// +monitor noties API
+function fetchMonitorNoties(req, res, next) {
+	if(req.params.id === "1") {
+		let currentPage = parseInt(req.query.page);
+		let pageLimit = parseInt(req.query.limit);
+		const offset = (currentPage - 1) * pageLimit;
+		MonitorNoties.findOne({_id: req.params.id}, 'noties', { lean: true })
+		.then(noties => {
+			let noties1 = noties.noties;
+			let tempArr = [];
+			for(let obj of noties1) {
+				tempArr.push(obj);
+			}
+			const currentNoties = tempArr.slice(offset, offset + pageLimit);
+			res.json({noties: currentNoties, length: tempArr.length});
+		});
+	}
+	else if(req.params.id === "2") {
+		let currentPage = parseInt(req.query.page);
+		let pageLimit = parseInt(req.query.limit);
+		const offset = (currentPage - 1) * pageLimit;
+		MonitorNoties.findOne({_id: req.params.id}, 'noties', { lean: true })
+		.then(noties => {
+			let noties2 = noties.noties;
+			let tempArr = [];
+			for(let obj of noties2) {
+				tempArr.push(obj);
+			}
+			const currentNoties = tempArr.slice(offset, offset + pageLimit);
+			res.json({noties: currentNoties, length: tempArr.length});
+		});
+	}
+}
+function updateMonitorNoties(id, data) {
+    MonitorNoties.updateOne({ _id: id}, {$set: {noties: data}}, {upsert:true},
+        function(err){
+            if(err){
+                console.error(err);
+            } 
+        });
+}
+app.get('/api/monitorNoties/:id', fetchMonitorNoties);
 //TRANSFER BETWEEN FE AND PLC WITH IO & MQTT----------------------------------------------------------------------------
 io.on('connection', function (socket) {
 
@@ -276,7 +339,7 @@ io.on('connection', function (socket) {
 	client.on("message", function (topic, message) {
 		if (topic === "n/motorData") {
 			let motorData = JSON.parse(message.toString());
-		//+send dcData, warn, info to fe
+			//+send dcData, warn, info to fe
 			try {
 				socket.emit("warnList1", notiesArr1);
 				socket.emit("motor1DCData", motorData);
@@ -299,7 +362,7 @@ io.on('connection', function (socket) {
 			} catch (e) {
 				console.log("because of undefined data from mqtt fake client");
 			}
-		//+status
+			//+status
 			socket.emit("motorStatus", {
 				run: motorData.run,
 				rev: motorData.rev,
@@ -313,17 +376,18 @@ io.on('connection', function (socket) {
 
 	//+trending
 	let id1 = setInterval(function () {
-
 		socket.emit("motor1TCTor", tor1Buffer);
 		socket.emit("motor1TCAmp", amp1Buffer);
 		socket.emit("motor1TCMotorT", motor1TBuffer);
 		socket.emit("motor1TCDriveT", drive1TBuffer);
 		socket.emit("motor1TCPower", power1Buffer);
+		socket.emit("mp1", mp1);
 		socket.emit("motor2TCTor", tor2Buffer);
 		socket.emit("motor2TCAmp", amp2Buffer);
 		socket.emit("motor2TCMotorT", motor2TBuffer);
 		socket.emit("motor2TCDriveT", drive2TBuffer);
 		socket.emit("motor2TCPower", power2Buffer);
+		socket.emit("mp2", mp2);
 	}, 10000);
 	let id2 = setInterval(function () {
 		socket.emit("heightAmount", hBuffer);
@@ -385,50 +449,50 @@ io.on('connection', function (socket) {
 	})
 	//-----------------------------------------------xFUNCTIONx------------------------------------------------
 	let firstForwFlag = null;
-		function slideBackTrend(type, countName, counter, copyStore) {
-			let currentIdx = copyStore.length;
-			if (firstForwFlag === 1) {
-				firstForwFlag = null;
-				counter[countName] += 20;
-			} else if((currentIdx - counter[countName]) >= 0) {
-				counter[countName] += 10;
-			}
-			console.log(counter[countName]);
-			if (currentIdx >= 10 && ((currentIdx - counter[countName]) >= 0)) {
-				let reviewData = copyStore.slice(currentIdx - counter[countName], currentIdx - counter[countName] + 10);
-				socket.emit(type, reviewData);
-			}
-			else if (currentIdx >= 10 && ((currentIdx - counter[countName]) < 0)) {
-				let reviewData = copyStore.slice(0, 11);	
-				socket.emit(type, reviewData);
-			}
-			else if (currentIdx < 10) {
-				socket.emit(type, copyStore);
-			}
+	function slideBackTrend(type, countName, counter, copyStore) {
+		let currentIdx = copyStore.length;
+		if (firstForwFlag === 1) {
+			firstForwFlag = null;
+			counter[countName] += 20;
+		} else if ((currentIdx - counter[countName]) >= 0) {
+			counter[countName] += 10;
 		}
-		function slideForwTrend(type, countName, counter, copyStore) {
-			let currentIdx = copyStore.length;
-			counter[countName] -= 10;
+		console.log(counter[countName]);
+		if (currentIdx >= 10 && ((currentIdx - counter[countName]) >= 0)) {
+			let reviewData = copyStore.slice(currentIdx - counter[countName], currentIdx - counter[countName] + 10);
+			socket.emit(type, reviewData);
+		}
+		else if (currentIdx >= 10 && ((currentIdx - counter[countName]) < 0)) {
+			let reviewData = copyStore.slice(0, 11);
+			socket.emit(type, reviewData);
+		}
+		else if (currentIdx < 10) {
+			socket.emit(type, copyStore);
+		}
+	}
+	function slideForwTrend(type, countName, counter, copyStore) {
+		let currentIdx = copyStore.length;
+		counter[countName] -= 10;
 
-			if (counter[countName] <= 0) {
-				counter[countName] = 0;
-				let reviewData = copyStore.slice(currentIdx - 10, currentIdx);
-				firstForwFlag = 1;
-				socket.emit(type, reviewData);
-			}
-			else if (currentIdx >= 10 && currentIdx >= counter[countName]) {
-				let reviewData = copyStore.slice(currentIdx - counter[countName], currentIdx - counter[countName] + 10);
-				socket.emit(type, reviewData);
-			}
-			else if (currentIdx >= 10 && (currentIdx < counter[countName])) {
-				let reviewData = copyStore.slice(0, currentIdx - counter[countName] + 10);
-				socket.emit(type, reviewData);
-			}
-			
-			if (currentIdx < 10) {
-				socket.emit(type, copyStore);
-			}
+		if (counter[countName] <= 0) {
+			counter[countName] = 0;
+			let reviewData = copyStore.slice(currentIdx - 10, currentIdx);
+			firstForwFlag = 1;
+			socket.emit(type, reviewData);
 		}
+		else if (currentIdx >= 10 && currentIdx >= counter[countName]) {
+			let reviewData = copyStore.slice(currentIdx - counter[countName], currentIdx - counter[countName] + 10);
+			socket.emit(type, reviewData);
+		}
+		else if (currentIdx >= 10 && (currentIdx < counter[countName])) {
+			let reviewData = copyStore.slice(0, currentIdx - counter[countName] + 10);
+			socket.emit(type, reviewData);
+		}
+
+		if (currentIdx < 10) {
+			socket.emit(type, copyStore);
+		}
+	}
 	//------------------------------------------------------x--------------------------------------------------
 	socket.on("reviewStore", function (reviewFlag) {
 		if (reviewFlag === "hReviewFlag") {
@@ -507,8 +571,36 @@ io.on('connection', function (socket) {
 			if (err) {
 				console.log(err);
 			}
-			console.log(toPLCData);
 		})
+		console.log(toPLCData);
+	})
+	//+ send Kp, Ki, Kd
+	socket.on("setKp", function (Kp) {
+		toPLCData[4] = parseInt(Kp);
+		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+			if (err) {
+				console.log(err);
+			}
+		})
+		console.log(toPLCData);
+	})
+	socket.on("setKi", function (Ki) {
+		toPLCData[5] = parseInt(Ki);
+		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+			if (err) {
+				console.log(err);
+			}
+		})
+		console.log(toPLCData);
+	})
+	socket.on("setKd", function (Kd) {
+		toPLCData[6] = parseInt(Kd);
+		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+			if (err) {
+				console.log(err);
+			}
+		})
+		console.log(toPLCData);
 	})
 	//+ send height
 	socket.on("setHeight", function (height) {
@@ -522,29 +614,29 @@ io.on('connection', function (socket) {
 	})
 	//+ virtual btn send for,rev,stop,service CMD
 	socket.on("vCmdToPLC", function (cmd) {
-		if(cmd==="onForward") {
-			if(!toPLCData[0]){
+		if (cmd === "onForward") {
+			if (!toPLCData[0]) {
 				toPLCData[0] = true;
 			} else {
 				toPLCData[0] = false;
 			}
 		}
-		else if(cmd==="onStop") {
-			if(!toPLCData[1]){
+		else if (cmd === "onStop") {
+			if (!toPLCData[1]) {
 				toPLCData[1] = true;
 			} else {
 				toPLCData[1] = false;
 			}
 		}
-		else if(cmd==="onReverse") {
-			if(!toPLCData[2]){
+		else if (cmd === "onReverse") {
+			if (!toPLCData[2]) {
 				toPLCData[2] = true;
 			} else {
 				toPLCData[2] = false;
 			}
 		}
-		else if(cmd==="onService") {
-			if(!toPLCData[3]){
+		else if (cmd === "onService") {
+			if (!toPLCData[3]) {
 				toPLCData[3] = true;
 			} else {
 				toPLCData[3] = false;
@@ -554,8 +646,8 @@ io.on('connection', function (socket) {
 			if (err) {
 				console.log(err);
 			}
-			console.log(toPLCData);
 		})
+		console.log(toPLCData);
 	})
 	//- NX
 	socket.on("vCmdToNX", function (cmd) {
@@ -579,7 +671,4 @@ io.on('connection', function (socket) {
 		console.log("Disconnect");
 	});
 });
-
-
-
 

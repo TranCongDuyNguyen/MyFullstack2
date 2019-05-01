@@ -111,4 +111,112 @@
 }
 .dc-fre-adj div {
     color: #ffe;
-} 
+}
+.bottom-text {
+    display: flex;
+    justify-content: center;
+    width: 60%;
+    font-size: 1.4em;
+    font-weight: bolder;
+}
+.footer-panel {
+    border: 1px solid #ccc;
+    height: 95%;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+    border-bottom-left-radius: 1em;
+}
+.operate .footer-panel {
+    border: 1px solid #FF5A5F;
+}
+.notify .footer-panel {
+    border: 1px solid #087E8B;
+}
+.footer-panel.mp {
+    border: 1px solid rgb(131, 196, 132);
+    color: rgb(131, 196, 132);
+    font-style: oblique;
+    padding-left: 0.5em;
+}
+.trapezoid {
+    border-bottom: 20px solid #ccc;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    height: 0;
+    width: 125px;
+    text-align: center;
+}
+.operate .trapezoid {
+    border-bottom: 20px solid #FF5A5F;
+}
+.notify .trapezoid {
+    border-bottom: 20px solid #087E8B;
+}
+.trapezoid.mp {
+    margin-top: 1em;
+    border-bottom: 20px solid rgb(131, 196, 132);
+}
+.config .freq-input {
+    position: relative;
+    padding-left: 2em;
+    margin-top: 1em;
+}
+.config .f-box {
+    margin-right: 2em;
+    padding-left: 0.75em;
+}
+.config .f-box .f-input{
+    width: 3em;
+}
+.dots {
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    font-size: 2em;
+    letter-spacing: 2px;
+    height: 1em;
+}
+.footer-panel.mp .dots {
+    color: rgb(131, 196, 132);
+    margin: 0;
+}
+.PID {
+    display:flex;
+    justify-content: space-around;
+    margin-top: 1em;
+}
+.Kp, .Ki, .Kd{
+    color: white;
+    display:flex;
+}
+.operate .dots {
+    margin-top: 0.8em;
+    color: #FF5A5F;
+}
+.operate .btns {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 1em;
+}
+.operate .fas.fa-pause,.fas.fa-chevron-left,.fas.fa-chevron-right {
+    position: unset;
+    font-size:2.5rem;
+}
+.forw-btn-entry, .rev-btn-entry, .stop-btn-entry {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #FF5A5F;
+    color: #FF5A5F;
+    border-radius: 2em;
+    width: 4em;
+    height: 4em;
+    transition: all 0.2s ease-in-out;
+}
+
+.forw-btn-entry:active, .rev-btn-entry:active, .stop-btn-entry:active {
+    background: #FF5A5F;
+    border: 2px solid #000b;
+    color: #000b;
+}

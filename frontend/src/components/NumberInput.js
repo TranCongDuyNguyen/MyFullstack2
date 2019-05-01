@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
 import io from 'socket.io-client';
 
-import './CSS/FreHeightInputStyle.css';
+import "./CSS/NumberInput.css";
 
-export default class FrequencyInput extends Component {
-
+export default class NumberInput extends Component {
+    
     state = {
-        text: "",
-        frequency: ""
+        text: ""
     }
-
+    componentDidMount() {
+        this.socket = io("http://localhost:5000")
+    };
     onChange = (e) => {
         if (parseInt(e.target.value) > 100) {
             e.target.value = '100';
@@ -28,19 +29,19 @@ export default class FrequencyInput extends Component {
     onIncClick = () => {
         if (!this.state.text) {
             this.setState({
-                text: "10"
+                text: "1"
             })
         }
         else if(parseInt(this.state.text) < 100) {
             this.setState({
-                text: (parseInt(this.state.text) + 10).toString()
+                text: (parseInt(this.state.text) + 1).toString()
             })
         }
     }
     onDecClick = () => {
         if(parseInt(this.state.text) > 0) {
             this.setState({
-                text: (parseInt(this.state.text) - 10).toString()
+                text: (parseInt(this.state.text) - 1).toString()
             })
         } 
     }
@@ -49,53 +50,29 @@ export default class FrequencyInput extends Component {
         let text = e.target.value;
         if (e.keyCode === 13) {
             if (!text) { return; };
-            this.socket.emit("setFrequency", this.state.text);
+            this.socket.emit(this.props.ioTopic, this.state.text);
             this.setState({
                 text: ""
             })
         }
     }
-
-    render() {
-        return (
-            <div className="freq-input" style={{ fontFamily: "Helvetica" }}>
-                <div className="f-box">
-                    <input type="number"
-                        className="f-input"
+  render() {
+    return (
+      <div className="numb-input-box">
+          <input type="number"
+                        className="numb-input"
                         value={this.state.text}
                         onChange={this.onChange}
                         onKeyUp={this.onKeyUp}
                         min="0"
                         max="100"
-                        placeholder="Speed">
+                        placeholder={this.props.placeholder}>
                     </input>
                     <div className="spin-btn">
                         <i className="fas fa-chevron-up" onClick={this.onIncClick}></i>
                         <i className="fas fa-chevron-down" onClick={this.onDecClick}></i>
                     </div>
-                </div>
-                <div className="f-box" style={{ width: "6rem" }}>
-                    <span className="f-txt">{this.state.frequency }</span>
-                </div>
-            </div>
-        )
-    }
-
-    componentDidMount() {
-        this.socket = io("http://localhost:5000")
-        this.socket.on("realFrequency", function (frequency) {
-            console.log(frequency);
-            this.setState({
-                frequency
-            })
-        }.bind(this));
-    };
-
-    componentWillUnmount() {
-        this.socket.disconnect();
-        this.socket.on("connect_error", function (error) {
-            console.log(error);
-            this.socket.disconnect();
-        })
-    };
+      </div>
+    )
+  }
 }

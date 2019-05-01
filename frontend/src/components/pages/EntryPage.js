@@ -8,14 +8,16 @@ import SpeedDC from "../charts/SpeedDC";
 import MotorInfo from "../MotorInfo";
 import TriangleBtn from "../TriangleBtn";
 import HeightModal from "../HeightModal";
+import FrequencyInput from "../FrequencyInput";
+import NumberInput from "../NumberInput";
 import "../CSS/ProgressStyle.css";
 import "../CSS/EntryPageStyle.css";
 let maxscale1 = [{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-    { val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-    { val: null, bs: false, ss: false }, { val: null, bs: false, ss: false }];
+{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
+{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false }];
 let maxscale2 = [{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-    { val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-    { val: null, bs: false, ss: false }, { val: null, bs: false, ss: false }];
+{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
+{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false }];
 export default class EntryPage extends Component {
     state = {
         isModal: false,
@@ -31,6 +33,16 @@ export default class EntryPage extends Component {
         textfre2M: "",
         maxfre1: "100",
         maxfre2: "100",
+        mpamp1: null,
+        mptor1: null,
+        mpmotorT1: null,
+        mpdriveT1: null,
+        mppow1: null,
+        mpamp2: null,
+        mptor2: null,
+        mpmotorT2: null,
+        mpdriveT2: null,
+        mppow2: null,
         pos1: '126,86 136,80 136,92',
         pos2: '126,86 136,80 136,92',
         Hvalue: 0 //pass to tri-btn
@@ -248,18 +260,45 @@ export default class EntryPage extends Component {
             });
         }).catch(err => console.log(err));
     }
+    onForw = () => {
+        this.socket.emit("vCmdToPLC", "onForward");
+    }
+    onStop = () => {
+        this.socket.emit("vCmdToPLC", "onStop");
+    }
+    onRev = () => {
+        this.socket.emit("vCmdToPLC", "onReverse");
+    }
     componentDidMount() {
         this.socket = io("http://localhost:5000");
         this.socket.on("motorStatus", function (status) {
             this.setState({
                 isService: status.service
             });
-          }.bind(this));
+        }.bind(this));
+        this.socket.on("mp1", function (mp1) {
+            this.setState({
+                mpamp1: mp1[0].toString(),
+                mptor1: mp1[1].toString(),
+                mpmotorT1: mp1[2].toString(),
+                mpdriveT1: mp1[3].toString(),
+                mppow1: mp1[4].toString()
+            });
+        }.bind(this));
+        this.socket.on("mp2", function (mp2) {
+            this.setState({
+                mpamp2: mp2[0].toString(),
+                mptor2: mp2[1].toString(),
+                mpmotorT2: mp2[2].toString(),
+                mpdriveT2: mp2[3].toString(),
+                mppow2: mp2[4].toString()
+            });
+        }.bind(this));
         this.getHandler();
     };
-   componentDidUpdate() {
+    componentDidUpdate() {
         this.getHandler();
-   }
+    }
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
@@ -269,7 +308,8 @@ export default class EntryPage extends Component {
     };
     render() {
         const { isModal, text, Hvalue, info1, info2, pos1, pos2, isFre1Adj, isFre2Adj, maxfre1, maxfre2,
-        bsFre1, bsFre2, ssFre1, ssFre2 } = this.state
+            bsFre1, bsFre2, ssFre1, ssFre2, mpamp1, mptor1, mpmotorT1, mpdriveT1, mppow1, mpamp2, 
+            mptor2, mpmotorT2, mpdriveT2, mppow2 } = this.state
         return (
             <div className="entry-page">
                 <HeightModal external={isModal}
@@ -331,8 +371,8 @@ export default class EntryPage extends Component {
                         ></SpeedDC>
                         <img className="motor-image for" src={MotorPic} alt="" onClick={this.onInfoPopup} />
                         {info1 && <MotorInfo ioTopic="motor1Info" >Motor 1</MotorInfo>}
-                        <div>Reversing</div>
-                        <div>{this.state.isService? "Service" : "Normal"}</div>
+                        <div className="bottom-text">Reversing</div>
+                        <div className="bottom-text">{this.state.isService ? "Service" : "Normal"}</div>
                     </Col>
                     <Col md={{ size: 4, offset: 3 }}>
                         {isFre2Adj && <div className="dc-fre-adj">
@@ -364,8 +404,63 @@ export default class EntryPage extends Component {
                             ssSize={ssFre2}></SpeedDC>
                         <img className="motor-image rev" src={MotorPic} alt="" onClick={this.onInfoPopup} />
                         {info2 && <MotorInfo ioTopic="motor2Info">Motor 2</MotorInfo>}
-                        <div>Forwarding</div>
-                        <div>{this.state.isService? "Service" : "Normal"}</div>
+                        <div className="bottom-text">Forwarding</div>
+                        <div className="bottom-text">{this.state.isService ? "Service" : "Normal"}</div>
+                    </Col>
+                </Row>
+                <Row style={{ background: "#000d", height: "25rem", padding: "0.5em 0.5em 1em 0.4em", marginTop: "1em" }}>
+                    <Col md="3" className="config" style={{ height: "10rem" }}>
+                        <div className="trapezoid">Configuration</div>
+                        <div className="footer-panel">
+                            <div className="PID">
+                                <div className="Kp">
+                                    <NumberInput placeholder="Kp" ioTopic="setKp"></NumberInput>
+                                </div>
+                                <div className="Ki">
+                                    <NumberInput placeholder="Ki" ioTopic="setKi"></NumberInput>
+                                </div>
+                                <div className="Kd">
+                                    <NumberInput placeholder="Kd" ioTopic="setKd"></NumberInput>
+                                </div>
+                            </div>
+                            <FrequencyInput className="freq"></FrequencyInput>
+                            <div className="dots">...</div>
+                        </div>
+                        <div className="trapezoid mp">Forward</div>
+                        <div className="footer-panel mp" style={{height: "11em"}}>
+                            <div style={{textDecoration: "underline", textAlign:"center"}}>Max performance per 10 sec</div>
+                            <div>Current: {mpamp1} A</div>
+                            <div>Torque: {mptor1} Nm</div>
+                            <div>Motor Thermal: {mpmotorT1} &deg;C</div>
+                            <div>Drive Thermal: {mpdriveT1} &deg;C</div>
+                            <div>Power: {mppow1} W</div>
+                            <div className="dots">...</div>
+                        </div>
+                    </Col>
+                    <Col md="3" className="operate" style={{ height: "10rem" }}>
+                        <div className="trapezoid">Operation</div>
+                        <div className="footer-panel">
+                            <div className="btns">
+                                <div className="rev-btn-entry" onClick={this.onRev}><i class="fas fa-chevron-left"></i></div>
+                                <div className="stop-btn-entry" onClick={this.onStop}><i class="fas fa-pause"></i></div>
+                                <div className="forw-btn-entry" onClick={this.onForw}><i class="fas fa-chevron-right"></i></div>
+                            </div>
+                            <div className="dots">...</div>
+                        </div>
+                        <div className="trapezoid mp">Reverse</div>
+                        <div className="footer-panel mp" style={{height: "11em"}}>
+                        <div style={{textDecoration: "underline", textAlign:"center"}}>Max performance per 10 sec</div>
+                            <div>Current: {mpamp2} A</div>
+                            <div>Torque: {mptor2} Nm</div>
+                            <div>Motor Thermal: {mpmotorT2} &deg;C</div>
+                            <div>Drive Thermal: {mpdriveT2} &deg;C</div>
+                            <div>Power: {mppow2} W</div>
+                            <div className="dots">...</div>
+                        </div>
+                    </Col>
+                    <Col className="notify">
+                        <div className="trapezoid">Notification</div>
+                        <div className="footer-panel"></div>
                     </Col>
                 </Row>
 
