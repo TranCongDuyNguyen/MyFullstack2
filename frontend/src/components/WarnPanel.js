@@ -30,6 +30,14 @@ export default class WarnPanel extends Component {
                 allNoties: notiesArr.concat()
             })
         }.bind(this));
+        axios.get(`/api/monitorNoties/${this.props.reqId}?page=${1}&limit=${20}`)
+        .then(res => {
+            const currentNoties = res.data.noties;
+            this.setState({
+                currentPage: 1,
+                currentNoties
+            });
+        }).catch(err => console.log(err));
     }
     componentWillUnmount() {
         this.socket.disconnect();
