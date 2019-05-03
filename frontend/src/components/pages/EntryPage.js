@@ -462,7 +462,7 @@ export default class EntryPage extends Component {
                     <Col className="notify">
                         <div className="trapezoid">Notification</div>
                         <div className="footer-panel">
-                            <EntryNotiPanel></EntryNotiPanel>
+                            {/* <EntryNotiPanel></EntryNotiPanel> */}
                         </div>
                     </Col>
                 </Row>
