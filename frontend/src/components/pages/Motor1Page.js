@@ -503,7 +503,7 @@ export default class Motor1Page extends Component {
                             <div className="motor-1-pic">
                                 <img className="motor-image" src={MotorPic} alt="" />
                             </div>
-                            <WarnPanel reqId={1}/>
+                            <WarnPanel ioTopic="warnList1" reqId={1}/>
                         </Col>
                         <Col md="6" className="rightside" >
                             <Row className="current-and-torque" style={{ justifyContent: "center" }}>

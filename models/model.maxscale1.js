@@ -4,8 +4,7 @@ var maxscale1Schema = mongoose.Schema({
     _id: {
         type: Number
     },
-    maxscale1 : {
-        type: Array,
+    maxscale1 : [{
         val: {
             type: String,
             default: "100"
@@ -18,7 +17,7 @@ var maxscale1Schema = mongoose.Schema({
             type:Boolean,
             default: false
         }
-    },
+    }],
      date: {
         type: Date,
         default: Date.now() //always give current date

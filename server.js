@@ -92,7 +92,7 @@ let motor1TStore = [{ motorT: 0, time: "00:00:00" }]; let motor1TStoreCopy = [];
 let drive1TStore = [{ driveT: 0, time: "00:00:00" }]; let drive1TStoreCopy = [];
 let power1Store = [{ power: 0, time: "00:00:00" }]; let power1StoreCopy = [];
 //+notification arr
-let notiesArr1 = [];
+let notiesArr1 = []; let operateNoties = [];
 let notiesArr2 = [];
 //-Motor 2----------------------------------------------------------------------------
 //+trend arr
@@ -106,16 +106,24 @@ let drive2TStore = [{ driveT: 0, time: "00:00:00" }]; let drive2TStoreCopy = [];
 let power2Store = [{ power: 0, time: "00:00:00" }]; let power2StoreCopy = [];
 
 //+get real time
-function getTime() {
+function getTime(option) {
 	let now = new Date();
 	let hours = (("0" + now.getHours()).slice(-2));
 	let minutes = (("0" + now.getMinutes()).slice(-2));
 	let seconds = (("0" + now.getSeconds()).slice(-2));
+	let day = now.getDate();
+	let month = now.getMonth() + 1;
+	let year = now.getFullYear();
+	if (option) {
+		return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+	}
 	return hours + ":" + minutes + ":" + seconds;
+
 }
 let time;
 setInterval(() => {
-	time = getTime();
+	time = getTime(false);
+	fullTime = getTime(true);
 }, 1000);
 //+ counter
 let counter = {
@@ -158,7 +166,6 @@ function generateAlarm(type, comparedData, warnObj, warnStr, dangerStr, notiesAr
 	if (type == "more") {
 		if (comparedData > 60 && comparedData <= 80) {
 			warnObj = {
-				notiId: '',
 				type: "Warning",
 				warnTime: null,
 				warnMsg: warnStr
@@ -166,7 +173,6 @@ function generateAlarm(type, comparedData, warnObj, warnStr, dangerStr, notiesAr
 		}
 		else if (comparedData > 80) {
 			warnObj = {
-				notiId: '',
 				type: "Danger",
 				warnTime: null,
 				warnMsg: dangerStr
@@ -176,7 +182,6 @@ function generateAlarm(type, comparedData, warnObj, warnStr, dangerStr, notiesAr
 	else if (type == "less") {
 		if (comparedData < 60) {
 			warnObj = {
-				notiId: '',
 				type: "Warning",
 				warnTime: null,
 				warnMsg: warnStr
@@ -184,7 +189,6 @@ function generateAlarm(type, comparedData, warnObj, warnStr, dangerStr, notiesAr
 		}
 		else if (comparedData >= 60 && comparedData >= 100) {
 			warnObj = {
-				notiId: '',
 				type: "Danger",
 				warnTime: null,
 				warnMsg: dangerStr
@@ -196,6 +200,18 @@ function generateAlarm(type, comparedData, warnObj, warnStr, dangerStr, notiesAr
 		objToBuffer(warnObj, notiesArr, 200);
 		let index = notiesArr.indexOf(warnObj);
 		warnObj.notiId = `Alarm ${index}`;
+	}
+}
+//+ generate Notifies
+function generateOperateNoties(notiObj, msg, arr) {
+	notiObj = {};
+	if (time) {
+		notiObj.type = "Operation";
+		notiObj.warnTime = time;
+		notiObj.warnMsg = msg;
+		objToBuffer(notiObj, arr, 200);
+		let idx = arr.indexOf(notiObj);
+		notiObj.notiId = `${idx}`;
 	}
 }
 //+ max performance filter
@@ -285,44 +301,36 @@ client.on("message", function (topic, message) {
 })
 // +monitor noties API
 function fetchMonitorNoties(req, res, next) {
-	if(req.params.id === "1") {
+	if (req.params.id === "1") {
 		let currentPage = parseInt(req.query.page);
 		let pageLimit = parseInt(req.query.limit);
 		const offset = (currentPage - 1) * pageLimit;
-		MonitorNoties.findOne({_id: req.params.id}, 'noties', { lean: true })
-		.then(noties => {
-			let noties1 = noties.noties;
-			let tempArr = [];
-			for(let obj of noties1) {
-				tempArr.push(obj);
-			}
-			const currentNoties = tempArr.slice(offset, offset + pageLimit);
-			res.json({noties: currentNoties, length: tempArr.length});
-		});
+		MonitorNoties.findOne({ _id: req.params.id }, 'noties')
+			.then(noties => {
+				let noties1 = noties.noties;
+				const currentNoties = noties1.slice(offset, offset + pageLimit);
+				res.json({ noties: currentNoties, length: noties1.length});
+			});
 	}
-	else if(req.params.id === "2") {
+	else if (req.params.id === "2") {
 		let currentPage = parseInt(req.query.page);
 		let pageLimit = parseInt(req.query.limit);
 		const offset = (currentPage - 1) * pageLimit;
-		MonitorNoties.findOne({_id: req.params.id}, 'noties', { lean: true })
-		.then(noties => {
-			let noties2 = noties.noties;
-			let tempArr = [];
-			for(let obj of noties2) {
-				tempArr.push(obj);
-			}
-			const currentNoties = tempArr.slice(offset, offset + pageLimit);
-			res.json({noties: currentNoties, length: tempArr.length});
-		});
+		MonitorNoties.findOne({ _id: req.params.id }, 'noties')
+			.then(noties => {
+				let noties2 = noties.noties;
+				const currentNoties = noties2.slice(offset, offset + pageLimit);
+				res.json({ noties: currentNoties });
+			});
 	}
 }
 function updateMonitorNoties(id, data) {
-    MonitorNoties.updateOne({ _id: id}, {$set: {noties: data}}, {upsert:true},
-        function(err){
-            if(err){
-                console.error(err);
-            } 
-        });
+	MonitorNoties.updateOne({ _id: id }, { $set: { noties: data } }, { upsert: true },
+		function (err) {
+			if (err) {
+				console.error(err);
+			}
+		});
 }
 app.get('/api/monitorNoties/:id', fetchMonitorNoties);
 //TRANSFER BETWEEN FE AND PLC WITH IO & MQTT----------------------------------------------------------------------------
@@ -371,6 +379,31 @@ io.on('connection', function (socket) {
 				service: motorData.service,
 				fault: motorData.fault
 			});
+			if (motorData.run) {
+				let noti = null;
+				generateOperateNoties(noti, `Forward at ${fullTime}`, operateNoties);
+			}
+			if (motorData.stop) {
+				let noti = null;
+				generateOperateNoties(noti, `Stop at ${fullTime}`, operateNoties);
+			}
+			if (motorData.rev) {
+				let noti = null;
+				generateOperateNoties(noti, `Reverse at ${fullTime}`, operateNoties);
+			}
+			if (motorData.service) {
+				let noti = null;
+				generateOperateNoties(noti, `Turn service mode at ${fullTime}`, operateNoties);
+			}
+			if (motorData.maint) {
+				let noti = null;
+				generateOperateNoties(noti, `Reach maintenance at ${fullTime}`, operateNoties);
+			}
+			if (motorData.fault) {
+				let noti = null;
+				generateOperateNoties(noti, `Fault at ${fullTime}`, operateNoties);
+			}
+			//console.log(operateNoties);
 		}
 	});
 
@@ -617,6 +650,9 @@ io.on('connection', function (socket) {
 		if (cmd === "onForward") {
 			if (!toPLCData[0]) {
 				toPLCData[0] = true;
+				let noti = null;
+				generateOperateNoties(noti, `Forward at ${fullTime}`, operateNoties);
+				console.log(operateNoties);
 			} else {
 				toPLCData[0] = false;
 			}
@@ -624,6 +660,9 @@ io.on('connection', function (socket) {
 		else if (cmd === "onStop") {
 			if (!toPLCData[1]) {
 				toPLCData[1] = true;
+				let noti = null;
+				generateOperateNoties(noti, `Stop at ${fullTime}`, operateNoties);
+				console.log(operateNoties);
 			} else {
 				toPLCData[1] = false;
 			}
@@ -631,6 +670,9 @@ io.on('connection', function (socket) {
 		else if (cmd === "onReverse") {
 			if (!toPLCData[2]) {
 				toPLCData[2] = true;
+				let noti = null;
+				generateOperateNoties(noti, `Reverse at ${fullTime}`, operateNoties);
+				console.log(operateNoties);
 			} else {
 				toPLCData[2] = false;
 			}
@@ -638,6 +680,9 @@ io.on('connection', function (socket) {
 		else if (cmd === "onService") {
 			if (!toPLCData[3]) {
 				toPLCData[3] = true;
+				let noti = null;
+				generateOperateNoties(noti, `Turn service mode at ${fullTime}`, operateNoties);
+				console.log(operateNoties);
 			} else {
 				toPLCData[3] = false;
 			}

@@ -131,5 +131,12 @@ i.fas.fa-exclamation, i.fas.fa-bell, i.far.fa-eye {
 .inner {
     height:100%;
 }
-
-    
+.jmp-to-current-btn {
+    position: absolute;
+    left: 2em;
+    bottom: 1.2em;
+    color: #F5F5F5;
+}    
+.jmp-to-current-btn:active {
+    color: #381D2A;
+}

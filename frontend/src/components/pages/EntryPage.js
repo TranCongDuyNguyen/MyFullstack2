@@ -10,6 +10,7 @@ import TriangleBtn from "../TriangleBtn";
 import HeightModal from "../HeightModal";
 import FrequencyInput from "../FrequencyInput";
 import NumberInput from "../NumberInput";
+import EntryNotiPanel from "../EntryNotiPanel";
 import "../CSS/ProgressStyle.css";
 import "../CSS/EntryPageStyle.css";
 let maxscale1 = [{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
@@ -441,9 +442,9 @@ export default class EntryPage extends Component {
                         <div className="trapezoid">Operation</div>
                         <div className="footer-panel">
                             <div className="btns">
-                                <div className="rev-btn-entry" onClick={this.onRev}><i class="fas fa-chevron-left"></i></div>
-                                <div className="stop-btn-entry" onClick={this.onStop}><i class="fas fa-pause"></i></div>
-                                <div className="forw-btn-entry" onClick={this.onForw}><i class="fas fa-chevron-right"></i></div>
+                                <div className="rev-btn-entry" onClick={this.onRev}><i className="fas fa-chevron-left"></i></div>
+                                <div className="stop-btn-entry" onClick={this.onStop}><i className="fas fa-pause"></i></div>
+                                <div className="forw-btn-entry" onClick={this.onForw}><i className="fas fa-chevron-right"></i></div>
                             </div>
                             <div className="dots">...</div>
                         </div>
@@ -460,7 +461,9 @@ export default class EntryPage extends Component {
                     </Col>
                     <Col className="notify">
                         <div className="trapezoid">Notification</div>
-                        <div className="footer-panel"></div>
+                        <div className="footer-panel">
+                            <EntryNotiPanel></EntryNotiPanel>
+                        </div>
                     </Col>
                 </Row>
 

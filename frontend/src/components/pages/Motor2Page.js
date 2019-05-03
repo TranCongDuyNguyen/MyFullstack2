@@ -495,7 +495,7 @@ export default class Motor2Page extends Component {
                             <div className="motor-1-pic">
                                 <img className="motor-image" src={MotorPic} alt="" />
                             </div>
-                            <WarnPanel reqId={2}/>
+                            <WarnPanel ioTopic="warnList2" reqId={2}/>
                         </Col>
                         <Col md="6" className="rightside" >
                             <Row className="current-and-torque" style={{ justifyContent: "center" }}>

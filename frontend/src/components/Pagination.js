@@ -33,6 +33,21 @@ export default class Pagination extends Component {
     componentDidMount() {
         this.gotoPage(1);
     }
+    componentWillReceiveProps(nxtProps) {
+        if(nxtProps.jmpPage !== this.props.jmpPage) {
+            this.gotoPage(nxtProps.jmpPage);
+        }
+        if(nxtProps.toggle !== this.props.toggle){
+            const { onPageChanged = f => f } = this.props;
+                const paginationData = {
+                    currentPage: nxtProps.jmpPage,
+                    totalPages: this.totalPages,
+                    pageLimit: this.pageLimit,
+                    totalItems: this.totalItems
+                };
+            onPageChanged(paginationData);
+        }
+    }
     fetchPageNumbers = () => {
         const currentPage = this.state.currentPage;
         const totalPages = this.totalPages;

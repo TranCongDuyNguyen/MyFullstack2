@@ -18,9 +18,19 @@ export default class WarnPanel extends Component {
         totalPages: null,
         isDangerFilting: false,
         isWarnFilting: false,
-        isAllFilting: true
+        isAllFilting: true,
+        isToggle: false,
+        jmpPage: 0        
     }
-
+    componentDidMount() {
+        this.socket = io("http://localhost:5000");
+        this.socket.on(this.props.ioTopic, function (notiesArr) {
+            length = notiesArr.length;
+            this.setState({
+                allNoties: notiesArr.concat()
+            })
+        }.bind(this));
+    }
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
@@ -33,7 +43,6 @@ export default class WarnPanel extends Component {
         axios.get(`/api/monitorNoties/${this.props.reqId}?page=${currentPage}&limit=${pageLimit}`)
         .then(res => {
             const currentNoties = res.data.noties;
-            length = res.data.length;
             this.setState({
                 currentPage,
                 currentNoties,
@@ -62,7 +71,15 @@ export default class WarnPanel extends Component {
             isAllFilting: true
         })
     }
-    
+    onGetCurrentPage = () => {
+        axios.get(`/api/monitorNoties/${this.props.reqId}`)
+        .then(res => {
+            let currentLength = res.data.length;
+            let jmpPage = Math.ceil(currentLength/ 20);
+            this.setState({jmpPage, isToggle: !this.state.isToggle});
+            console.log(jmpPage)
+        }).catch(err => console.log(err));
+    }
     render() {
         const { currentPage, totalPages, currentNoties, allNoties, isDangerFilting, isWarnFilting, isAllFilting } = this.state;
         const totalNoties = allNoties.length;
@@ -117,7 +134,15 @@ export default class WarnPanel extends Component {
 
 
                 </div>
-                <Pagination totalItems={totalNoties} pageLimit={20} pageNeighbours={1} onPageChanged={this.onPageChanged} />
+                <div className="jmp-to-current-btn" onClick={this.onGetCurrentPage}>
+                    <i className="fas fa-shoe-prints"></i>
+                </div>
+                <Pagination totalItems={totalNoties} 
+                            pageLimit={20} 
+                            pageNeighbours={1} 
+                            onPageChanged={this.onPageChanged} 
+                            jmpPage={this.state.jmpPage} 
+                            toggle={this.state.isToggle}/>
             </div>
         )
     }

@@ -4,8 +4,7 @@ var monitorNotiesSchema = mongoose.Schema({
     _id: {
         type: Number
     },
-    noties: {
-        type: Array,
+    noties: [{
         notiId: {
             type: String
         },
@@ -18,7 +17,7 @@ var monitorNotiesSchema = mongoose.Schema({
         warnMsg: {
             type: String
         }
-    },
+    }],
     date: {
         type: Date,
         default: Date.now() //always give current date
