@@ -21,9 +21,7 @@ import OperatingTime from '../OperatingTime';
 import WarnPanel from '../WarnPanel';
 import "../CSS/MonitorPageStyle.css";
 import MotorPic from "../../images/motor.png";
-let maxscale1 = [{ val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false }, { val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false },
-{ val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false }, { val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false },
-{ val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false }];
+
 const config = {
     headers: {
         "Content-type": "application/json"
@@ -32,6 +30,11 @@ const config = {
 export default class Motor1Page extends Component {
     constructor(props) {
         super(props);
+        this.maxscale1 = [{ val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }];
         this.onAdjustTriClick = this.onAdjustTriClick.bind(this);
 
     }
@@ -95,38 +98,38 @@ export default class Motor1Page extends Component {
     }
     getHandler = () => {
         axios.get('/api/maxscale1/1').then(res => {
-            maxscale1 = res.data.maxscale1;
+            this.maxscale1 = res.data.maxscale1;
             this.setState({
-                maxcur: maxscale1[0].val,
-                maxtor: maxscale1[1].val,
-                maxmotorT: maxscale1[2].val,
-                maxdriveT: maxscale1[3].val,
-                maxpow: maxscale1[4].val,
-                bsCur: maxscale1[0].bs,
-                bsTor: maxscale1[1].bs,
-                bsMotorT: maxscale1[2].bs,
-                bsDriveT: maxscale1[3].bs,
-                bsPow: maxscale1[4].bs,
-                ssCur: maxscale1[0].ss,
-                ssTor: maxscale1[1].ss,
-                ssMotorT: maxscale1[2].ss,
-                ssDriveT: maxscale1[3].ss,
-                ssPow: maxscale1[4].ss,
-                curpos: maxscale1[0].pos,
-                fCurLvl: maxscale1[0].fault,
-                wCurLvl: maxscale1[0].warn,
-                torpos: maxscale1[1].pos,
-                fTorLvl: maxscale1[1].fault,
-                wTorLvl: maxscale1[1].warn,
-                motorTpos: maxscale1[2].pos,
-                fMotorTLvl: maxscale1[2].fault,
-                wMotorTLvl: maxscale1[2].warn,
-                driveTpos: maxscale1[3].pos,
-                fDriveTLvl: maxscale1[3].fault,
-                wDriveTLvl: maxscale1[3].warn,
-                powpos: maxscale1[4].pos,
-                fPowLvl: maxscale1[4].fault,
-                wPowLvl: maxscale1[4].warn,
+                maxcur: this.maxscale1[0].val,
+                maxtor: this.maxscale1[1].val,
+                maxmotorT: this.maxscale1[2].val,
+                maxdriveT: this.maxscale1[3].val,
+                maxpow: this.maxscale1[4].val,
+                bsCur: this.maxscale1[0].bs,
+                bsTor: this.maxscale1[1].bs,
+                bsMotorT: this.maxscale1[2].bs,
+                bsDriveT: this.maxscale1[3].bs,
+                bsPow: this.maxscale1[4].bs,
+                ssCur: this.maxscale1[0].ss,
+                ssTor: this.maxscale1[1].ss,
+                ssMotorT: this.maxscale1[2].ss,
+                ssDriveT: this.maxscale1[3].ss,
+                ssPow: this.maxscale1[4].ss,
+                curpos: this.maxscale1[0].pos,
+                fCurLvl: this.maxscale1[0].fault,
+                wCurLvl: this.maxscale1[0].warn,
+                torpos: this.maxscale1[1].pos,
+                fTorLvl: this.maxscale1[1].fault,
+                wTorLvl: this.maxscale1[1].warn,
+                motorTpos: this.maxscale1[2].pos,
+                fMotorTLvl: this.maxscale1[2].fault,
+                wMotorTLvl: this.maxscale1[2].warn,
+                driveTpos: this.maxscale1[3].pos,
+                fDriveTLvl: this.maxscale1[3].fault,
+                wDriveTLvl: this.maxscale1[3].warn,
+                powpos: this.maxscale1[4].pos,
+                fPowLvl: this.maxscale1[4].fault,
+                wPowLvl: this.maxscale1[4].warn,
             })
         }).catch(err => console.log(err));
     }
@@ -374,45 +377,45 @@ export default class Motor1Page extends Component {
             let yt = 86 - R * Math.sin(alpha - beta);
             let positionStr = `${x},${y} ${xt},${yt} ${xd},${yd}`;
             if (eid === "curset") {
-                maxscale1[0].pos = positionStr;
-                maxscale1[0].fault = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[0].pos = positionStr;
+                this.maxscale1[0].fault = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textcur: ""
                 }))
             }
             else if (eid === "torset") {
-                maxscale1[1].pos = positionStr;
-                maxscale1[1].fault = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[1].pos = positionStr;
+                this.maxscale1[1].fault = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     texttor: ""
                 }))
             }
             else if (eid === "motorTset") {
-                maxscale1[2].pos = positionStr;
-                maxscale1[2].fault = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[2].pos = positionStr;
+                this.maxscale1[2].fault = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textmotorT: ""
                 }))
             }
             else if (eid === "driveTset") {
-                maxscale1[3].pos = positionStr;
-                maxscale1[3].fault = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[3].pos = positionStr;
+                this.maxscale1[3].fault = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textdriveT: ""
                 }))
             }
             else if (eid === "powset") {
-                maxscale1[4].pos = positionStr;
-                maxscale1[4].fault = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[4].pos = positionStr;
+                this.maxscale1[4].fault = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textpow: ""
@@ -428,19 +431,19 @@ export default class Motor1Page extends Component {
             if (!text) { return; };
             if (eid === "curmax") {
                 if (e.target.value.length > 3) {
-                    maxscale1[0].bs = true;
-                    maxscale1[0].ss = false;
+                    this.maxscale1[0].bs = true;
+                    this.maxscale1[0].ss = false;
                 }
                 else if (e.target.value.length < 3) {
-                    maxscale1[0].bs = false;
-                    maxscale1[0].ss = true;
+                    this.maxscale1[0].bs = false;
+                    this.maxscale1[0].ss = true;
                 }
                 else {
-                    maxscale1[0].bs = false;
-                    maxscale1[0].ss = false;
+                    this.maxscale1[0].bs = false;
+                    this.maxscale1[0].ss = false;
                 }
-                maxscale1[0].val = text;
-                this.putHandler(maxscale1, config);
+                this.maxscale1[0].val = text;
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textcurM: ""
@@ -448,19 +451,19 @@ export default class Motor1Page extends Component {
             }
             else if (eid === "tormax") {
                 if (e.target.value.length > 3) {
-                    maxscale1[1].bs = true;
-                    maxscale1[1].ss = false;
+                    this.maxscale1[1].bs = true;
+                    this.maxscale1[1].ss = false;
                 }
                 else if (e.target.value.length < 3) {
-                    maxscale1[1].bs = false;
-                    maxscale1[1].ss = true;
+                    this.maxscale1[1].bs = false;
+                    this.maxscale1[1].ss = true;
                 }
                 else {
-                    maxscale1[1].bs = false;
-                    maxscale1[1].ss = false;
+                    this.maxscale1[1].bs = false;
+                    this.maxscale1[1].ss = false;
                 }
-                maxscale1[1].val = text;
-                this.putHandler(maxscale1, config);
+                this.maxscale1[1].val = text;
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     texttorM: ""
@@ -468,19 +471,19 @@ export default class Motor1Page extends Component {
             }
             else if (eid === "motorTmax") {
                 if (e.target.value.length > 3) {
-                    maxscale1[2].bs = true;
-                    maxscale1[2].ss = false;
+                    this.maxscale1[2].bs = true;
+                    this.maxscale1[2].ss = false;
                 }
                 else if (e.target.value.length < 3) {
-                    maxscale1[2].bs = false;
-                    maxscale1[2].ss = true;
+                    this.maxscale1[2].bs = false;
+                    this.maxscale1[2].ss = true;
                 }
                 else {
-                    maxscale1[2].bs = false;
-                    maxscale1[2].ss = false;
+                    this.maxscale1[2].bs = false;
+                    this.maxscale1[2].ss = false;
                 }
-                maxscale1[2].val = text;
-                this.putHandler(maxscale1, config);
+                this.maxscale1[2].val = text;
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textmotorTM: ""
@@ -488,19 +491,19 @@ export default class Motor1Page extends Component {
             }
             else if (eid === "driveTmax") {
                 if (e.target.value.length > 3) {
-                    maxscale1[3].bs = true;
-                    maxscale1[3].ss = false;
+                    this.maxscale1[3].bs = true;
+                    this.maxscale1[3].ss = false;
                 }
                 else if (e.target.value.length < 3) {
-                    maxscale1[3].bs = false;
-                    maxscale1[3].ss = true;
+                    this.maxscale1[3].bs = false;
+                    this.maxscale1[3].ss = true;
                 }
                 else {
-                    maxscale1[3].bs = false;
-                    maxscale1[3].ss = false;
+                    this.maxscale1[3].bs = false;
+                    this.maxscale1[3].ss = false;
                 }
-                maxscale1[3].val = text;
-                this.putHandler(maxscale1, config);
+                this.maxscale1[3].val = text;
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textdriveTM: ""
@@ -508,19 +511,19 @@ export default class Motor1Page extends Component {
             }
             else if (eid === "powmax") {
                 if (e.target.value.length > 3) {
-                    maxscale1[4].bs = true;
-                    maxscale1[4].ss = false;
+                    this.maxscale1[4].bs = true;
+                    this.maxscale1[4].ss = false;
                 }
                 else if (e.target.value.length < 3) {
-                    maxscale1[4].bs = false;
-                    maxscale1[4].ss = true;
+                    this.maxscale1[4].bs = false;
+                    this.maxscale1[4].ss = true;
                 }
                 else {
-                    maxscale1[4].bs = false;
-                    maxscale1[4].ss = false;
+                    this.maxscale1[4].bs = false;
+                    this.maxscale1[4].ss = false;
                 }
-                maxscale1[4].val = text;
-                this.putHandler(maxscale1, config);
+                this.maxscale1[4].val = text;
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textpowM: ""
@@ -534,40 +537,40 @@ export default class Motor1Page extends Component {
         if (e.keyCode === 13) {
             if (!text) { return; };
             if (eid === "curset1") {
-                maxscale1[0].warn = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[0].warn = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textcur1: ""
                 }))
             }
             else if (eid === "torset1") {
-                maxscale1[1].warn = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[1].warn = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     texttor1: ""
                 }))
             }
             else if (eid === "motorTset1") {
-                maxscale1[2].warn = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[2].warn = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textmotorT1: ""
                 }))
             }
             else if (eid === "driveTset1") {
-                maxscale1[3].warn = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[3].warn = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textdriveT1: ""
                 }))
             }
             else if (eid === "powset1") {
-                maxscale1[4].warn = parseInt(text);
-                this.putHandler(maxscale1, config);
+                this.maxscale1[4].warn = parseInt(text);
+                this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textpow1: ""

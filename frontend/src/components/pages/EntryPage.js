@@ -13,13 +13,29 @@ import NumberInput from "../NumberInput";
 import EntryNotiPanel from "../EntryNotiPanel";
 import "../CSS/ProgressStyle.css";
 import "../CSS/EntryPageStyle.css";
-let maxscale1 = [{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false }];
-let maxscale2 = [{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false }];
+
+const config = {
+    headers: {
+        "Content-type": "application/json"
+    }
+}
 export default class EntryPage extends Component {
+    constructor(props) {
+        super(props);
+        this.maxscale1 = [{ val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }];
+
+        this.maxscale2 = [{ val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }];
+    }
     state = {
         isModal: false,
         info1: false,
@@ -30,6 +46,12 @@ export default class EntryPage extends Component {
         text: "", //pass to height modal
         textfre1: "",
         textfre2: "",
+        textfre1W: "",
+        textfre2W: "",
+        fFre1Lvl: "",
+        fFre2Lvl: "",
+        wFre1Lvl: "",
+        wFre2Lvl: "",
         textfre1M: "",
         textfre2M: "",
         maxfre1: "100",
@@ -65,6 +87,26 @@ export default class EntryPage extends Component {
         this.setState({
             text: e.target.value
         })
+    }
+    onChange1(e, maxScale) {
+        let eid = e.target.id;
+        if (parseInt(e.target.value) > maxScale) {
+            e.target.value = maxScale.toString();
+        }
+        if (e.target.value.length > 4) {
+            let newS = e.target.value.slice(0, 4);
+            e.target.value = newS;
+        }
+        if (eid === "fre1set1") {
+            this.setState({
+                textfre1W: e.target.value
+            })
+        }
+        else if (eid === "fre2set1") {
+            this.setState({
+                textfre2W: e.target.value
+            })
+        }
     }
     onChange2 = (e) => {
         let eid = e.target.id;
@@ -141,17 +183,19 @@ export default class EntryPage extends Component {
             let yt = 86 - R * Math.sin(alpha - beta);
             let positionStr = `${x},${y} ${xt},${yt} ${xd},${yd}`;
             if (eid === "fre1set") {
-                this.setState({
-                    pos1: positionStr
-                })
+                this.maxscale1[5].pos = positionStr;
+                this.maxscale1[5].fault = parseInt(text);
+                this.putHandler1(this.maxscale1, config);
+                this.getHandler1();
                 this.setState(() => ({
                     textfre1: ""
                 }))
             }
             else if (eid === "fre2set") {
-                this.setState({
-                    pos2: positionStr
-                })
+                this.maxscale2[5].pos = positionStr;
+                this.maxscale2[5].fault = parseInt(text);
+                this.putHandler2(this.maxscale2, config);
+                this.getHandler2();
                 this.setState(() => ({
                     textfre2: ""
                 }))
@@ -163,58 +207,78 @@ export default class EntryPage extends Component {
             .then(res => console.log(res))
             .catch(err => console.log(err));
     }
-    putHandler2 = (maxscale1, config) => {
-        axios.put('/api/maxscale1/2', { maxscale1 }, config)
+    putHandler2 = (maxscale2, config) => {
+        axios.put('/api/maxscale1/2', { maxscale1: maxscale2 }, config)
             .then(res => console.log(res))
             .catch(err => console.log(err));
     }
     onKeyUp2 = (e) => {
         let eid = e.target.id;
         let text = e.target.value;
-        const config = {
-            headers: {
-                "Content-type": "application/json"
-            }
-        }
         if (e.keyCode === 13) {
             if (!text) { return; };
             if (eid === "fre1max") {
                 if (e.target.value.length > 3) {
-                    maxscale1[5].bs = true;
-                    maxscale1[5].ss = false;
+                    this.maxscale1[5].bs = true;
+                    this.maxscale1[5].ss = false;
                 }
                 else if (e.target.value.length < 3) {
-                    maxscale1[5].bs = false;
-                    maxscale1[5].ss = true;
+                    this.maxscale1[5].bs = false;
+                    this.maxscale1[5].ss = true;
                 }
                 else {
-                    maxscale1[5].bs = false;
-                    maxscale1[5].ss = false;
+                    this.maxscale1[5].bs = false;
+                    this.maxscale1[5].ss = false;
                 }
-                maxscale1[5].val = text;
-                this.putHandler1(maxscale1, config);
+                this.maxscale1[5].val = text;
+                this.putHandler1(this.maxscale1, config);
+                this.getHandler1();
                 this.setState(() => ({
                     textfre1M: ""
                 }))
             }
             else if (eid === "fre2max") {
                 if (e.target.value.length > 3) {
-                    maxscale1[5].bs = true;
-                    maxscale1[5].ss = false;
+                    this.maxscale2[5].bs = true;
+                    this.maxscale2[5].ss = false;
                 }
                 else if (e.target.value.length < 3) {
-                    maxscale1[5].bs = false;
-                    maxscale1[5].ss = true;
+                    this.maxscale2[5].bs = false;
+                    this.maxscale2[5].ss = true;
                 }
                 else {
-                    maxscale1[5].bs = false;
-                    maxscale1[5].ss = false;
+                    this.maxscale2[5].bs = false;
+                    this.maxscale2[5].ss = false;
                 }
-                maxscale1[5].val = text;
-                this.putHandler2(maxscale1, config);
+                this.maxscale2[5].val = text;
+                this.putHandler2(this.maxscale2, config);
+                this.getHandler2();
                 this.setState(() => ({
                     textfre2M: ""
                 }))
+            }
+        }
+    }
+    onKeyUp1 = (e) => {
+        let eid = e.target.id;
+        let text = e.target.value;
+        if (e.keyCode === 13) {
+            if (!text) { return; };
+            if (eid === "fre1set1") {
+                this.maxscale1[5].warn = parseInt(text);
+                this.putHandler1(this.maxscale1, config);
+                this.getHandler1();
+                this.setState({
+                    textfre1W: ""
+                })
+            }
+            else if (eid === "fre2set1") {
+                this.maxscale2[5].warn = parseInt(text);
+                this.putHandler2(this.maxscale2, config);
+                this.getHandler2();
+                this.setState({
+                    textfre2W: ""
+                })
             }
         }
     }
@@ -243,24 +307,33 @@ export default class EntryPage extends Component {
             })
         }
     }
-    getHandler = () => {
+    getHandler1 = () => {
         axios.get("/api/maxscale1/1").then(res => {
-            maxscale1 = res.data.maxscale1;
+            this.maxscale1 = res.data.maxscale1;
             this.setState({
-                maxfre1: maxscale1[5].val,
-                bsFre1: maxscale1[5].bs,
-                ssFre1: maxscale1[5].ss
-            });
-        }).catch(err => console.log(err));
-        axios.get("/api/maxscale1/2").then(res => {
-            maxscale2 = res.data.maxscale1;
-            this.setState({
-                maxfre2: maxscale2[5].val,
-                bsFre2: maxscale2[5].bs,
-                ssFre2: maxscale2[5].ss
+                maxfre1: this.maxscale1[5].val,
+                bsFre1: this.maxscale1[5].bs,
+                ssFre1: this.maxscale1[5].ss,
+                pos1: this.maxscale1[5].pos,
+                fFre1Lvl: this.maxscale1[5].fault, 
+                wFre1Lvl: this.maxscale1[5].warn
             });
         }).catch(err => console.log(err));
     }
+    getHandler2 = () => {
+        axios.get("/api/maxscale1/2").then(res => {
+            this.maxscale2 = res.data.maxscale1;
+            this.setState({
+                maxfre2: this.maxscale2[5].val,
+                bsFre2: this.maxscale2[5].bs,
+                ssFre2: this.maxscale2[5].ss,
+                pos2: this.maxscale2[5].pos,
+                fFre2Lvl: this.maxscale2[5].fault, 
+                wFre2Lvl: this.maxscale2[5].warn
+            });
+        }).catch(err => console.log(err));
+    }
+    
     onForw = () => {
         this.socket.emit("vCmdToPLC", "onForward");
     }
@@ -295,11 +368,9 @@ export default class EntryPage extends Component {
                 mppow2: mp2[4].toString()
             });
         }.bind(this));
-        this.getHandler();
+        this.getHandler1();
+        this.getHandler2();
     };
-    componentDidUpdate() {
-        this.getHandler();
-    }
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
@@ -310,7 +381,7 @@ export default class EntryPage extends Component {
     render() {
         const { isModal, text, Hvalue, info1, info2, pos1, pos2, isFre1Adj, isFre2Adj, maxfre1, maxfre2,
             bsFre1, bsFre2, ssFre1, ssFre2, mpamp1, mptor1, mpmotorT1, mpdriveT1, mppow1, mpamp2, 
-            mptor2, mpmotorT2, mpdriveT2, mppow2 } = this.state
+            mptor2, mpmotorT2, mpdriveT2, mppow2, fFre1Lvl, fFre2Lvl, wFre1Lvl, wFre2Lvl } = this.state
         return (
             <div className="entry-page">
                 <HeightModal external={isModal}
@@ -343,7 +414,7 @@ export default class EntryPage extends Component {
                     </div>
                     <Col md={{ size: 4, offset: 1 }}>
                         {isFre1Adj && <div className="dc-fre-adj">
-                            <div    >Max Value:</div>
+                            <div>Max Value:</div>
                             <input type="number"
                                 id="fre1max"
                                 className="dc-fre-adj-input"
@@ -351,15 +422,21 @@ export default class EntryPage extends Component {
                                 onChange={this.onChange2}
                                 onKeyUp={this.onKeyUp2}
                             />
-                            <div>Threshold:</div>
+                            <div>Fault level:</div>
                             <input type="number"
                                 id="fre1set"
-                                className="dc-fre-adj-input th"
+                                className="dc-fre-adj-input"
                                 value={this.state.textfre1}
                                 onChange={(e) => this.onChange3(e, maxfre1)}
                                 onKeyUp={(e) => this.onKeyUp3(e, maxfre1)}
                             />
-
+                            <div>Warn level:</div>
+                            <input type="number"
+                                id="fre1set1"
+                                className="dc-fre-adj-input th"
+                                value={this.state.textfre1W}
+                                onChange={(e) => this.onChange1(e, fFre1Lvl)}
+                                onKeyUp={this.onKeyUp1} />
                         </div>}
                         <SpeedDC ioTopic="motor1DCData"
                             valKey="fre1"
@@ -369,6 +446,8 @@ export default class EntryPage extends Component {
                             maxScale={maxfre1}
                             bsSize={bsFre1}
                             ssSize={ssFre1}
+                            faultLvl={fFre1Lvl}
+                            warnLvl={wFre1Lvl}
                         ></SpeedDC>
                         <img className="motor-image for" src={MotorPic} alt="" onClick={this.onInfoPopup} />
                         {info1 && <MotorInfo ioTopic="motor1Info" >Motor 1</MotorInfo>}
@@ -385,15 +464,21 @@ export default class EntryPage extends Component {
                                 onChange={this.onChange2}
                                 onKeyUp={this.onKeyUp2}
                             />
-                            <div>Threshold:</div>
+                            <div>Fault level:</div>
                             <input type="number"
                                 id="fre2set"
-                                className="dc-fre-adj-input th"
+                                className="dc-fre-adj-input"
                                 value={this.state.textfre2}
                                 onChange={(e) => this.onChange3(e, maxfre2)}
                                 onKeyUp={(e) => this.onKeyUp3(e, maxfre2)}
                             />
-
+                            <div>Warn level:</div>
+                            <input type="number"
+                                id="fre2set1"
+                                className="dc-fre-adj-input th"
+                                value={this.state.textfre2W}
+                                onChange={(e) => this.onChange1(e, fFre2Lvl)}
+                                onKeyUp={this.onKeyUp1} />
                         </div>}
                         <SpeedDC ioTopic="motor2DCData"
                             valKey="fre2"
@@ -402,7 +487,9 @@ export default class EntryPage extends Component {
                             triBtnPos={pos2}
                             maxScale={maxfre2}
                             bsSize={bsFre2}
-                            ssSize={ssFre2}></SpeedDC>
+                            ssSize={ssFre2}
+                            faultLvl={fFre2Lvl}
+                            warnLvl={wFre2Lvl}></SpeedDC>
                         <img className="motor-image rev" src={MotorPic} alt="" onClick={this.onInfoPopup} />
                         {info2 && <MotorInfo ioTopic="motor2Info">Motor 2</MotorInfo>}
                         <div className="bottom-text">Forwarding</div>
