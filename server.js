@@ -22,19 +22,7 @@ app.use('/api/users', require('./routes/api/route.users'));
 app.use('/api/items', require('./routes/api/route.items'));
 app.use('/api/auth', require('./routes/api/route.auth'));
 app.use('/api/maxscale1', require('./routes/api/route.maxscale1'));
-
-
-
-//Serve static assets if in production
-if (process.env.NODE_ENV === 'production') {
-	//Set static folder
-	app.use(express.static('frontend/build'));
-
-	app.get('*', (req, res) => {
-		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-	})
-}
-
+app.get('/api/monitorNoties/:id', fetchMonitorNoties);
 
 //connect to mongoDB
 mongoose.connect(process.env.mongo_url, {
@@ -332,7 +320,7 @@ function updateMonitorNoties(id, data) {
 			}
 		});
 }
-app.get('/api/monitorNoties/:id', fetchMonitorNoties);
+
 //TRANSFER BETWEEN FE AND PLC WITH IO & MQTT----------------------------------------------------------------------------
 io.on('connection', function (socket) {
 
@@ -716,4 +704,14 @@ io.on('connection', function (socket) {
 		console.log("Disconnect");
 	});
 });
+
+//Serve static assets if in production
+if (process.env.NODE_ENV === 'production') {
+	//Set static folder
+	app.use(express.static('frontend/build'));
+
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+	})
+}
 

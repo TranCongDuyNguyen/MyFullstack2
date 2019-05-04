@@ -99,9 +99,6 @@ export default class Motor2Page extends Component {
     componentDidMount() {
         this.getHandler();
     }
-    componentDidUpdate() {
-        this.getHandler();
-    }
     onDeleteTrend = (e) => {
         let eclass = e.target.className;
         if (eclass === "exit-button cur") {
@@ -373,6 +370,7 @@ export default class Motor2Page extends Component {
                 }
                 maxscale1[0].val = text;
                 this.putHandler(maxscale1, config);
+                this.getHandler();
                 this.setState(() => ({
                     textcurM: ""
                 }))
@@ -391,7 +389,8 @@ export default class Motor2Page extends Component {
                     maxscale1[1].ss = false;
                 }
                 maxscale1[1].val = text;
-                this.putHandler(maxscale1, config);
+                this.putHandler(maxscale1, config); 
+                this.getHandler();
                 this.setState(() => ({
                     texttorM: ""
                 }))
@@ -410,7 +409,8 @@ export default class Motor2Page extends Component {
                     maxscale1[2].ss = false;
                 }
                 maxscale1[2].val = text;
-                this.putHandler(maxscale1, config);
+                this.putHandler(maxscale1, config); 
+                this.getHandler();
                 this.setState(() => ({
                     textmotorTM: ""
                 }))
@@ -429,7 +429,8 @@ export default class Motor2Page extends Component {
                     maxscale1[3].ss = false;
                 }
                 maxscale1[3].val = text;
-                this.putHandler(maxscale1, config);
+                this.putHandler(maxscale1, config); 
+                this.getHandler();
                 this.setState(() => ({
                     textdriveTM: ""
                 }))
@@ -448,7 +449,8 @@ export default class Motor2Page extends Component {
                     maxscale1[4].ss = false;
                 }
                 maxscale1[4].val = text;
-                this.putHandler(maxscale1, config);
+                this.putHandler(maxscale1, config); 
+                this.getHandler();
                 this.setState(() => ({
                     textpowM: ""
                 }))
