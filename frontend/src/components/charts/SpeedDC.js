@@ -26,8 +26,8 @@ export default class SpeedDC extends Component {
             <div className="speed-dc">
                 <DoughnutChart data={data.concat([])}
                     dataKey="freq"
-                    threshold={60}
-                    offset={20}
+                    fault={this.props.faultLvl}                             /**/
+                    warn={this.props.warnLvl}
                     colorId="speed"
                     startGradColor="#141e30"
                     endGradColor="#243b55"

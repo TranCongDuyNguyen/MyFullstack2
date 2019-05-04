@@ -32,8 +32,8 @@ export default class CurrentDC extends Component {
             <div className="current-dc">
                 <DoughnutChart data={data.concat([])}
                     dataKey="amp"
-                    threshold={60}
-                    offset={20}
+                    fault={this.props.faultLvl}                             /**/
+                    warn={this.props.warnLvl}
                     colorId="current"
                     startGradColor="#FFF275"
                     endGradColor="#d0ed57"
@@ -59,7 +59,7 @@ export default class CurrentDC extends Component {
                     data: this.newData
                 }
             });
-            if (motorObj[this.props.valKey] > 80) {
+            if (motorObj[this.props.valKey] > (this.props.fault)) { /**/
                 this.setState({
                     flash: !this.state.flash
                 })

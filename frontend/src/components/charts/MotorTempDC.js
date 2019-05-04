@@ -34,8 +34,8 @@ export default class MotorTempDC extends Component {
             <div>
                 <DoughnutChart data={data.concat([])}
                     dataKey="motorT"
-                    threshold={60}
-                    offset={20}
+                    fault={this.props.faultLvl}                             /**/
+                    warn={this.props.warnLvl}
                     colorId="motorT"
                     startGradColor="#FFF275"
                     endGradColor="#fd1d1d"

@@ -32,8 +32,8 @@ export default class PowerDC extends Component {
             <div className="power-dc">
                 <DoughnutChart data={data.concat([])}
                     dataKey="power"
-                    threshold={60}
-                    offset={20}
+                    fault={this.props.faultLvl}                             /**/
+                    warn={this.props.warnLvl}
                     colorId="power"
                     startGradColor="#84fab0"
                     endGradColor="#8fd3f4"

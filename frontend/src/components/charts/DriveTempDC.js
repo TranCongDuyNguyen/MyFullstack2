@@ -32,8 +32,8 @@ export default class DriveTempDC extends Component {
             <div className="driveT-dc">
                 <DoughnutChart data={data.concat([])}
                     dataKey="driveT"
-                    threshold={60}
-                    offset={20}
+                    fault={this.props.faultLvl}                             /**/
+                    warn={this.props.warnLvl}
                     colorId="driveT"
                     startGradColor="#FFF275"
                     endGradColor="#fd1d1d"

@@ -22,8 +22,8 @@ import WarnPanel from '../WarnPanel';
 import "../CSS/MonitorPageStyle.css";
 import MotorPic from "../../images/motor.png";
 let maxscale1 = [{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-    { val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-    { val: null, bs: false, ss: false }];
+{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
+{ val: null, bs: false, ss: false }];
 
 export default class Motor2Page extends Component {
     state = {
@@ -389,7 +389,7 @@ export default class Motor2Page extends Component {
                     maxscale1[1].ss = false;
                 }
                 maxscale1[1].val = text;
-                this.putHandler(maxscale1, config); 
+                this.putHandler(maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     texttorM: ""
@@ -409,7 +409,7 @@ export default class Motor2Page extends Component {
                     maxscale1[2].ss = false;
                 }
                 maxscale1[2].val = text;
-                this.putHandler(maxscale1, config); 
+                this.putHandler(maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textmotorTM: ""
@@ -429,7 +429,7 @@ export default class Motor2Page extends Component {
                     maxscale1[3].ss = false;
                 }
                 maxscale1[3].val = text;
-                this.putHandler(maxscale1, config); 
+                this.putHandler(maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textdriveTM: ""
@@ -449,7 +449,7 @@ export default class Motor2Page extends Component {
                     maxscale1[4].ss = false;
                 }
                 maxscale1[4].val = text;
-                this.putHandler(maxscale1, config); 
+                this.putHandler(maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
                     textpowM: ""
@@ -487,17 +487,17 @@ export default class Motor2Page extends Component {
                 background: "linear-gradient(0deg, #29323c 0%, #485563 100%)",
                 padding: "1em 1em 1em 1em"
             }}>
+                <div className="page-button">
+                    <a href="/monitor/1" alt="">1</a>
+                    <a href="/monitor/2" alt="">2</a>
+                </div>
                 <Container className="motor-dc" style={{ marginBottom: "1em" }}>
                     <Row>
                         <Col md="6" className="leftside">
-                            <div className="page-button">
-                                <a href="/monitor/1" alt="">1</a>
-                                <a href="/monitor/2" alt="">2</a>
-                            </div>
                             <div className="motor-1-pic">
                                 <img className="motor-image" src={MotorPic} alt="" />
                             </div>
-                            <WarnPanel ioTopic="warnList2" reqId={2}/>
+                            <WarnPanel ioTopic="warnList2" reqId={2} />
                         </Col>
                         <Col md="6" className="rightside" >
                             <Row className="current-and-torque" style={{ justifyContent: "center" }}>

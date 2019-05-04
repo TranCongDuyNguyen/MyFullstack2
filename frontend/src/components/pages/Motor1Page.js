@@ -21,9 +21,14 @@ import OperatingTime from '../OperatingTime';
 import WarnPanel from '../WarnPanel';
 import "../CSS/MonitorPageStyle.css";
 import MotorPic from "../../images/motor.png";
-let maxscale1 = [{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-{ val: null, bs: false, ss: false }, { val: null, bs: false, ss: false },
-{ val: null, bs: false, ss: false }];
+let maxscale1 = [{ val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false }, { val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false },
+{ val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false }, { val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false },
+{ val: null, fault: 0, warn: 0, pos: null, bs: false, ss: false }];
+const config = {
+    headers: {
+        "Content-type": "application/json"
+    }
+}
 export default class Motor1Page extends Component {
     constructor(props) {
         super(props);
@@ -57,11 +62,26 @@ export default class Motor1Page extends Component {
         textmotorT: '',
         textdriveT: '',
         textpow: '',
+        textcur1: '',
+        texttor1: '',
+        textmotorT1: '',
+        textdriveT1: '',
+        textpow1: '',
         textcurM: '',
         texttorM: '',
         textmotorTM: '',
         textdriveTM: '',
         textpowM: '',
+        fCurLvl: '',
+        fTorLvl: '',
+        fMotorTLvl: '',
+        fDriveTLvl: '',
+        fPowLvl: '',
+        wCurLvl: '',
+        wTorLvl: '',
+        wMotorTLvl: '',
+        wDriveTLvl: '',
+        wPowLvl: '',
         maxcur: '100',
         maxtor: '100',
         maxmotorT: '100',
@@ -92,6 +112,21 @@ export default class Motor1Page extends Component {
                 ssMotorT: maxscale1[2].ss,
                 ssDriveT: maxscale1[3].ss,
                 ssPow: maxscale1[4].ss,
+                curpos: maxscale1[0].pos,
+                fCurLvl: maxscale1[0].fault,
+                wCurLvl: maxscale1[0].warn,
+                torpos: maxscale1[1].pos,
+                fTorLvl: maxscale1[1].fault,
+                wTorLvl: maxscale1[1].warn,
+                motorTpos: maxscale1[2].pos,
+                fMotorTLvl: maxscale1[2].fault,
+                wMotorTLvl: maxscale1[2].warn,
+                driveTpos: maxscale1[3].pos,
+                fDriveTLvl: maxscale1[3].fault,
+                wDriveTLvl: maxscale1[3].warn,
+                powpos: maxscale1[4].pos,
+                fPowLvl: maxscale1[4].fault,
+                wPowLvl: maxscale1[4].warn,
             })
         }).catch(err => console.log(err));
     }
@@ -260,37 +295,67 @@ export default class Motor1Page extends Component {
         }
 
         if (eid === "curmax") {
-
             this.setState({
                 textcurM: e.target.value
             })
         }
         else if (eid === "tormax") {
-
             this.setState({
                 texttorM: e.target.value
             })
         }
         else if (eid === "motorTmax") {
-
             this.setState({
                 textmotorTM: e.target.value
             })
         }
         else if (eid === "driveTmax") {
-
             this.setState({
                 textdriveTM: e.target.value
             })
         }
         else if (eid === "powmax") {
-
             this.setState({
                 textpowM: e.target.value
             })
         }
     }
-    onKeyUp = (e, maxScale) => {
+    onChange3(e, maxScale) {                                                        /**/
+        let eid = e.target.id;
+        if (parseInt(e.target.value) > maxScale) {
+            e.target.value = maxScale.toString();
+        }
+        if (e.target.value.length > 4) {
+            let newS = e.target.value.slice(0, 4);
+            e.target.value = newS;
+        }
+        if (eid === "curset1") {
+            this.setState({
+                textcur1: e.target.value
+            })
+        }
+        else if (eid === "torset1") {
+            this.setState({
+                texttor1: e.target.value
+            })
+        }
+        else if (eid === "motorTset1") {
+            this.setState({
+                textmotorT1: e.target.value
+            })
+        }
+        else if (eid === "driveTset1") {
+            this.setState({
+                textdriveT1: e.target.value
+            })
+        }
+        else if (eid === "powset1") {
+            this.setState({
+                textpow1: e.target.value
+            })
+        }
+    }
+    onKeyUp = (e, maxScale) => {                                                         /**/
         let text = e.target.value;
         let eid = e.target.id;
         if (e.keyCode === 13) {
@@ -309,41 +374,46 @@ export default class Motor1Page extends Component {
             let yt = 86 - R * Math.sin(alpha - beta);
             let positionStr = `${x},${y} ${xt},${yt} ${xd},${yd}`;
             if (eid === "curset") {
-                this.setState({
-                    curpos: positionStr
-                })
+                maxscale1[0].pos = positionStr;
+                maxscale1[0].fault = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
                 this.setState(() => ({
                     textcur: ""
                 }))
             }
             else if (eid === "torset") {
-                this.setState({
-                    torpos: positionStr
-                })
+                maxscale1[1].pos = positionStr;
+                maxscale1[1].fault = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
                 this.setState(() => ({
                     texttor: ""
                 }))
             }
             else if (eid === "motorTset") {
-                this.setState({
-                    motorTpos: positionStr
-                })
+                maxscale1[2].pos = positionStr;
+                maxscale1[2].fault = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
                 this.setState(() => ({
                     textmotorT: ""
                 }))
             }
             else if (eid === "driveTset") {
-                this.setState({
-                    driveTpos: positionStr
-                })
+                maxscale1[3].pos = positionStr;
+                maxscale1[3].fault = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
                 this.setState(() => ({
                     textdriveT: ""
                 }))
             }
             else if (eid === "powset") {
-                this.setState({
-                    powpos: positionStr
-                })
+                maxscale1[4].pos = positionStr;
+                maxscale1[4].fault = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
                 this.setState(() => ({
                     textpow: ""
                 }))
@@ -354,11 +424,6 @@ export default class Motor1Page extends Component {
     onKeyUp2 = (e) => {
         let eid = e.target.id;
         let text = e.target.value;
-        const config = {
-            headers: {
-                "Content-type": "application/json"
-            }
-        }
         if (e.keyCode === 13) {
             if (!text) { return; };
             if (eid === "curmax") {
@@ -463,11 +528,60 @@ export default class Motor1Page extends Component {
             }
         }
     }
+    onKeyUp3 = (e) => {
+        let eid = e.target.id;
+        let text = e.target.value;
+        if (e.keyCode === 13) {
+            if (!text) { return; };
+            if (eid === "curset1") {
+                maxscale1[0].warn = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
+                this.setState(() => ({
+                    textcur1: ""
+                }))
+            }
+            else if (eid === "torset1") {
+                maxscale1[1].warn = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
+                this.setState(() => ({
+                    texttor1: ""
+                }))
+            }
+            else if (eid === "motorTset1") {
+                maxscale1[2].warn = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
+                this.setState(() => ({
+                    textmotorT1: ""
+                }))
+            }
+            else if (eid === "driveTset1") {
+                maxscale1[3].warn = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
+                this.setState(() => ({
+                    textdriveT1: ""
+                }))
+            }
+            else if (eid === "powset1") {
+                maxscale1[4].warn = parseInt(text);
+                this.putHandler(maxscale1, config);
+                this.getHandler();
+                this.setState(() => ({
+                    textpow1: ""
+                }))
+            }
+
+        }
+    }
     render() {
         let { isHideCur, isHideDriveT, isHideMotorT, isHidePower, isHideTor, isPauseAllTrend,
-            isCurAdj, isTorAdj, isMotorTAdj, isDriveTAdj, isPowerAdj, curpos, torpos, motorTpos, driveTpos, powpos,
-            maxcur, maxtor, maxmotorT, maxdriveT, maxpow, bsCur, bsTor, bsMotorT, bsDriveT, bsPow,
-            ssCur, ssTor, ssMotorT, ssDriveT, ssPow } = this.state;
+            isCurAdj, isTorAdj, isMotorTAdj, isDriveTAdj, isPowerAdj, curpos, torpos, motorTpos, driveTpos, 
+            powpos, maxcur, maxtor, maxmotorT, maxdriveT, maxpow, bsCur, bsTor, bsMotorT, bsDriveT, bsPow,
+            ssCur, ssTor, ssMotorT, ssDriveT, ssPow, fCurLvl, fTorLvl, fMotorTLvl, fDriveTLvl, fPowLvl, wCurLvl, 
+            wTorLvl, wMotorTLvl, wDriveTLvl, wPowLvl, } = this.state;
         let curState = classNames({
             "tc-box": true,
             "hide": !isHideCur
@@ -493,19 +607,17 @@ export default class Motor1Page extends Component {
                 background: "linear-gradient(0deg, #29323c 0%, #485563 100%)",
                 padding: "1em 1em 1em 1em"
             }}>
+                <div className="page-button">
+                    <a href="/monitor/1" alt="">1</a>
+                    <a href="/monitor/2" alt="">2</a>
+                </div>
                 <Container className="motor-dc" style={{ marginBottom: "1em" }}>
                     <Row>
                         <Col md="6" className="leftside">
-
-                            <div className="page-button">
-                                <a href="/monitor/1" alt="">1</a>
-                                <a href="/monitor/2" alt="">2</a>
-                            </div>
-
                             <div className="motor-1-pic">
                                 <img className="motor-image" src={MotorPic} alt="" />
                             </div>
-                            <WarnPanel ioTopic="warnList1" reqId={1}/>
+                            <WarnPanel ioTopic="warnList1" reqId={1} />
                         </Col>
                         <Col md="6" className="rightside" >
                             <Row className="current-and-torque" style={{ justifyContent: "center" }}>
@@ -519,13 +631,20 @@ export default class Motor1Page extends Component {
                                             value={this.state.textcurM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Threshold:</div>
+                                        <div>Fault level:</div>
                                         <input type="number"
                                             id="curset"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.textcur}
                                             onChange={(e) => this.onChange(e, maxcur)}
                                             onKeyUp={(e) => this.onKeyUp(e, maxcur)} />
+                                        <div>Warn level:</div>
+                                        <input type="number"
+                                            id="curset1"
+                                            className="dc-adjust-tribtn-input"
+                                            value={this.state.textcur1}
+                                            onChange={(e) => this.onChange3(e, fCurLvl)}
+                                            onKeyUp={this.onKeyUp3} />
 
                                     </div>}
                                     <CurrentDC ioTopic="motor1DCData"
@@ -535,7 +654,10 @@ export default class Motor1Page extends Component {
                                         triBtnPos={curpos}
                                         maxScale={maxcur}
                                         sSize={bsCur}
-                                        ssSize={ssCur} />
+                                        ssSize={ssCur}
+                                        faultLvl={fCurLvl}
+                                        warnLvl={wCurLvl}
+                                    />
                                     <div className="trend-button cur"
                                         onClick={this.onAddTrend}>
                                         <i className="fas fa-chart-line cur"
@@ -556,13 +678,20 @@ export default class Motor1Page extends Component {
                                             value={this.state.texttorM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Threshold:</div>
+                                        <div>Fault level:</div>
                                         <input type="number"
                                             id="torset"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.texttor}
                                             onChange={(e) => this.onChange(e, maxtor)}
                                             onKeyUp={(e) => this.onKeyUp(e, maxtor)} />
+                                        <div>Warn level:</div>
+                                        <input type="number"
+                                            id="torrset1"
+                                            className="dc-adjust-tribtn-input"
+                                            value={this.state.texttor1}
+                                            onChange={(e) => this.onChange3(e, fTorLvl)}
+                                            onKeyUp={this.onKeyUp3} />
                                     </div>}
                                     <TorqueDC ioTopic="motor1DCData"
                                         valKey="tor1"
@@ -571,7 +700,9 @@ export default class Motor1Page extends Component {
                                         triBtnPos={torpos}
                                         maxScale={maxtor}
                                         sSize={bsTor}
-                                        ssSize={ssTor} />
+                                        ssSize={ssTor}
+                                        faultLvl={fTorLvl}
+                                        warnLvl={wTorLvl} />
                                     <div className="trend-button tor"
                                         onClick={this.onAddTrend}>
                                         <i className="fas fa-chart-line tor"
@@ -594,13 +725,20 @@ export default class Motor1Page extends Component {
                                             value={this.state.textmotorTM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Threshold:</div>
+                                        <div>Fault level:</div>
                                         <input type="number"
                                             id="motorTset"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.textmotorT}
                                             onChange={(e) => this.onChange(e, maxmotorT)}
                                             onKeyUp={(e) => this.onKeyUp(e, maxmotorT)} />
+                                        <div>Warn level:</div>
+                                        <input type="number"
+                                        id="motorTset1"
+                                        className="dc-adjust-tribtn-input"
+                                        value={this.state.textmotorT1}
+                                        onChange={(e) => this.onChange3(e, fMotorTLvl)}
+                                        onKeyUp={this.onKeyUp3} />
                                     </div>}
                                     <MotorTempDC ioTopic="motor1DCData"
                                         valKey="motor1T"
@@ -609,7 +747,9 @@ export default class Motor1Page extends Component {
                                         triBtnPos={motorTpos}
                                         maxScale={maxmotorT}
                                         sSize={bsMotorT}
-                                        ssSize={ssMotorT} />
+                                        ssSize={ssMotorT}
+                                        faultLvl={fMotorTLvl}
+                                        warnLvl={wMotorTLvl} />
                                     <div className="trend-button motorT"
                                         onClick={this.onAddTrend}>
                                         <i className="fas fa-chart-line motorT"
@@ -630,13 +770,20 @@ export default class Motor1Page extends Component {
                                             value={this.state.textdriveTM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Threshold:</div>
+                                        <div>Fault level:</div>
                                         <input type="number"
                                             id="driveTset"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.textdriveT}
                                             onChange={(e) => this.onChange(e, maxdriveT)}
                                             onKeyUp={(e) => this.onKeyUp(e, maxdriveT)} />
+                                        <div>Warn level:</div>
+                                        <input type="number"
+                                            id="driveTset1"
+                                            className="dc-adjust-tribtn-input"
+                                            value={this.state.textdriveT1}
+                                            onChange={(e) => this.onChange3(e, fDriveTLvl)}
+                                            onKeyUp={this.onKeyUp3} />
                                     </div>}
                                     <DriveTempDC ioTopic="motor1DCData"
                                         valKey="drive1T"
@@ -645,7 +792,9 @@ export default class Motor1Page extends Component {
                                         triBtnPos={driveTpos}
                                         maxScale={maxdriveT}
                                         sSize={bsDriveT}
-                                        ssSize={ssDriveT} />
+                                        ssSize={ssDriveT}
+                                        faultLvl={fDriveTLvl}
+                                        warnLvl={wDriveTLvl} />
                                     <div className="trend-button driveT"
                                         onClick={this.onAddTrend}>
                                         <i className="fas fa-chart-line driveT"
@@ -668,13 +817,20 @@ export default class Motor1Page extends Component {
                                             value={this.state.textpowM}
                                             onChange={this.onChange2}
                                             onKeyUp={this.onKeyUp2} />
-                                        <div>Threshold:</div>
+                                        <div>Fault level:</div>
                                         <input type="number"
                                             id="powset"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.textpow}
                                             onChange={(e) => this.onChange(e, maxpow)}
                                             onKeyUp={(e) => this.onKeyUp(e, maxpow)} />
+                                        <div>Warn level:</div>    
+                                        <input type="number"
+                                            id="powset1"
+                                            className="dc-adjust-tribtn-input"
+                                            value={this.state.textpow1}
+                                            onChange={(e) => this.onChange3(e, fPowLvl)}
+                                            onKeyUp={this.onKeyUp3} />
                                     </div>}
                                     <PowerDC ioTopic="motor1DCData"
                                         valKey="power1"
@@ -683,7 +839,9 @@ export default class Motor1Page extends Component {
                                         triBtnPos={powpos}
                                         maxScale={maxpow}
                                         sSize={bsPow}
-                                        ssSize={ssPow} />
+                                        ssSize={ssPow}
+                                        faultLvl={fPowLvl}
+                                        warnLvl={wPowLvl} />
                                     <div className="trend-button pow"
                                         onClick={this.onAddTrend}>
                                         <i className="fas fa-chart-line pow"

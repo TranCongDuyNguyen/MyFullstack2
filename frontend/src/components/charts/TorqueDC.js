@@ -32,8 +32,8 @@ export default class TorqueDC extends Component {
             <div className="torque-dc">
                 <DoughnutChart data={data.concat([])}
                     dataKey="tor"
-                    threshold={60}
-                    offset={20}
+                    fault={this.props.faultLvl}                             /**/
+                    warn={this.props.warnLvl}
                     colorId="torque"
                     startGradColor="#56bc2f"
                     endGradColor="#a8e063"

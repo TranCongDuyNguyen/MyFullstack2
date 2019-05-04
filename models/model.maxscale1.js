@@ -9,6 +9,18 @@ var maxscale1Schema = mongoose.Schema({
             type: String,
             default: "100"
         },
+        fault: {
+            type: Number,
+            default: 0
+        },
+        warn: {
+            type: Number,
+            default: 0
+        },
+        pos: {
+            type: String,
+            default: '126,86 136,80 136,92'
+        },
         bs: {
             type: Boolean,
             default: false

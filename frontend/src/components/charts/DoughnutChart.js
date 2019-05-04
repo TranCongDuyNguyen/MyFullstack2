@@ -11,12 +11,12 @@ import '../CSS/DoughnutChartStyle.css';
 export default class DoughnutChart extends Component {
 
     CustomBar = () => {
-        const { data, dataKey, threshold, offset, flash } = this.props;
+        const { data, dataKey, fault, warn, flash } = this.props;
         let value = data[0][dataKey];
-        if (value > threshold && value <= threshold + offset) {
+        if (value > warn && value <= fault) {
             return <Cell fill="#DD403A"></Cell>
         }
-        else if (value > threshold + offset) {
+        else if (value > fault) {
             return flash ? <Cell fill="#D60000">  </Cell> : <Cell fill="#DD403A"></Cell>
         }
     }
@@ -27,7 +27,7 @@ export default class DoughnutChart extends Component {
             bigchar: this.props.sSize,
             smallchar: this.props.ssSize
         })
-        const { data, dataKey, colorId, startGradColor, endGradColor, theUnit, threshold, offset } = this.props;
+        const { data, dataKey, colorId, startGradColor, endGradColor, theUnit, fault } = this.props;
         return (
             <div className="dc" style={{height:"140px"}}>
                 <div className="dc-tribtn-box">
@@ -36,7 +36,7 @@ export default class DoughnutChart extends Component {
                                     onClick={e => this.props.onAdjTriClick(e)}
                                     id={this.props.id} 
                                     className="dc-tribtn"
-                                    style={{"fill": `${(data[0][dataKey]>(threshold+offset))?"red":`url(#${colorId})`}`}} />
+                                    style={{"fill": `${(data[0][dataKey]>(fault))?"red":`url(#${colorId})`}`}} />
                         </svg>
                 </div>
                 <div className="text">
