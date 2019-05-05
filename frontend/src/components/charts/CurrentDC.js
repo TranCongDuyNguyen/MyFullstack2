@@ -8,7 +8,7 @@ export default class CurrentDC extends Component {
         data: [
             {
                 name: "Current",
-                amp: 40
+                amp: 5
             },
             {
                 name: "Ref",

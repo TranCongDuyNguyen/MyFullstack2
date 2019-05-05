@@ -6,3 +6,18 @@
     top: 26.5em;
     right: 3em;
 }
+.notify .warn-item {
+    height: 20%;
+    margin-bottom: 0.5em;
+}
+.notify .warn-amount, .current-page {
+    top: 19em;
+    left: 5em;
+    color: white;
+}
+.notify .current-page {
+    left: 12em;
+}
+.notify .jmp-to-current-btn:active {
+    color: #087E8B;
+}

@@ -18,7 +18,7 @@ setInterval(() => {
 }, 1000);
 module.exports.getTime = getTime;
 
-module.exports.createObj = function(type, data) {
+module.exports.createObj = function (type, data) {
 	let obj = {};
 	obj[type] = data;
 	obj.time = time;
@@ -26,26 +26,25 @@ module.exports.createObj = function(type, data) {
 }
 
 function objToBuffer(obj, arr, amount) {
-	let buffer = arr;
-	buffer.push(obj);
+	arr.push(obj);
 	if (amount) {
-		if (buffer.length > amount) {
-			buffer.splice(0, 1)
+		if (arr.length > amount) {
+			arr.splice(0, 1)
 		}
 	}
 }
 module.exports.objToBuffer = objToBuffer;
 
-module.exports.generateAlarm = function(type, comparedData, warnObj, warnStr, dangerStr, notiesArr) {
+module.exports.generateAlarm = function (type, comparedData, warnObj, dangerStr, warnStr, notiesArr, faultLvl, warnLvl) {
 	if (type == "more") {
-		if (comparedData > 60 && comparedData <= 80) {
+		if (comparedData > warnLvl && comparedData <= faultLvl) {
 			warnObj = {
 				type: "Warning",
 				warnTime: null,
 				warnMsg: warnStr
 			}
 		}
-		else if (comparedData > 80) {
+		else if (comparedData > faultLvl) {
 			warnObj = {
 				type: "Danger",
 				warnTime: null,
@@ -54,14 +53,14 @@ module.exports.generateAlarm = function(type, comparedData, warnObj, warnStr, da
 		}
 	}
 	else if (type == "less") {
-		if (comparedData < 60) {
+		if (comparedData < warnLvl) {
 			warnObj = {
 				type: "Warning",
 				warnTime: null,
 				warnMsg: warnStr
 			}
 		}
-		else if (comparedData >= 60 && comparedData >= 100) {
+		else if (comparedData >= faultLvl) {
 			warnObj = {
 				type: "Danger",
 				warnTime: null,
@@ -75,9 +74,10 @@ module.exports.generateAlarm = function(type, comparedData, warnObj, warnStr, da
 		let index = notiesArr.indexOf(warnObj);
 		warnObj.notiId = `Alarm ${index}`;
 	}
+
 }
 
-module.exports.generateOperateNoties = function(notiObj, msg, arr) {
+module.exports.generateOperateNoties = function (notiObj, msg, arr) {
 	notiObj = {};
 	if (time) {
 		notiObj.type = "Operation";
@@ -85,11 +85,11 @@ module.exports.generateOperateNoties = function(notiObj, msg, arr) {
 		notiObj.warnMsg = msg;
 		objToBuffer(notiObj, arr, 200);
 		let idx = arr.indexOf(notiObj);
-		notiObj.notiId = `${idx}`;
+		notiObj.notiId = `Noti ${idx}`;
 	}
 }
 
-module.exports.maxFilter = function(arr, key) {
+module.exports.maxFilter = function (arr, key) {
 	let max = 0;
 	for (let obj of arr) {
 		if (obj[key] > max) {

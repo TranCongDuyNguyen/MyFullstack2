@@ -35,6 +35,7 @@ export default class Motor2Page extends Component {
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }];
     }
     state = {

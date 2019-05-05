@@ -1,6 +1,8 @@
 require('dotenv').config();
-const MonitorNoties = require("./models/model.monitorNoties");
+const MaxScale1 = require('./models/model.maxscale1');
 const utility = require("./controllers/controller.utility");
+const monitorNotiesFunc = require("./controllers/controller.monitorNoties");
+const operateNotiesFunc = require("./controllers/controller.operateNoties");
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -9,7 +11,7 @@ const port = process.env.PORT || 5000;
 const http = require('http').Server(app)
 const io = require('socket.io')(http); //IO Socket
 const mqtt = require('mqtt');
-const path = require('path');	
+const path = require('path');
 
 http.listen(port, function () {
 	console.log(`Server starts on port ${port}`);
@@ -23,7 +25,8 @@ app.use('/api/users', require('./routes/api/route.users'));
 app.use('/api/items', require('./routes/api/route.items'));
 app.use('/api/auth', require('./routes/api/route.auth'));
 app.use('/api/maxscale1', require('./routes/api/route.maxscale1'));
-app.get('/api/monitorNoties/:id', fetchMonitorNoties);
+app.get('/api/monitorNoties/:id', monitorNotiesFunc.fetchMonitorNoties);
+app.get('/api/operateNoties/:id', operateNotiesFunc.fetchOperateNoties);
 
 //connect to mongoDB
 mongoose.connect(process.env.mongo_url, {
@@ -119,6 +122,7 @@ let toPLCData = [false, false, false, false, 0, 0, 0, 0, 0, 0, 0];
 let mp1 = [0, 0, 0, 0, 0];
 let mp2 = [0, 0, 0, 0, 0];
 //- RECEIVE DATA FROM PLC VIA MQTT
+
 client.on("message", function (topic, message) {
 	if (topic === "n/motorData") {
 		let motorData = JSON.parse(message.toString());
@@ -164,7 +168,6 @@ client.on("message", function (topic, message) {
 				let hObj = utility.createObj("h", motorData.h);
 				utility.objToBuffer(hObj, hBuffer, 10);
 				utility.objToBuffer(hObj, hStore, 1000);
-
 			}
 			catch (e) {
 				console.log(e);
@@ -173,63 +176,83 @@ client.on("message", function (topic, message) {
 		}
 		//+ Create monitor warning list
 		try {
-			let ampWarn1, torWarn1, motorTWarn1, driveTWarn1, powerWarn1 = null;
-			utility.generateAlarm("more", motorData.amp1, ampWarn1, 'Current is above 60%', 'Current is above 80%', notiesArr1);
-			utility.generateAlarm("more", motorData.tor1, torWarn1, 'Torque is above 60%', 'Torque is above 80%', notiesArr1);
-			utility.generateAlarm("more", motorData.motor1T, motorTWarn1, 'Motor Thermal is above 60', 'Motor Thermal is above 80', notiesArr1);
-			utility.generateAlarm("more", motorData.drive1T, driveTWarn1, 'Drive Thermal is above 60', 'Drive Thermal is above 80', notiesArr1);
-			utility.generateAlarm("less", motorData.power1, powerWarn1, 'Power is under 60%', 'Power is above 100%', notiesArr1);
-			updateMonitorNoties(1, notiesArr1);
-			let ampWarn2, torWarn2, motorTWarn2, driveTWarn2, powerWarn2 = null;
-			utility.generateAlarm("more", motorData.amp2, ampWarn2, 'Current is above 60%', 'Current is above 80%', notiesArr2);
-			utility.generateAlarm("more", motorData.tor2, torWarn2, 'Torque is above 60%', 'Torque is above 80%', notiesArr2);
-			utility.generateAlarm("more", motorData.motor2T, motorTWarn2, 'Motor Thermal is above 60', 'Motor Thermal is above 80', notiesArr2);
-			utility.generateAlarm("more", motorData.drive2T, driveTWarn2, 'Drive Thermal is above 60', 'Drive Thermal is above 80', notiesArr2);
-			utility.generateAlarm("less", motorData.power2, powerWarn2, 'Power is under 60%', 'Power is above 100%', notiesArr2);
-			updateMonitorNoties(2, notiesArr2);
+			let ampWarn1, torWarn1, motorTWarn1, driveTWarn1, powerWarn1, freWarn1;
+			let curFLvl1 = 0; let torFLvl1 = 0; let motorTFLvl1 = 0; let driveTFLvl1 = 0; let powFLvl1 = 0;
+			let curWLvl1 = 0; let torWLvl1 = 0; let motorTWLvl1 = 0; let driveTWLvl1 = 0; let powWLvl1 = 0;
+			let freFLvl1 = 0; let freWLvl1 = 0;
+			MaxScale1.findOne({ _id: 1 }, "maxscale1").select('-_id')
+				.then(payload => {
+					let maxscale1 = payload.maxscale1;
+					curFLvl1 = maxscale1[0].fault; curWLvl1 = maxscale1[0].warn;
+					torFLvl1 = maxscale1[1].fault; torWLvl1 = maxscale1[1].warn;
+					motorTFLvl1 = maxscale1[2].fault; motorTWLvl1 = maxscale1[2].warn;
+					driveTFLvl1 = maxscale1[3].fault; driveTWLvl1 = maxscale1[3].warn;
+					powFLvl1 = maxscale1[4].fault; powWLvl1 = maxscale1[4].warn;
+					freFLvl1 = maxscale1[5].fault; freWLvl1 = maxscale1[5].warn;
+					utility.generateAlarm("more", motorData.amp1, ampWarn1, `Current is above ${curFLvl1}`, `Current is above ${curWLvl1}`, notiesArr1, curFLvl1, curWLvl1);
+					utility.generateAlarm("more", motorData.tor1, torWarn1, `Torque is above ${torFLvl1}`, `Torque is above ${torWLvl1}`, notiesArr1, torFLvl1, torWLvl1);
+					utility.generateAlarm("more", motorData.motor1T, motorTWarn1, `Motor Thermal is above ${motorTFLvl1}`, `Motor Thermal is above ${motorTWLvl1}`, notiesArr1, motorTFLvl1, motorTWLvl1);
+					utility.generateAlarm("more", motorData.drive1T, driveTWarn1, `Drive Thermal is above ${driveTFLvl1}`, `Drive Thermal is above ${driveTWLvl1}`, notiesArr1, driveTFLvl1, driveTWLvl1);
+					utility.generateAlarm("less", motorData.power1, powerWarn1, `Power is above ${powFLvl1}`, `Power is under ${powWLvl1}`, notiesArr1, powFLvl1, powWLvl1);
+					utility.generateAlarm("more", motorData.fre1, freWarn1, `Speed is above ${freFLvl1}`, `Power is above ${freWLvl1}`, operateNoties, freFLvl1, freWLvl1);
+					monitorNotiesFunc.updateMonitorNoties(1, notiesArr1);
+				})
+				
+			let ampWarn2, torWarn2, motorTWarn2, driveTWarn2, powerWarn2, freWarn2;
+			let curFLvl2 = 0; let torFLvl2 = 0; let motorTFLvl2 = 0; let driveTFLvl2 = 0; let powFLvl2 = 0;
+			let curWLvl2 = 0; let torWLvl2 = 0; let motorTWLvl2 = 0; let driveTWLvl2 = 0; let powWLvl2 = 0;
+			let freFLvl2 = 0; let freWLvl2 = 0;
+			MaxScale1.findOne({_id: 2}, "maxscale1").select('-_id')
+			.then(payload => {
+				let maxscale1 = payload.maxscale1;
+					curFLvl2 = maxscale1[0].fault; curWLvl2 = maxscale1[0].warn;
+					torFLvl2 = maxscale1[1].fault; torWLvl2 = maxscale1[1].warn;
+					motorTFLvl2 = maxscale1[2].fault; motorTWLvl2 = maxscale1[2].warn;
+					driveTFLvl2 = maxscale1[3].fault; driveTWLvl2 = maxscale1[3].warn;
+					powFLvl2 = maxscale1[4].fault; powWLvl2 = maxscale1[4].warn;
+					freFLvl2 = maxscale1[5].fault; freWLvl2 = maxscale1[5].warn;
+					utility.generateAlarm("more", motorData.amp2, ampWarn2, `Current is above ${curFLvl2}`, `Current is above ${curWLvl2}`, notiesArr2, curFLvl2, curWLvl2);
+					utility.generateAlarm("more", motorData.tor2, torWarn2, `Torque is above ${torFLvl2}`, `Torque is above ${torWLvl2}`, notiesArr2, torFLvl2, torWLvl2);
+					utility.generateAlarm("more", motorData.motor2T, motorTWarn2, `Motor Thermal is above ${motorTFLvl2}`, `Motor Thermal is above ${motorTWLvl2}`, notiesArr2, motorTFLvl2,  motorTWLvl2);
+					utility.generateAlarm("more", motorData.drive2T, driveTWarn2, `Drive Thermal is above ${driveTFLvl2}`, `Drive Thermal is above ${driveTWLvl2}`, notiesArr2, driveTFLvl2, driveTWLvl2);
+					utility.generateAlarm("less", motorData.power2, powerWarn2, `Power is above ${powFLvl2}`, `Power is under ${powWLvl2}`, notiesArr2, powFLvl2, powWLvl2);
+					utility.generateAlarm("more", motorData.fre2, freWarn2, `Speed is above ${freFLvl2}`, `Power is above ${freWLvl2}`, operateNoties, freFLvl2, freWLvl2);
+					monitorNotiesFunc.updateMonitorNoties(2, notiesArr2);
+			})
+			if (motorData.run) {
+				let noti = null;
+				utility.generateOperateNoties(noti, `Forward at ${fullTime}`, operateNoties);
+			}
+			if (motorData.stop) {
+				let noti = null;
+				utility.generateOperateNoties(noti, `Stop at ${fullTime}`, operateNoties);
+			}
+			if (motorData.rev) {
+				let noti = null;
+				utility.generateOperateNoties(noti, `Reverse at ${fullTime}`, operateNoties);
+			}
+			if (motorData.service) {
+				let noti = null;
+				utility.generateOperateNoties(noti, `Turn service mode at ${fullTime}`, operateNoties);
+			}
+			if (motorData.maint) {
+				let noti = null;
+				utility.generateOperateNoties(noti, `Reach maintenance at ${fullTime}`, operateNoties);
+			}
+			if (motorData.fault) {
+				let noti = null;
+				utility.generateOperateNoties(noti, `Fault at ${fullTime}`, operateNoties);
+			}
+			operateNotiesFunc.updateOperateNoties(1, operateNoties);
 		} catch (e) {
 			console.log(e);
 			console.log("because of undefined data from mqtt fake client");
 		}
 	}
 })
-// +monitor noties API
-function fetchMonitorNoties(req, res, next) {
-	if (req.params.id === "1") {
-		let currentPage = parseInt(req.query.page);
-		let pageLimit = parseInt(req.query.limit);
-		const offset = (currentPage - 1) * pageLimit;
-		MonitorNoties.findOne({ _id: req.params.id }, 'noties')
-			.then(noties => {
-				let noties1 = noties.noties;
-				const currentNoties = noties1.slice(offset, offset + pageLimit);
-				res.json({ noties: currentNoties, length: noties1.length});
-			});
-	}
-	else if (req.params.id === "2") {
-		let currentPage = parseInt(req.query.page);
-		let pageLimit = parseInt(req.query.limit);
-		const offset = (currentPage - 1) * pageLimit;
-		MonitorNoties.findOne({ _id: req.params.id }, 'noties')
-			.then(noties => {
-				let noties2 = noties.noties;
-				const currentNoties = noties2.slice(offset, offset + pageLimit);
-				res.json({ noties: currentNoties });
-			});
-	}
-}
-function updateMonitorNoties(id, data) {
-	MonitorNoties.updateOne({ _id: id }, { $set: { noties: data } }, { upsert: true },
-		function (err) {
-			if (err) {
-				console.error(err);
-			}
-		});
-}
 
 //TRANSFER BETWEEN FE AND PLC WITH IO & MQTT----------------------------------------------------------------------------
 io.on('connection', function (socket) {
-
 	console.log('server-side socket connected');
 	socket.on("error", (err) => {
 		if (err) {
@@ -261,6 +284,7 @@ io.on('connection', function (socket) {
 					driveT: motorData.drive2T,
 					power: motorData.power2
 				});
+				socket.emit("operationNoties", operateNoties);
 			} catch (e) {
 				console.log("because of undefined data from mqtt fake client");
 			}
@@ -273,31 +297,6 @@ io.on('connection', function (socket) {
 				service: motorData.service,
 				fault: motorData.fault
 			});
-			if (motorData.run) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Forward at ${fullTime}`, operateNoties);
-			}
-			if (motorData.stop) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Stop at ${fullTime}`, operateNoties);
-			}
-			if (motorData.rev) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Reverse at ${fullTime}`, operateNoties);
-			}
-			if (motorData.service) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Turn service mode at ${fullTime}`, operateNoties);
-			}
-			if (motorData.maint) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Reach maintenance at ${fullTime}`, operateNoties);
-			}
-			if (motorData.fault) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Fault at ${fullTime}`, operateNoties);
-			}
-			//console.log(operateNoties);
 		}
 	});
 
@@ -605,8 +604,6 @@ io.on('connection', function (socket) {
 		time = 0;
 		clearInterval(id1);
 		clearInterval(id2);
-		notiesArr1 = [];
-		notiesArr2 = [];
 		console.log("Disconnect");
 	});
 });

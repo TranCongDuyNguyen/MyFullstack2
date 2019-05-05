@@ -70,6 +70,71 @@ export default class EntryPage extends Component {
         pos2: '126,86 136,80 136,92',
         Hvalue: 0 //pass to tri-btn
     }
+    getHandler1 = () => {
+        axios.get("/api/maxscale1/1").then(res => {
+            this.maxscale1 = res.data.maxscale1;
+            this.setState({
+                maxfre1: this.maxscale1[5].val,
+                bsFre1: this.maxscale1[5].bs,
+                ssFre1: this.maxscale1[5].ss,
+                pos1: this.maxscale1[5].pos,
+                fFre1Lvl: this.maxscale1[5].fault, 
+                wFre1Lvl: this.maxscale1[5].warn
+            });
+        }).catch(err => console.log(err));
+    }
+    getHandler2 = () => {
+        axios.get("/api/maxscale1/2").then(res => {
+            this.maxscale2 = res.data.maxscale1;
+            this.setState({
+                maxfre2: this.maxscale2[5].val,
+                bsFre2: this.maxscale2[5].bs,
+                ssFre2: this.maxscale2[5].ss,
+                pos2: this.maxscale2[5].pos,
+                fFre2Lvl: this.maxscale2[5].fault, 
+                wFre2Lvl: this.maxscale2[5].warn
+            });
+        }).catch(err => console.log(err));
+    }
+    putHandler1 = (maxscale1, config) => {
+        axios.put('/api/maxscale1/1', { maxscale1 }, config)
+            .then(res => console.log(res))
+            .catch(err => console.log(err));
+    }
+    putHandler2 = (maxscale2, config) => {
+        axios.put('/api/maxscale1/2', { maxscale1: maxscale2 }, config)
+            .then(res => console.log(res))
+            .catch(err => console.log(err));
+    }
+    componentDidMount() {
+        console.log(this.maxscale1);
+        this.socket = io("http://localhost:5000");
+        this.socket.on("motorStatus", function (status) {
+            this.setState({
+                isService: status.service
+            });
+        }.bind(this));
+        this.socket.on("mp1", function (mp1) {
+            this.setState({
+                mpamp1: mp1[0].toString(),
+                mptor1: mp1[1].toString(),
+                mpmotorT1: mp1[2].toString(),
+                mpdriveT1: mp1[3].toString(),
+                mppow1: mp1[4].toString()
+            });
+        }.bind(this));
+        this.socket.on("mp2", function (mp2) {
+            this.setState({
+                mpamp2: mp2[0].toString(),
+                mptor2: mp2[1].toString(),
+                mpmotorT2: mp2[2].toString(),
+                mpdriveT2: mp2[3].toString(),
+                mppow2: mp2[4].toString()
+            });
+        }.bind(this));
+        this.getHandler1();
+        this.getHandler2();
+    };
     onOpenModal = () => {
         this.setState({
             isModal: !this.state.isModal
@@ -202,16 +267,7 @@ export default class EntryPage extends Component {
             }
         }
     }
-    putHandler1 = (maxscale1, config) => {
-        axios.put('/api/maxscale1/1', { maxscale1 }, config)
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
-    }
-    putHandler2 = (maxscale2, config) => {
-        axios.put('/api/maxscale1/2', { maxscale1: maxscale2 }, config)
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
-    }
+    
     onKeyUp2 = (e) => {
         let eid = e.target.id;
         let text = e.target.value;
@@ -307,32 +363,6 @@ export default class EntryPage extends Component {
             })
         }
     }
-    getHandler1 = () => {
-        axios.get("/api/maxscale1/1").then(res => {
-            this.maxscale1 = res.data.maxscale1;
-            this.setState({
-                maxfre1: this.maxscale1[5].val,
-                bsFre1: this.maxscale1[5].bs,
-                ssFre1: this.maxscale1[5].ss,
-                pos1: this.maxscale1[5].pos,
-                fFre1Lvl: this.maxscale1[5].fault, 
-                wFre1Lvl: this.maxscale1[5].warn
-            });
-        }).catch(err => console.log(err));
-    }
-    getHandler2 = () => {
-        axios.get("/api/maxscale1/2").then(res => {
-            this.maxscale2 = res.data.maxscale1;
-            this.setState({
-                maxfre2: this.maxscale2[5].val,
-                bsFre2: this.maxscale2[5].bs,
-                ssFre2: this.maxscale2[5].ss,
-                pos2: this.maxscale2[5].pos,
-                fFre2Lvl: this.maxscale2[5].fault, 
-                wFre2Lvl: this.maxscale2[5].warn
-            });
-        }).catch(err => console.log(err));
-    }
     
     onForw = () => {
         this.socket.emit("vCmdToPLC", "onForward");
@@ -343,34 +373,7 @@ export default class EntryPage extends Component {
     onRev = () => {
         this.socket.emit("vCmdToPLC", "onReverse");
     }
-    componentDidMount() {
-        this.socket = io("http://localhost:5000");
-        this.socket.on("motorStatus", function (status) {
-            this.setState({
-                isService: status.service
-            });
-        }.bind(this));
-        this.socket.on("mp1", function (mp1) {
-            this.setState({
-                mpamp1: mp1[0].toString(),
-                mptor1: mp1[1].toString(),
-                mpmotorT1: mp1[2].toString(),
-                mpdriveT1: mp1[3].toString(),
-                mppow1: mp1[4].toString()
-            });
-        }.bind(this));
-        this.socket.on("mp2", function (mp2) {
-            this.setState({
-                mpamp2: mp2[0].toString(),
-                mptor2: mp2[1].toString(),
-                mpmotorT2: mp2[2].toString(),
-                mpdriveT2: mp2[3].toString(),
-                mppow2: mp2[4].toString()
-            });
-        }.bind(this));
-        this.getHandler1();
-        this.getHandler2();
-    };
+    
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
@@ -549,7 +552,7 @@ export default class EntryPage extends Component {
                     <Col className="notify">
                         <div className="trapezoid">Notification</div>
                         <div className="footer-panel">
-                            {/* <EntryNotiPanel></EntryNotiPanel> */}
+                             <EntryNotiPanel ioTopic="operationNoties"></EntryNotiPanel> 
                         </div>
                     </Col>
                 </Row>

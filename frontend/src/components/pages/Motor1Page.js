@@ -34,6 +34,7 @@ export default class Motor1Page extends Component {
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }];
         this.onAdjustTriClick = this.onAdjustTriClick.bind(this);
 
@@ -690,7 +691,7 @@ export default class Motor1Page extends Component {
                                             onKeyUp={(e) => this.onKeyUp(e, maxtor)} />
                                         <div>Warn level:</div>
                                         <input type="number"
-                                            id="torrset1"
+                                            id="torset1"
                                             className="dc-adjust-tribtn-input"
                                             value={this.state.texttor1}
                                             onChange={(e) => this.onChange3(e, fTorLvl)}

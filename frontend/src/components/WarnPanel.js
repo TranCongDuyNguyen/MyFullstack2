@@ -33,6 +33,7 @@ export default class WarnPanel extends Component {
         axios.get(`/api/monitorNoties/${this.props.reqId}?page=${1}&limit=${20}`)
         .then(res => {
             const currentNoties = res.data.noties;
+            length = res.data.length;
             this.setState({
                 currentPage: 1,
                 currentNoties

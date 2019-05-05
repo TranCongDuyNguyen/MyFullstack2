@@ -1,7 +1,7 @@
 const MaxScale1 = require('../models/model.maxscale1');
 
 module.exports.fetchMaxscale1 = function(req, res, next){
-    MaxScale1.findOne({_id: req.params.id})
+    MaxScale1.findOne({_id: req.params.id}, 'maxscale1')
         .then(maxscale1 => res.json(maxscale1));
 }
 
