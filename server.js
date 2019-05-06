@@ -39,11 +39,12 @@ mongoose.connect(process.env.mongo_url, {
 /*<===========================================IO SOCKET=======================================================>*/
 /*<============================================MQTT CONNECTION============================================> */
 
-const client = mqtt.connect('mqtt://127.0.0.1:1883', {
-	clientId: "my-client",
-	username: "admin",
-	password: "admin"
-});
+const client = mqtt.connect(process.env.CLOUDMQTT_URL);
+//, {
+// 	clientId: "my-client",
+// 	username: "admin",
+// 	password: "admin"
+// });
 
 client.on("connect", function () {
 	console.log("MQTT connected");
