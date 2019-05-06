@@ -50,7 +50,7 @@ export default class VirtualPageBtn extends Component {
     )
   }
   componentDidMount() {
-    this.socket = io("http://localhost:5000")
+    this.socket = io();
   };
 
   componentWillUnmount() {

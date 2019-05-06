@@ -108,7 +108,7 @@ export default class EntryPage extends Component {
     }
     componentDidMount() {
         console.log(this.maxscale1);
-        this.socket = io("http://localhost:5000");
+        this.socket = io();
         this.socket.on("motorStatus", function (status) {
             this.setState({
                 isService: status.service

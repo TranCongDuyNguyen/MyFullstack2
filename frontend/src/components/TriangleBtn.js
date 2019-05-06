@@ -3,7 +3,7 @@ import io from "socket.io-client";
 export default class TriangleBtn extends Component {
 
     componentDidMount() {
-      this.socket = io("http://localhost:5000");
+      this.socket = io();
   };
   componentWillUnmount() {
       this.socket.disconnect();

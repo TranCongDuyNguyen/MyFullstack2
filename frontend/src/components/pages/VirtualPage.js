@@ -21,7 +21,7 @@ export default class VirtualPage extends Component {
     service: false
   }
   componentDidMount() {
-    this.socket = io("http://localhost:5000");
+    this.socket = io();
     if(!this.state.onPause) {
       this.socket.on("picture", function (image) {
         this.setState({

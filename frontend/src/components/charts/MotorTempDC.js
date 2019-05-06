@@ -52,7 +52,7 @@ export default class MotorTempDC extends Component {
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000")
+        this.socket = io()
         this.socket.on(this.props.ioTopic, function (motorObj) {
             this.newData[0].motorT = motorObj[this.props.valKey];
             this.setState((state) => {

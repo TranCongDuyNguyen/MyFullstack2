@@ -45,7 +45,7 @@ export default class SpeedDC extends Component {
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000").connect();
+        this.socket = io().connect();
         this.socket.on(this.props.ioTopic, function (motorObj) {
             this.newData[0].freq = motorObj[this.props.valKey];
             this.setState((state) => {

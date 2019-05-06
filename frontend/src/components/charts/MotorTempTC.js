@@ -65,7 +65,7 @@ export default class MotorTempTC extends Component {
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000");
+        this.socket = io();
         this.socket.on(this.props.ioTopic, function (motorTBuffer) {
             if (!isStop) {
                 this.setState((state) => {

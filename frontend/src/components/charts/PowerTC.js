@@ -65,7 +65,7 @@ export default class PowerTC extends Component {
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000");
+        this.socket = io();
         this.socket.on(this.props.ioTopic, function (powerBuffer) {
             if (!isStop) {
                 this.setState((state) => {

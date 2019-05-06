@@ -30,7 +30,7 @@ export default class OperatingTime extends Component {
 
     componentDidMount() {
         const ioApi = this.props.ioTopic;
-        this.socket = io("http://localhost:5000").connect();
+        this.socket = io().connect();
         this.socket.on(ioApi[1], function (oTime) {
             this.setState({
                 oTime

@@ -23,7 +23,7 @@ export default class WarnPanel extends Component {
         jmpPage: 0        
     }
     componentDidMount() {
-        this.socket = io("http://localhost:5000");
+        this.socket = io();
         this.socket.on(this.props.ioTopic, function (notiesArr) {
             length = notiesArr.length;
             this.setState({

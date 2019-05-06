@@ -9,7 +9,7 @@ export default class NumberInput extends Component {
         text: ""
     }
     componentDidMount() {
-        this.socket = io("http://localhost:5000")
+        this.socket = io()
     };
     onChange = (e) => {
         if (parseInt(e.target.value) > 100) {

@@ -39,7 +39,7 @@ export default class MotorInfo extends Component {
   }
 
   componentDidMount() {
-    this.socket = io("http://localhost:5000").connect();
+    this.socket = io().connect();
     this.socket.on(this.props.ioTopic, function (motorObj) {
       this.setState({
         amp: motorObj.amp,

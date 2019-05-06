@@ -67,7 +67,7 @@ componentWillReceiveProps(nxtProps) {
   }
 
   componentDidMount() {
-    this.socket = io("http://localhost:5000");
+    this.socket = io();
     this.socket.on(this.props.ioTopic, function (torBuffer) {
       if (!isStop) {
         this.setState((state) => {

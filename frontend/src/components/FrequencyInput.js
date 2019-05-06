@@ -82,7 +82,7 @@ export default class FrequencyInput extends Component {
     }
 
     componentDidMount() {
-        this.socket = io("http://localhost:5000")
+        this.socket = io()
         this.socket.on("realFrequency", function (frequency) {
             console.log(frequency);
             this.setState({
