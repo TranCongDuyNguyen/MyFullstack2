@@ -19,10 +19,13 @@ setInterval(() => {
 module.exports.getTime = getTime;
 
 module.exports.createObj = function (type, data) {
-	let obj = {};
-	obj[type] = data;
-	obj.time = time;
-	return obj;
+	if(data) {
+		let obj = {};
+		obj[type] = data;
+		obj.time = time;
+		return obj;
+	}
+	else return;
 }
 
 function objToBuffer(obj, arr, amount) {
@@ -36,45 +39,46 @@ function objToBuffer(obj, arr, amount) {
 module.exports.objToBuffer = objToBuffer;
 
 module.exports.generateAlarm = function (type, comparedData, warnObj, dangerStr, warnStr, notiesArr, faultLvl, warnLvl) {
-	if (type == "more") {
-		if (comparedData > warnLvl && comparedData <= faultLvl) {
-			warnObj = {
-				type: "Warning",
-				warnTime: null,
-				warnMsg: warnStr
+	if(comparedData) {
+		if (type == "more") {
+			if (comparedData > warnLvl && comparedData <= faultLvl) {
+				warnObj = {
+					type: "Warning",
+					warnTime: null,
+					warnMsg: warnStr
+				}
+			}
+			else if (comparedData > faultLvl) {
+				warnObj = {
+					type: "Danger",
+					warnTime: null,
+					warnMsg: dangerStr
+				}
 			}
 		}
-		else if (comparedData > faultLvl) {
-			warnObj = {
-				type: "Danger",
-				warnTime: null,
-				warnMsg: dangerStr
+		else if (type == "less") {
+			if (comparedData < warnLvl) {
+				warnObj = {
+					type: "Warning",
+					warnTime: null,
+					warnMsg: warnStr
+				}
 			}
+			else if (comparedData >= faultLvl) {
+				warnObj = {
+					type: "Danger",
+					warnTime: null,
+					warnMsg: dangerStr
+				}
+			}
+		}
+		if (warnObj && time) {
+			warnObj.warnTime = time;
+			objToBuffer(warnObj, notiesArr, 200);
+			let index = notiesArr.indexOf(warnObj);
+			warnObj.notiId = `Alarm ${index}`;
 		}
 	}
-	else if (type == "less") {
-		if (comparedData < warnLvl) {
-			warnObj = {
-				type: "Warning",
-				warnTime: null,
-				warnMsg: warnStr
-			}
-		}
-		else if (comparedData >= faultLvl) {
-			warnObj = {
-				type: "Danger",
-				warnTime: null,
-				warnMsg: dangerStr
-			}
-		}
-	}
-	if (warnObj && time) {
-		warnObj.warnTime = time;
-		objToBuffer(warnObj, notiesArr, 200);
-		let index = notiesArr.indexOf(warnObj);
-		warnObj.notiId = `Alarm ${index}`;
-	}
-
 }
 
 module.exports.generateOperateNoties = function (notiObj, msg, arr) {
@@ -92,9 +96,16 @@ module.exports.generateOperateNoties = function (notiObj, msg, arr) {
 module.exports.maxFilter = function (arr, key) {
 	let max = 0;
 	for (let obj of arr) {
-		if (obj[key] > max) {
-			max = obj[key];
+		if(obj) {
+			if (obj[key] > max) {
+				max = obj[key];
+			}
 		}
 	}
 	return max;
+}
+
+module.exports.ArrToPLCMsg = function(arr) {
+	let msg = arr.join(";") + ";";
+	return msg;
 }

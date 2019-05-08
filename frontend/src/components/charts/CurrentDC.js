@@ -8,7 +8,7 @@ export default class CurrentDC extends Component {
         data: [
             {
                 name: "Current",
-                amp: 5
+                amp: 10
             },
             {
                 name: "Ref",
@@ -32,7 +32,7 @@ export default class CurrentDC extends Component {
             <div className="current-dc">
                 <DoughnutChart data={data.concat([])}
                     dataKey="amp"
-                    fault={this.props.faultLvl}                             /**/
+                    fault={this.props.faultLvl}                         
                     warn={this.props.warnLvl}
                     colorId="current"
                     startGradColor="#FFF275"

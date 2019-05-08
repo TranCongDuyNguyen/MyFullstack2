@@ -6,8 +6,8 @@ module.exports.fetchMonitorNoties = function(req, res, next) {
 		let pageLimit = parseInt(req.query.limit);
 		const offset = (currentPage - 1) * pageLimit;
 		MonitorNoties.findOne({ _id: req.params.id }, 'noties')
-			.then(noties => {
-				let noties1 = noties.noties;
+			.then(payload => {
+				let noties1 = payload.noties;
 				const currentNoties = noties1.slice(offset, offset + pageLimit);
 				res.json({ noties: currentNoties, length: noties1.length });
 			});
@@ -17,8 +17,8 @@ module.exports.fetchMonitorNoties = function(req, res, next) {
 		let pageLimit = parseInt(req.query.limit);
 		const offset = (currentPage - 1) * pageLimit;
 		MonitorNoties.findOne({ _id: req.params.id }, 'noties')
-			.then(noties => {
-				let noties2 = noties.noties;
+			.then(payload => {
+				let noties2 = payload.noties;
 				const currentNoties = noties2.slice(offset, offset + pageLimit);
 				res.json({ noties: currentNoties, length: noties2.length });
 			});

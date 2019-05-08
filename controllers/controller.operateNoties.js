@@ -5,8 +5,8 @@ module.exports.fetchOperateNoties = function(req, res, next) {
     let pageLimit = parseInt(req.query.limit);
     const offset = (currentPage - 1) * pageLimit;
     OperateNoties.findOne({ _id: req.params.id }, 'noties')
-        .then(noties => {
-            let noties1 = noties.noties;
+        .then(payload => {
+            let noties1 = payload.noties;
             const currentNoties = noties1.slice(offset, offset + pageLimit);
             res.json({ noties: currentNoties, length: noties1.length });
         });

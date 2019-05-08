@@ -7,7 +7,7 @@ export default class FrequencyInput extends Component {
 
     state = {
         text: "",
-        frequency: ""
+        frequency: 0
     }
 
     onChange = (e) => {
@@ -75,7 +75,7 @@ export default class FrequencyInput extends Component {
                     </div>
                 </div>
                 <div className="f-box" style={{ width: "6rem" }}>
-                    <span className="f-txt">{this.state.frequency }</span>
+                    <span className="f-txt">{`${this.state.frequency} Hz`}</span>
                 </div>
             </div>
         )
@@ -83,10 +83,10 @@ export default class FrequencyInput extends Component {
 
     componentDidMount() {
         this.socket = io()
-        this.socket.on("realFrequency", function (frequency) {
-            console.log(frequency);
+        this.socket.on("motorStatus", function (status) {
+            console.log(status.freq);
             this.setState({
-                frequency
+                frequency: status.freq
             })
         }.bind(this));
     };

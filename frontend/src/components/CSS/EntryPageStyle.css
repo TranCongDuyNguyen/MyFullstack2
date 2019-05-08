@@ -4,10 +4,10 @@
 }
 .speed-dc .dc .text .smallchar {
     top: 0em;
-    left: -2.2em;
+    left: -2em;
 }
 .speed-dc .dc .unitText {
-    right: 0.8em;
+    right: 0.6em;
     top: 1.2em;
 }
 .motor-info {
@@ -159,11 +159,11 @@
 .config .freq-input {
     position: relative;
     padding-left: 2em;
-    margin-top: 1em;
+    margin-top: 2em;
 }
 .config .f-box {
     margin-right: 2em;
-    padding-left: 0.75em;
+    padding-left: 0.5em;
 }
 .config .f-box .f-input{
     width: 3em;
@@ -191,13 +191,42 @@
     display:flex;
 }
 .operate .dots {
-    margin-top: 0.8em;
+    margin-top: -0.2em;
     color: #FF5A5F;
 }
 .operate .btns {
     display: flex;
     justify-content: space-evenly;
     margin-top: 1em;
+}
+.operate .K-tau {
+    display: flex;
+    margin-top: 1em;
+    justify-content: space-around;
+}
+.operate .numb-input-box {
+   border: 1px solid #FF5A5F;
+}
+.operate .numb-input-box .numb-input {
+    color: #FF5A5F;
+}
+.operate .numb-input-box .fas.fa-chevron-up {
+    color: #FF5A5F;
+}
+.operate .numb-input-box .fas.fa-chevron-down {
+    color: #FF5A5F;
+}
+.operate .numb-input-box .fas.fa-chevron-up:hover {
+    color: rgb(255, 113, 118);
+}
+.operate .numb-input-box .fas.fa-chevron-down:hover {
+    color: rgb(255, 113, 118);
+}
+.operate .numb-input-box .fas.fa-chevron-up:active {
+    color: rgb(140, 4, 8);
+}
+.operate .numb-input-box .fas.fa-chevron-down:active {
+    color: rgb(140, 4, 8);
 }
 .operate .fas.fa-pause,.fas.fa-chevron-left,.fas.fa-chevron-right {
     position: unset;
@@ -212,11 +241,28 @@
     border-radius: 2em;
     width: 4em;
     height: 4em;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
+.forw-btn-entry:hover, .rev-btn-entry:hover, .stop-btn-entry:hover {
+    background: #FF5A5FEE;
+    color: #000e;
+}
 .forw-btn-entry:active, .rev-btn-entry:active, .stop-btn-entry:active {
     background: #FF5A5F;
     border: 2px solid #000b;
     color: #000b;
+}
+.set-sp1-box {
+    position: absolute;
+    top: 18em;
+    left: 20em;
+    text-align: center;
+    color: #212529;
+}
+.set-sp1-box.sp2 {
+    left: -6em;
+}
+.ssp {
+    font-size: 2em;
 }

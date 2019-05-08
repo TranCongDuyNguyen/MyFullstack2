@@ -651,8 +651,8 @@ export default class Motor1Page extends Component {
                                             onKeyUp={this.onKeyUp3} />
 
                                     </div>}
-                                    <CurrentDC ioTopic="motor1DCData"
-                                        valKey="amp1"
+                                    <CurrentDC ioTopic="motor1DCData1"
+                                        valKey="Cur0"
                                         id="currentDC1"
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={curpos}
@@ -697,8 +697,8 @@ export default class Motor1Page extends Component {
                                             onChange={(e) => this.onChange3(e, fTorLvl)}
                                             onKeyUp={this.onKeyUp3} />
                                     </div>}
-                                    <TorqueDC ioTopic="motor1DCData"
-                                        valKey="tor1"
+                                    <TorqueDC ioTopic="motor1DCData1"
+                                        valKey="Tor0"
                                         id="torqueDC1"
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={torpos}
@@ -744,8 +744,8 @@ export default class Motor1Page extends Component {
                                         onChange={(e) => this.onChange3(e, fMotorTLvl)}
                                         onKeyUp={this.onKeyUp3} />
                                     </div>}
-                                    <MotorTempDC ioTopic="motor1DCData"
-                                        valKey="motor1T"
+                                    <MotorTempDC ioTopic="motor1DCData2"
+                                        valKey="ThM0"
                                         id="motorTDC1"
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={motorTpos}
@@ -789,8 +789,8 @@ export default class Motor1Page extends Component {
                                             onChange={(e) => this.onChange3(e, fDriveTLvl)}
                                             onKeyUp={this.onKeyUp3} />
                                     </div>}
-                                    <DriveTempDC ioTopic="motor1DCData"
-                                        valKey="drive1T"
+                                    <DriveTempDC ioTopic="motor1DCData1"
+                                        valKey="ThD0"
                                         id="driveTDC1"
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={driveTpos}
@@ -836,8 +836,8 @@ export default class Motor1Page extends Component {
                                             onChange={(e) => this.onChange3(e, fPowLvl)}
                                             onKeyUp={this.onKeyUp3} />
                                     </div>}
-                                    <PowerDC ioTopic="motor1DCData"
-                                        valKey="power1"
+                                    <PowerDC ioTopic="motor1DCData1"
+                                        valKey="Pow0"
                                         id="powerDC1"
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={powpos}
@@ -857,7 +857,7 @@ export default class Motor1Page extends Component {
                                     </div>
                                 </div>
                                 <div className="otime-box" style={{ width: "192px" }}>
-                                    <OperatingTime ioTopic={["motor1Status", "motor1OTime"]} />
+                                    <OperatingTime ioTopic="motor1OTime" reqId={1}/>
                                     <div className="stop-all-trend"
                                         onClick={this.onPauseAllTrend}
                                     >Pause all <i className="fas fa-chart-line"></i></div>

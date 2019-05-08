@@ -3,6 +3,7 @@ const MaxScale1 = require('./models/model.maxscale1');
 const utility = require("./controllers/controller.utility");
 const monitorNotiesFunc = require("./controllers/controller.monitorNoties");
 const operateNotiesFunc = require("./controllers/controller.operateNoties");
+const operateTimeFunc = require("./controllers/controller.operateTime");
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -27,6 +28,7 @@ app.use('/api/auth', require('./routes/api/route.auth'));
 app.use('/api/maxscale1', require('./routes/api/route.maxscale1'));
 app.get('/api/monitorNoties/:id', monitorNotiesFunc.fetchMonitorNoties);
 app.get('/api/operateNoties/:id', operateNotiesFunc.fetchOperateNoties);
+app.get('/api/operateTime/:id', operateTimeFunc.fetchOtime);
 
 //connect to mongoDB
 mongoose.connect(process.env.mongo_url, {
@@ -99,7 +101,7 @@ let drive2TStore = [{ driveT: 0, time: "00:00:00" }]; let drive2TStoreCopy = [];
 let power2Store = [{ power: 0, time: "00:00:00" }]; let power2StoreCopy = [];
 
 let time;
-setInterval(() => {
+let id0 = setInterval(() => {
 	time = utility.getTime(false);
 	fullTime = utility.getTime(true);
 }, 1000);
@@ -118,23 +120,76 @@ let counter = {
 	countH: 0
 }
 //+data to send to PLC
-let toPLCData = [false, false, false, false, 0, 0, 0, 0, 0, 0, 0];
+let toPLCData = [0, 0, false, false, false, 0, 0, 0, 0, 0];
 //+ max perfomance paras
 let mp1 = [0, 0, 0, 0, 0];
 let mp2 = [0, 0, 0, 0, 0];
+//+ PLC Data
+let motorData1 = {
+	Cur0: 0,
+	Cur1: 0,
+	Tor0: 0,
+	Tor1: 0,
+	Pow0: 0,
+	Pow1: 0,
+	ThD0: 0,
+	ThD1: 0
+};
+let motorData2 = {
+	ThM0: 0,
+	ThM1: 0,
+	Hrs0: 0,
+	Hrs1: 0,
+	RSp0: 0,
+	RSp1: 0,
+	SSp0: 0,
+	SSp1: 0
+};
+let motorData3 = {
+	Fwrd: false,
+	Stop: false,
+	Reve: false,
+	Falt: false,
+	Mtnt: false,
+	Emrg: false,
+	HiFB: 0,
+	HiEx: 0,
+	FrSy: 0
+};
 //- RECEIVE DATA FROM PLC VIA MQTT
 
 client.on("message", function (topic, message) {
 	if (topic === "n/motorData") {
 		let motorData = JSON.parse(message.toString());
+
+		if(motorData.PkID === 1) {
+			console.log("a");
+			motorData1 = motorData;
+		}
+		else if(motorData.PkID === 2) {
+			console.log("b");
+			motorData2 = motorData;
+		}
+		else if(motorData.PkID === 3) {
+			console.log("c");
+			motorData3 = motorData;
+		}
 		//+create trend buffer
 		if (time) {
 			try {
-				let tor1Obj = utility.createObj("tor", motorData.tor1);
-				let amp1Obj = utility.createObj("amp", motorData.amp1);
-				let motor1TObj = utility.createObj("motorT", motorData.motor1T);
-				let drive1TObj = utility.createObj("driveT", motorData.drive1T);
-				let power1Obj = utility.createObj("power", motorData.power1);
+				let amp1Obj, amp2Obj, tor1Obj, tor2Obj, drive1TObj, drive2TObj, power1Obj, power2Obj, motor1TObj, motor2TObj, hObj;
+				amp1Obj = utility.createObj("amp", motorData1.Cur0);
+				amp2Obj = utility.createObj("amp", motorData1.Cur1);
+				tor1Obj = utility.createObj("tor", motorData1.Tor0);
+				tor2Obj = utility.createObj("tor", motorData1.Tor1);
+				drive1TObj = utility.createObj("driveT", motorData1.ThD0);
+				drive2TObj = utility.createObj("driveT", motorData1.ThD1);
+				power1Obj = utility.createObj("power", motorData1.Pow0);
+				power2Obj = utility.createObj("power", motorData1.Pow1);
+				motor1TObj = utility.createObj("motorT", motorData2.ThM0);
+				motor2TObj = utility.createObj("motorT", motorData2.ThM1);
+				hObj = utility.createObj("h", motorData3.HiFB);
+
 				utility.objToBuffer(tor1Obj, tor1Buffer, 10);
 				utility.objToBuffer(tor1Obj, tor1Store, 1000);
 				utility.objToBuffer(amp1Obj, amp1Buffer, 10);
@@ -148,11 +203,6 @@ client.on("message", function (topic, message) {
 				mp1[0] = utility.maxFilter(amp1Buffer, "amp"); mp1[1] = utility.maxFilter(tor1Buffer, "tor");
 				mp1[2] = utility.maxFilter(motor1TBuffer, "motorT"); mp1[3] = utility.maxFilter(drive1TBuffer, "driveT");
 				mp1[4] = utility.maxFilter(power1Buffer, "power");
-				let tor2Obj = utility.createObj("tor", motorData.tor2);
-				let amp2Obj = utility.createObj("amp", motorData.amp2);
-				let motor2TObj = utility.createObj("motorT", motorData.motor2T);
-				let drive2TObj = utility.createObj("driveT", motorData.drive2T);
-				let power2Obj = utility.createObj("power", motorData.power2);
 				utility.objToBuffer(tor2Obj, tor2Buffer, 10);
 				utility.objToBuffer(tor2Obj, tor2Store, 1000);
 				utility.objToBuffer(amp2Obj, amp2Buffer, 10);
@@ -166,7 +216,6 @@ client.on("message", function (topic, message) {
 				mp2[0] = utility.maxFilter(amp2Buffer, "amp"); mp2[1] = utility.maxFilter(tor2Buffer, "tor");
 				mp2[2] = utility.maxFilter(motor2TBuffer, "motorT"); mp2[3] = utility.maxFilter(drive2TBuffer, "driveT");
 				mp2[4] = utility.maxFilter(power2Buffer, "power");
-				let hObj = utility.createObj("h", motorData.h);
 				utility.objToBuffer(hObj, hBuffer, 10);
 				utility.objToBuffer(hObj, hStore, 1000);
 			}
@@ -190,12 +239,12 @@ client.on("message", function (topic, message) {
 					driveTFLvl1 = maxscale1[3].fault; driveTWLvl1 = maxscale1[3].warn;
 					powFLvl1 = maxscale1[4].fault; powWLvl1 = maxscale1[4].warn;
 					freFLvl1 = maxscale1[5].fault; freWLvl1 = maxscale1[5].warn;
-					utility.generateAlarm("more", motorData.amp1, ampWarn1, `Current is above ${curFLvl1}`, `Current is above ${curWLvl1}`, notiesArr1, curFLvl1, curWLvl1);
-					utility.generateAlarm("more", motorData.tor1, torWarn1, `Torque is above ${torFLvl1}`, `Torque is above ${torWLvl1}`, notiesArr1, torFLvl1, torWLvl1);
-					utility.generateAlarm("more", motorData.motor1T, motorTWarn1, `Motor Thermal is above ${motorTFLvl1}`, `Motor Thermal is above ${motorTWLvl1}`, notiesArr1, motorTFLvl1, motorTWLvl1);
-					utility.generateAlarm("more", motorData.drive1T, driveTWarn1, `Drive Thermal is above ${driveTFLvl1}`, `Drive Thermal is above ${driveTWLvl1}`, notiesArr1, driveTFLvl1, driveTWLvl1);
-					utility.generateAlarm("less", motorData.power1, powerWarn1, `Power is above ${powFLvl1}`, `Power is under ${powWLvl1}`, notiesArr1, powFLvl1, powWLvl1);
-					utility.generateAlarm("more", motorData.fre1, freWarn1, `Speed is above ${freFLvl1}`, `Power is above ${freWLvl1}`, operateNoties, freFLvl1, freWLvl1);
+					utility.generateAlarm("more", motorData1.Cur0, ampWarn1, `Current is above ${curFLvl1}`, `Current is above ${curWLvl1}`, notiesArr1, curFLvl1, curWLvl1);
+					utility.generateAlarm("more", motorData1.Tor0, torWarn1, `Torque is above ${torFLvl1}`, `Torque is above ${torWLvl1}`, notiesArr1, torFLvl1, torWLvl1);
+					utility.generateAlarm("more", motorData2.ThM0, motorTWarn1, `Motor Thermal is above ${motorTFLvl1}`, `Motor Thermal is above ${motorTWLvl1}`, notiesArr1, motorTFLvl1, motorTWLvl1);
+					utility.generateAlarm("more", motorData1.ThD0, driveTWarn1, `Drive Thermal is above ${driveTFLvl1}`, `Drive Thermal is above ${driveTWLvl1}`, notiesArr1, driveTFLvl1, driveTWLvl1);
+					utility.generateAlarm("less", motorData1.Pow0, powerWarn1, `Power is above ${powFLvl1}`, `Power is under ${powWLvl1}`, notiesArr1, powFLvl1, powWLvl1);
+					utility.generateAlarm("more", motorData2.RSp0, freWarn1, `Speed is above ${freFLvl1}`, `Power is above ${freWLvl1}`, operateNoties, freFLvl1, freWLvl1);
 					monitorNotiesFunc.updateMonitorNoties(1, notiesArr1);
 				})
 				
@@ -212,39 +261,41 @@ client.on("message", function (topic, message) {
 					driveTFLvl2 = maxscale1[3].fault; driveTWLvl2 = maxscale1[3].warn;
 					powFLvl2 = maxscale1[4].fault; powWLvl2 = maxscale1[4].warn;
 					freFLvl2 = maxscale1[5].fault; freWLvl2 = maxscale1[5].warn;
-					utility.generateAlarm("more", motorData.amp2, ampWarn2, `Current is above ${curFLvl2}`, `Current is above ${curWLvl2}`, notiesArr2, curFLvl2, curWLvl2);
-					utility.generateAlarm("more", motorData.tor2, torWarn2, `Torque is above ${torFLvl2}`, `Torque is above ${torWLvl2}`, notiesArr2, torFLvl2, torWLvl2);
-					utility.generateAlarm("more", motorData.motor2T, motorTWarn2, `Motor Thermal is above ${motorTFLvl2}`, `Motor Thermal is above ${motorTWLvl2}`, notiesArr2, motorTFLvl2,  motorTWLvl2);
-					utility.generateAlarm("more", motorData.drive2T, driveTWarn2, `Drive Thermal is above ${driveTFLvl2}`, `Drive Thermal is above ${driveTWLvl2}`, notiesArr2, driveTFLvl2, driveTWLvl2);
-					utility.generateAlarm("less", motorData.power2, powerWarn2, `Power is above ${powFLvl2}`, `Power is under ${powWLvl2}`, notiesArr2, powFLvl2, powWLvl2);
-					utility.generateAlarm("more", motorData.fre2, freWarn2, `Speed is above ${freFLvl2}`, `Power is above ${freWLvl2}`, operateNoties, freFLvl2, freWLvl2);
+					utility.generateAlarm("more", motorData1.Cur1, ampWarn2, `Current is above ${curFLvl2}`, `Current is above ${curWLvl2}`, notiesArr2, curFLvl2, curWLvl2);
+					utility.generateAlarm("more", motorData1.Tor1, torWarn2, `Torque is above ${torFLvl2}`, `Torque is above ${torWLvl2}`, notiesArr2, torFLvl2, torWLvl2);
+					utility.generateAlarm("more", motorData2.ThM1, motorTWarn2, `Motor Thermal is above ${motorTFLvl2}`, `Motor Thermal is above ${motorTWLvl2}`, notiesArr2, motorTFLvl2,  motorTWLvl2);
+					utility.generateAlarm("more", motorData1.ThD1, driveTWarn2, `Drive Thermal is above ${driveTFLvl2}`, `Drive Thermal is above ${driveTWLvl2}`, notiesArr2, driveTFLvl2, driveTWLvl2);
+					utility.generateAlarm("less", motorData1.Pow1, powerWarn2, `Power is above ${powFLvl2}`, `Power is under ${powWLvl2}`, notiesArr2, powFLvl2, powWLvl2);
+					utility.generateAlarm("more", motorData2.RSp1, freWarn2, `Speed is above ${freFLvl2}`, `Power is above ${freWLvl2}`, operateNoties, freFLvl2, freWLvl2);
 					monitorNotiesFunc.updateMonitorNoties(2, notiesArr2);
 			})
-			if (motorData.run) {
+			if (motorData3.Fwrd) {
 				let noti = null;
 				utility.generateOperateNoties(noti, `Forward at ${fullTime}`, operateNoties);
 			}
-			if (motorData.stop) {
+			if (motorData3.Stop) {
 				let noti = null;
 				utility.generateOperateNoties(noti, `Stop at ${fullTime}`, operateNoties);
 			}
-			if (motorData.rev) {
+			if (motorData3.Reve) {
 				let noti = null;
 				utility.generateOperateNoties(noti, `Reverse at ${fullTime}`, operateNoties);
 			}
-			if (motorData.service) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Turn service mode at ${fullTime}`, operateNoties);
-			}
-			if (motorData.maint) {
+			if (motorData3.Mtnt) {
 				let noti = null;
 				utility.generateOperateNoties(noti, `Reach maintenance at ${fullTime}`, operateNoties);
 			}
-			if (motorData.fault) {
+			if (motorData3.Falt) {
 				let noti = null;
 				utility.generateOperateNoties(noti, `Fault at ${fullTime}`, operateNoties);
 			}
+			if (motorData3.Emrg) {
+				let noti = null;
+				utility.generateOperateNoties(noti, `Emergency stop at ${fullTime}`, operateNoties);
+			}
 			operateNotiesFunc.updateOperateNoties(1, operateNoties);
+			operateTimeFunc.updateOtime(1, motorData2.Hrs0);
+			operateTimeFunc.updateOtime(2, motorData2.Hrs1);
 		} catch (e) {
 			console.log(e);
 			console.log("because of undefined data from mqtt fake client");
@@ -264,40 +315,64 @@ io.on('connection', function (socket) {
 	//-send to fe client-----------------------------------------------------------------------------------------
 	client.on("message", function (topic, message) {
 		if (topic === "n/motorData") {
-			let motorData = JSON.parse(message.toString());
 			//+send dcData, warn, info to fe
+			if(motorData2.Hrs0 && motorData2.Hrs1) {
+				socket.emit("motor1OTime", motorData2.Hrs0);
+				socket.emit("motor2OTime", motorData2.Hrs1);
+			}
 			try {
 				socket.emit("warnList1", notiesArr1);
-				socket.emit("motor1DCData", motorData);
-				socket.emit("motor1Info", {
-					amp: motorData.amp1,
-					torque: motorData.tor1,
-					motorT: motorData.motor1T,
-					driveT: motorData.drive1T,
-					power: motorData.power1
-				});
+				socket.emit("motor1DCData1", motorData1);
+				socket.emit("motor1DCData2", motorData2);
+				if(motorData1) {
+					socket.emit("motor1Info1", {
+						amp: motorData1.Cur0,
+						torque: motorData1.Tor0,
+						driveT: motorData1.ThD0,
+						power: motorData1.Pow0
+					});
+				}
+				if(motorData2.ThM0) {
+					socket.emit("motor1Info2", motorData2.ThM0)
+				}
 				socket.emit("warnList2", notiesArr2);
-				socket.emit("motor2DCData", motorData);
-				socket.emit("motor2Info", {
-					amp: motorData.amp2,
-					torque: motorData.tor2,
-					motorT: motorData.motor2T,
-					driveT: motorData.drive2T,
-					power: motorData.power2
-				});
+				socket.emit("motor2DCData1", motorData1);
+				socket.emit("motor2DCData2", motorData2);
+				if(motorData1) {
+					socket.emit("motor2Info1", {
+						amp: motorData1.Cur1,
+						torque: motorData1.Tor1,
+						driveT: motorData1.ThD1,
+						power: motorData1.Pow1
+					});
+				}
+				if(motorData2.ThM1) {
+					socket.emit("motor2Info2", motorData2.ThM1)
+				}
 				socket.emit("operationNoties", operateNoties);
 			} catch (e) {
 				console.log("because of undefined data from mqtt fake client");
 			}
 			//+status
-			socket.emit("motorStatus", {
-				run: motorData.run,
-				rev: motorData.rev,
-				stop: motorData.stop,
-				maint: motorData.maint,
-				service: motorData.service,
-				fault: motorData.fault
-			});
+			if(motorData3) {
+				socket.emit("motorStatus", {
+					run: motorData3.Fwrd,
+					rev: motorData3.Reve,
+					stop: motorData3.Stop,
+					maint: motorData3.Mtnt,
+					fault: motorData3.Falt,
+					emer: motorData3.Emrg,
+					hiex: motorData3.HiEx,
+					freq: motorData3.FrSy,
+				});
+			}
+			if(motorData2) {
+				socket.emit("motorStatus2", {
+					ssp1: motorData2.SSp0,
+					ssp2: motorData2.SSp1
+				})
+			}
+			
 		}
 	});
 
@@ -492,101 +567,111 @@ io.on('connection', function (socket) {
 	//-fe client publishing----------------------------------------------------------------------------
 	//- PLC
 	//+ send freq
+	let PLCMsg;
+
 	socket.on("setFrequency", function (frequency) {
-		toPLCData[10] = parseInt(frequency);
-		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+		toPLCData[0] = parseInt(frequency);
+		let msg = utility.ArrToPLCMsg(toPLCData);
+		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
 				console.log(err);
 			}
 		})
-		console.log(toPLCData);
+		console.log(msg);
 	})
 	//+ send Kp, Ki, Kd
-	socket.on("setKp", function (Kp) {
-		toPLCData[4] = parseInt(Kp);
-		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+	socket.on("setK", function (K) {
+		toPLCData[5] = parseInt(K);
+		let msg = utility.ArrToPLCMsg(toPLCData);
+		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
 				console.log(err);
 			}
 		})
-		console.log(toPLCData);
+		console.log(msg);
+	})
+	socket.on("setTau", function (Tau) {
+		toPLCData[6] = parseInt(Tau);
+		let msg = utility.ArrToPLCMsg(toPLCData);
+		client.publish("n/toPLC", msg, function (err) {
+			if (err) {
+				console.log(err);
+			}
+		})
+		console.log(msg);
+	})
+	socket.on("setKp", function (Kp) {
+		toPLCData[7] = parseInt(Kp);
+		let msg = utility.ArrToPLCMsg(toPLCData);
+		client.publish("n/toPLC", msg, function (err) {
+			if (err) {
+				console.log(err);
+			}
+		})
+		console.log(msg);
 	})
 	socket.on("setKi", function (Ki) {
-		toPLCData[5] = parseInt(Ki);
-		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+		toPLCData[8] = parseInt(Ki);
+		let msg = utility.ArrToPLCMsg(toPLCData);
+		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
 				console.log(err);
 			}
 		})
-		console.log(toPLCData);
+		console.log(msg);
 	})
 	socket.on("setKd", function (Kd) {
-		toPLCData[6] = parseInt(Kd);
-		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+		toPLCData[9] = parseInt(Kd);
+		let msg = utility.ArrToPLCMsg(toPLCData);
+		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
 				console.log(err);
 			}
 		})
-		console.log(toPLCData);
+		console.log(msg);
 	})
 	//+ send height
 	socket.on("setHeight", function (height) {
-		toPLCData[9] = parseFloat(height);
-		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+		toPLCData[1] = parseFloat(height);
+		let msg = utility.ArrToPLCMsg(toPLCData);
+		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
 				console.log(err);
 			}
-			console.log(toPLCData);
+			console.log(msg);
 		})
 	})
 	//+ virtual btn send for,rev,stop,service CMD
 	socket.on("vCmdToPLC", function (cmd) {
 		if (cmd === "onForward") {
-			if (!toPLCData[0]) {
-				toPLCData[0] = true;
-				let noti = null;
-				utility.generateOperateNoties(noti, `Forward at ${fullTime}`, operateNoties);
-				console.log(operateNoties);
-			} else {
-				toPLCData[0] = false;
-			}
-		}
-		else if (cmd === "onStop") {
-			if (!toPLCData[1]) {
-				toPLCData[1] = true;
-				let noti = null;
-				utility.generateOperateNoties(noti, `Stop at ${fullTime}`, operateNoties);
-				console.log(operateNoties);
-			} else {
-				toPLCData[1] = false;
-			}
-		}
-		else if (cmd === "onReverse") {
 			if (!toPLCData[2]) {
 				toPLCData[2] = true;
-				let noti = null;
-				utility.generateOperateNoties(noti, `Reverse at ${fullTime}`, operateNoties);
-				console.log(operateNoties);
 			} else {
 				toPLCData[2] = false;
 			}
 		}
-		else if (cmd === "onService") {
+		else if (cmd === "onStop") {
 			if (!toPLCData[3]) {
 				toPLCData[3] = true;
-				let noti = null;
-				utility.generateOperateNoties(noti, `Turn service mode at ${fullTime}`, operateNoties);
-				console.log(operateNoties);
 			} else {
 				toPLCData[3] = false;
 			}
 		}
-		client.publish("n/toPLC", toPLCData.toString(), function (err) {
+		else if (cmd === "onReverse") {
+			if (!toPLCData[4]) {
+				toPLCData[4] = true;
+			} else {
+				toPLCData[4] = false;
+			}
+		}
+		msg = utility.ArrToPLCMsg(toPLCData);
+		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
 				console.log(err);
 			}
 		})
-		console.log(toPLCData);
+		console.log(msg);
+		
 	})
 	//- NX
 	socket.on("vCmdToNX", function (cmd) {
@@ -603,6 +688,7 @@ io.on('connection', function (socket) {
 			socket.connect();
 		}
 		time = 0;
+		clearInterval(id0);
 		clearInterval(id1);
 		clearInterval(id2);
 		console.log("Disconnect");

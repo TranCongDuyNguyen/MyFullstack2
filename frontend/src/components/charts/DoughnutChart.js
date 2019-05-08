@@ -58,8 +58,8 @@ export default class DoughnutChart extends Component {
                 >
                     <defs>
                         <linearGradient id={colorId} x1="0%" y1="0%" x2="120%" y2="20%">
-                            <stop offset="0%" stopColor={startGradColor} stopOpacity={data[0][dataKey] / 40} />
-                            <stop offset="100%" stopColor={endGradColor} stopOpacity={data[0][dataKey] / 80} />
+                            <stop offset="0%" stopColor={startGradColor} stopOpacity={data[0][dataKey] / (80*this.props.warn/100)} />
+                            <stop offset="100%" stopColor={endGradColor} stopOpacity={data[0][dataKey] / (80*this.props.fault/100)} />
                         </linearGradient>
                     </defs>
                     

@@ -17,8 +17,7 @@ export default class VirtualPage extends Component {
     rev: false,
     stop: false,
     maintenance: false,
-    fault: false,
-    service: false
+    fault: false
   }
   componentDidMount() {
     this.socket = io();
@@ -38,7 +37,6 @@ export default class VirtualPage extends Component {
         stop: status.stop,
         maintenance: status.maint,
         fault: status.fault,
-        service: status.service
       });
     }.bind(this));
   };
@@ -70,7 +68,7 @@ export default class VirtualPage extends Component {
   }
 
   render() {
-    const { forw, rev, stop, maintenance, fault, service, onPic } = this.state;
+    const { forw, rev, stop, maintenance, fault, onPic } = this.state;
     let loadPicClass = classNames({
       "background-pic": !onPic
     })
@@ -132,15 +130,6 @@ export default class VirtualPage extends Component {
                       <Led className="blue-led"
                         customColor={(rev && "#24E0FF") || (!rev && "#FFFD")}
                         customShadow={rev ? "rgba(0, 0, 0, 0.2) 0 -1px 8px 1px, inset  0 -1px 9px, #3F8CFF 0 2px 14px" : "0px 0px #0000"}
-                      />
-
-                    </div>
-                    <div className="led-container">
-                      <VirtualPageBtn sendText="onService"
-                        btnType="yellow">Service</VirtualPageBtn>
-                      <Led className="yellow-led"
-                        customColor={(service && "#FF0") || (!service && "#FFFD")}
-                        customShadow={service ? "rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #808002 0 -1px 9px, #FF0 0 2px 12px" : "0px 0px #0000"}
                       />
 
                     </div>

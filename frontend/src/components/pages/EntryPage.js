@@ -22,16 +22,16 @@ const config = {
 export default class EntryPage extends Component {
     constructor(props) {
         super(props);
-        this.maxscale1 = [{ val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        this.maxscale1 = [{ val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
-        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }];
 
-        this.maxscale2 = [{ val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        this.maxscale2 = [{ val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
-        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }];
@@ -68,7 +68,10 @@ export default class EntryPage extends Component {
         mppow2: null,
         pos1: '126,86 136,80 136,92',
         pos2: '126,86 136,80 136,92',
-        Hvalue: 0 //pass to tri-btn
+        Hvalue: 0, //pass to tri-btn
+        Hexp: 0,
+        ssp1: 0,
+        ssp2: 0
     }
     getHandler1 = () => {
         axios.get("/api/maxscale1/1").then(res => {
@@ -78,7 +81,7 @@ export default class EntryPage extends Component {
                 bsFre1: this.maxscale1[5].bs,
                 ssFre1: this.maxscale1[5].ss,
                 pos1: this.maxscale1[5].pos,
-                fFre1Lvl: this.maxscale1[5].fault, 
+                fFre1Lvl: this.maxscale1[5].fault,
                 wFre1Lvl: this.maxscale1[5].warn
             });
         }).catch(err => console.log(err));
@@ -91,7 +94,7 @@ export default class EntryPage extends Component {
                 bsFre2: this.maxscale2[5].bs,
                 ssFre2: this.maxscale2[5].ss,
                 pos2: this.maxscale2[5].pos,
-                fFre2Lvl: this.maxscale2[5].fault, 
+                fFre2Lvl: this.maxscale2[5].fault,
                 wFre2Lvl: this.maxscale2[5].warn
             });
         }).catch(err => console.log(err));
@@ -111,7 +114,14 @@ export default class EntryPage extends Component {
         this.socket = io();
         this.socket.on("motorStatus", function (status) {
             this.setState({
-                isService: status.service
+                isService: status.service,
+                Hexp: status.hiex
+            });
+        }.bind(this));
+        this.socket.on("motorStatus2", function (status) {
+            this.setState({
+                ssp1: status.ssp1,
+                ssp2: status.ssp2
             });
         }.bind(this));
         this.socket.on("mp1", function (mp1) {
@@ -267,7 +277,7 @@ export default class EntryPage extends Component {
             }
         }
     }
-    
+
     onKeyUp2 = (e) => {
         let eid = e.target.id;
         let text = e.target.value;
@@ -363,7 +373,7 @@ export default class EntryPage extends Component {
             })
         }
     }
-    
+
     onForw = () => {
         this.socket.emit("vCmdToPLC", "onForward");
     }
@@ -373,7 +383,7 @@ export default class EntryPage extends Component {
     onRev = () => {
         this.socket.emit("vCmdToPLC", "onReverse");
     }
-    
+
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
@@ -383,8 +393,8 @@ export default class EntryPage extends Component {
     };
     render() {
         const { isModal, text, Hvalue, info1, info2, pos1, pos2, isFre1Adj, isFre2Adj, maxfre1, maxfre2,
-            bsFre1, bsFre2, ssFre1, ssFre2, mpamp1, mptor1, mpmotorT1, mpdriveT1, mppow1, mpamp2, 
-            mptor2, mpmotorT2, mpdriveT2, mppow2, fFre1Lvl, fFre2Lvl, wFre1Lvl, wFre2Lvl } = this.state
+            bsFre1, bsFre2, ssFre1, ssFre2, mpamp1, mptor1, mpmotorT1, mpdriveT1, mppow1, mpamp2, Hexp,
+            mptor2, mpmotorT2, mpdriveT2, mppow2, fFre1Lvl, fFre2Lvl, wFre1Lvl, wFre2Lvl, ssp1, ssp2 } = this.state
         return (
             <div className="entry-page">
                 <HeightModal external={isModal}
@@ -395,7 +405,7 @@ export default class EntryPage extends Component {
                     <TriangleBtn onOpenModal={this.onOpenModal}
                         value={Hvalue}></TriangleBtn>
                     <div className="h-bar-box">
-                        <div className="unit">cm</div>
+                        <div className="unit">{`${Hexp} cm`}</div>
                         <Progress max={15} value={10}>
                         </Progress>
                         <div className="scale-box">
@@ -441,8 +451,8 @@ export default class EntryPage extends Component {
                                 onChange={(e) => this.onChange1(e, fFre1Lvl)}
                                 onKeyUp={this.onKeyUp1} />
                         </div>}
-                        <SpeedDC ioTopic="motor1DCData"
-                            valKey="fre1"
+                        <SpeedDC ioTopic="motor1DCData2"
+                            valKey="RSp0"
                             id="fre1DC"
                             onAdjTriClick={this.onAdjustTriClick}
                             triBtnPos={pos1}
@@ -453,9 +463,13 @@ export default class EntryPage extends Component {
                             warnLvl={wFre1Lvl}
                         ></SpeedDC>
                         <img className="motor-image for" src={MotorPic} alt="" onClick={this.onInfoPopup} />
-                        {info1 && <MotorInfo ioTopic="motor1Info" >Motor 1</MotorInfo>}
+                        {info1 && <MotorInfo ioTopic={["motor1Info1", "motor1Info2"]} >Motor 1</MotorInfo>}
                         <div className="bottom-text">Reversing</div>
                         <div className="bottom-text">{this.state.isService ? "Service" : "Normal"}</div>
+                        {info1 && <div className="set-sp1-box">
+                            Speed Setpoint:
+                            <div className="ssp">{ssp1}</div>
+                        </div>}
                     </Col>
                     <Col md={{ size: 4, offset: 3 }}>
                         {isFre2Adj && <div className="dc-fre-adj">
@@ -483,8 +497,8 @@ export default class EntryPage extends Component {
                                 onChange={(e) => this.onChange1(e, fFre2Lvl)}
                                 onKeyUp={this.onKeyUp1} />
                         </div>}
-                        <SpeedDC ioTopic="motor2DCData"
-                            valKey="fre2"
+                        <SpeedDC ioTopic="motor2DCData2"
+                            valKey="RSp1"
                             id="fre2DC"
                             onAdjTriClick={this.onAdjustTriClick}
                             triBtnPos={pos2}
@@ -494,9 +508,13 @@ export default class EntryPage extends Component {
                             faultLvl={fFre2Lvl}
                             warnLvl={wFre2Lvl}></SpeedDC>
                         <img className="motor-image rev" src={MotorPic} alt="" onClick={this.onInfoPopup} />
-                        {info2 && <MotorInfo ioTopic="motor2Info">Motor 2</MotorInfo>}
+                        {info2 && <MotorInfo ioTopic={["motor2Info1", "motor2Info2"]}>Motor 2</MotorInfo>}
                         <div className="bottom-text">Forwarding</div>
                         <div className="bottom-text">{this.state.isService ? "Service" : "Normal"}</div>
+                        {info2 && <div className="set-sp1-box sp2">
+                            Speed Setpoint:
+                            <div className="ssp">{ssp2}</div>
+                        </div>}
                     </Col>
                 </Row>
                 <Row style={{ background: "#000d", height: "25rem", padding: "0.5em 0.5em 1em 0.4em", marginTop: "1em" }}>
@@ -518,8 +536,8 @@ export default class EntryPage extends Component {
                             <div className="dots">...</div>
                         </div>
                         <div className="trapezoid mp">Forward</div>
-                        <div className="footer-panel mp" style={{height: "11em"}}>
-                            <div style={{textDecoration: "underline", textAlign:"center"}}>Max performance per 10 sec</div>
+                        <div className="footer-panel mp" style={{ height: "11em" }}>
+                            <div style={{ textDecoration: "underline", textAlign: "center" }}>Max performance per 10 sec</div>
                             <div>Current: {mpamp1} A</div>
                             <div>Torque: {mptor1} Nm</div>
                             <div>Motor Thermal: {mpmotorT1} &deg;C</div>
@@ -536,11 +554,20 @@ export default class EntryPage extends Component {
                                 <div className="stop-btn-entry" onClick={this.onStop}><i className="fas fa-pause"></i></div>
                                 <div className="forw-btn-entry" onClick={this.onForw}><i className="fas fa-chevron-right"></i></div>
                             </div>
+                            <div className="K-tau">
+                                <div className="K">
+                                    <NumberInput placeholder="K" ioTopic="setK"></NumberInput>
+                                </div>
+                                <div className="Tau">
+                                    <NumberInput placeholder="Tau" ioTopic="setTau"></NumberInput>
+                                </div>
+                            </div>
+
                             <div className="dots">...</div>
                         </div>
                         <div className="trapezoid mp">Reverse</div>
-                        <div className="footer-panel mp" style={{height: "11em"}}>
-                        <div style={{textDecoration: "underline", textAlign:"center"}}>Max performance per 10 sec</div>
+                        <div className="footer-panel mp" style={{ height: "11em" }}>
+                            <div style={{ textDecoration: "underline", textAlign: "center" }}>Max performance per 10 sec</div>
                             <div>Current: {mpamp2} A</div>
                             <div>Torque: {mptor2} Nm</div>
                             <div>Motor Thermal: {mpmotorT2} &deg;C</div>
@@ -552,7 +579,7 @@ export default class EntryPage extends Component {
                     <Col className="notify">
                         <div className="trapezoid">Notification</div>
                         <div className="footer-panel">
-                             <EntryNotiPanel ioTopic="operationNoties"></EntryNotiPanel> 
+                            <EntryNotiPanel ioTopic="operationNoties"></EntryNotiPanel>
                         </div>
                     </Col>
                 </Row>

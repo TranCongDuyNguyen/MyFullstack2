@@ -8,7 +8,7 @@ export default class TorqueDC extends Component {
         data: [
             {
                 name: "Torque",
-                tor: 60
+                tor: 560
             },
             {
                 name: "Ref",
