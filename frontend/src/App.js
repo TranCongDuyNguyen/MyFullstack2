@@ -26,7 +26,7 @@ class App extends Component {
     return (
       <Provider store = {store}>
         <Router>
-          <div className="App" style={{backgroundImage: 'linear-gradient(to top, #dfe9f3 0%, #FFE 100%)'}}>
+          <div className="App" style={{backgroundImage: 'linear-gradient(to top, #dfe9f3 0%, #EEEE 100%)'}}>
             <TopNavBar/>
             {/*<Users/>*/}
             <Route exact path="/" component={Landing} />

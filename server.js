@@ -4,6 +4,7 @@ const utility = require("./controllers/controller.utility");
 const monitorNotiesFunc = require("./controllers/controller.monitorNoties");
 const operateNotiesFunc = require("./controllers/controller.operateNoties");
 const operateTimeFunc = require("./controllers/controller.operateTime");
+const planFunc = require("./controllers/controller.plan");
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -29,6 +30,7 @@ app.use('/api/maxscale1', require('./routes/api/route.maxscale1'));
 app.get('/api/monitorNoties/:id', monitorNotiesFunc.fetchMonitorNoties);
 app.get('/api/operateNoties/:id', operateNotiesFunc.fetchOperateNoties);
 app.get('/api/operateTime/:id', operateTimeFunc.fetchOtime);
+app.get('/api/plan', planFunc.fetchPlan);
 
 //connect to mongoDB
 mongoose.connect(process.env.mongo_url, {
@@ -124,6 +126,8 @@ let toPLCData = [0, 0, false, false, false, 0, 0, 0, 0, 0];
 //+ max perfomance paras
 let mp1 = [0, 0, 0, 0, 0];
 let mp2 = [0, 0, 0, 0, 0];
+//+ Plan events
+let planEvents = [];
 //+ PLC Data
 let motorData1 = {
 	Cur0: 0,
@@ -157,7 +161,6 @@ let motorData3 = {
 	FrSy: 0
 };
 //- RECEIVE DATA FROM PLC VIA MQTT
-
 client.on("message", function (topic, message) {
 	if (topic === "n/motorData") {
 		let motorData = JSON.parse(message.toString());
@@ -567,7 +570,6 @@ io.on('connection', function (socket) {
 	//-fe client publishing----------------------------------------------------------------------------
 	//- PLC
 	//+ send freq
-	let PLCMsg;
 
 	socket.on("setFrequency", function (frequency) {
 		toPLCData[0] = parseInt(frequency);
@@ -681,6 +683,12 @@ io.on('connection', function (socket) {
 			}
 			console.log(cmd);
 		})
+	})
+	// - Plan
+	socket.on("planEvent", function (event) {
+		utility.objToBuffer(event, planEvents, 500);
+		planFunc.updatePlan(planEvents);
+		console.log(planEvents);
 	})
 	socket.on("disconnect", (reason) => {
 		if (reason === 'io server disconnect') {
