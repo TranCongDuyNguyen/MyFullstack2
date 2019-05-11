@@ -4,6 +4,7 @@
     margin-top: 1em;
     width: 100%;
 }
+
 .currency-input {
     padding: .375rem .75rem;
     font-size: 1rem;
@@ -33,4 +34,18 @@
     border: 1px solid #ced4da;
     border-radius: .25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.raise-cm {
+    color: #6c757d!important;
+    background-color: #fff!important;
+}
+.raise-cm:hover {
+    color: #eee!important;
+    background-color:#D3C4E3!important;
+    border: 1px solid #8F95D3!important;
+}
+.cancel-cm:hover {
+    color: #6c757d!important;
+    background-color: #98A886!important;
+    border: 1px solid #C4A69D!important;
 }

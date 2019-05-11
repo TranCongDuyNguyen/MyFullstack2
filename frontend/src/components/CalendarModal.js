@@ -88,8 +88,8 @@ onRaiseClick = () => {
           </div>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.onRaiseClick}>Raise</Button>{' '}
-            <Button color="secondary" onClick={toggle}>Cancel</Button>
+            <Button className="raise-cm" onClick={this.onRaiseClick}>Raise</Button>{' '}
+            <Button className="cancel-cm" onClick={toggle}>Cancel</Button>
           </ModalFooter>
         </Modal>
       </div>

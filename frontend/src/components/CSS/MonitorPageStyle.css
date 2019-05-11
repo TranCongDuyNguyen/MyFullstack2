@@ -170,9 +170,18 @@
     left: 4.4em;
 }
 .motor-1-pic {
+    display: flex;
     width: 10em;
 }
+.motor-1-pic .fas.fa-radiation-alt {
+    margin-top: 0.2em;
+    font-size: 10em;
+}
+.emrg {
+    color: red;
+}
 .motor-image {
+    margin-right: 6em;
     width: 316px;
     height: 267px;
 }

@@ -1,17 +1,31 @@
 const Plan = require("../models/model.plan")
 
 module.exports.fetchPlan = function(req, res, next) {
-    Plan.findOne({ _id: 1 }, 'events')
-        .then(payload => {
-            let events = payload.events;
-            res.json({ events });
-        });
+    Plan.find()
+        .sort({ date: -1 })
+        .then(event => res.json(event));
 }
-module.exports.updatePlan = function(data) {
-	Plan.updateOne({ _id: 1 }, { $set: { events: data } }, { upsert: true },
-		function (err) {
-			if (err) {
-				console.error(err);
-			}
-		});
+
+module.exports.createPlan = function(req, res, next) {
+	console.log(req.body);
+	const newPlan = new Plan({
+		plan: req.body.plan,
+		from: req.body.from,
+		to: req.body.to,
+		money: req.body.money,
+		calendarDate: req.body.calendarDate
+	})
+	newPlan.save().then(event => res.json(event)) 
+}
+
+module.exports.deletePlan = function(req, res, next){
+    console.log(req.params.id); 
+    Plan.deleteOne({ _id: req.params.id}, 
+            function(err){
+                if(err){
+                    res.status(404).json({success: false});
+                    return console.error(err);
+                } 
+                else return res.json({success: true})
+            });
 }

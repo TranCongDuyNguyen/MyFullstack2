@@ -4,7 +4,8 @@ const utility = require("./controllers/controller.utility");
 const monitorNotiesFunc = require("./controllers/controller.monitorNoties");
 const operateNotiesFunc = require("./controllers/controller.operateNoties");
 const operateTimeFunc = require("./controllers/controller.operateTime");
-const planFunc = require("./controllers/controller.plan");
+
+
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -27,10 +28,11 @@ app.use('/api/users', require('./routes/api/route.users'));
 app.use('/api/items', require('./routes/api/route.items'));
 app.use('/api/auth', require('./routes/api/route.auth'));
 app.use('/api/maxscale1', require('./routes/api/route.maxscale1'));
+app.use('/api/plan', require('./routes/api/route.plan'));
 app.get('/api/monitorNoties/:id', monitorNotiesFunc.fetchMonitorNoties);
 app.get('/api/operateNoties/:id', operateNotiesFunc.fetchOperateNoties);
 app.get('/api/operateTime/:id', operateTimeFunc.fetchOtime);
-app.get('/api/plan', planFunc.fetchPlan);
+
 
 //connect to mongoDB
 mongoose.connect(process.env.mongo_url, {
@@ -126,8 +128,7 @@ let toPLCData = [0, 0, false, false, false, 0, 0, 0, 0, 0];
 //+ max perfomance paras
 let mp1 = [0, 0, 0, 0, 0];
 let mp2 = [0, 0, 0, 0, 0];
-//+ Plan events
-let planEvents = [];
+
 //+ PLC Data
 let motorData1 = {
 	Cur0: 0,
@@ -166,15 +167,12 @@ client.on("message", function (topic, message) {
 		let motorData = JSON.parse(message.toString());
 
 		if(motorData.PkID === 1) {
-			console.log("a");
 			motorData1 = motorData;
 		}
 		else if(motorData.PkID === 2) {
-			console.log("b");
 			motorData2 = motorData;
 		}
 		else if(motorData.PkID === 3) {
-			console.log("c");
 			motorData3 = motorData;
 		}
 		//+create trend buffer
@@ -192,6 +190,7 @@ client.on("message", function (topic, message) {
 				motor1TObj = utility.createObj("motorT", motorData2.ThM0);
 				motor2TObj = utility.createObj("motorT", motorData2.ThM1);
 				hObj = utility.createObj("h", motorData3.HiFB);
+				
 
 				utility.objToBuffer(tor1Obj, tor1Buffer, 10);
 				utility.objToBuffer(tor1Obj, tor1Store, 1000);
@@ -684,12 +683,7 @@ io.on('connection', function (socket) {
 			console.log(cmd);
 		})
 	})
-	// - Plan
-	socket.on("planEvent", function (event) {
-		utility.objToBuffer(event, planEvents, 500);
-		planFunc.updatePlan(planEvents);
-		console.log(planEvents);
-	})
+	
 	socket.on("disconnect", (reason) => {
 		if (reason === 'io server disconnect') {
 			// the disconnection was initiated by the server, you need to reconnect manually

@@ -6,6 +6,7 @@ import {
 } from "reactstrap";
 import classNames from "classnames";
 import axios from "axios";
+import io from 'socket.io-client';
 
 import TorqueDC from '../charts/TorqueDC';
 import CurrentDC from '../charts/CurrentDC';
@@ -60,6 +61,7 @@ export default class Motor2Page extends Component {
         ssMotorT: false,
         ssDriveT: false,
         ssPow: false,
+        emer: false,
         textcur: '',
         texttor: '',
         textmotorT: '',
@@ -140,7 +142,21 @@ export default class Motor2Page extends Component {
     }
     componentDidMount() {
         this.getHandler();
+        this.socket = io();
+        this.socket.on("motorStatus", function (statusObj) {
+            console.log(statusObj);
+            this.setState({
+                emer: statusObj.emer
+            })
+        }.bind(this))
     }
+    componentWillUnmount() {
+        this.socket.disconnect();
+        this.socket.on("connect_error", function (error) {
+          console.log(error);
+          this.socket.disconnect();
+        })
+    };
     onDeleteTrend = (e) => {
         let eclass = e.target.className;
         if (eclass === "exit-button cur") {
@@ -587,7 +603,7 @@ export default class Motor2Page extends Component {
             isCurAdj, isTorAdj, isMotorTAdj, isDriveTAdj, isPowerAdj, curpos, torpos, motorTpos, driveTpos,
             powpos, maxcur, maxtor, maxmotorT, maxdriveT, maxpow, bsCur, bsTor, bsMotorT, bsDriveT, bsPow,
             ssCur, ssTor, ssMotorT, ssDriveT, ssPow, fCurLvl, fTorLvl, fMotorTLvl, fDriveTLvl, fPowLvl, wCurLvl,
-            wTorLvl, wMotorTLvl, wDriveTLvl, wPowLvl, } = this.state;
+            wTorLvl, wMotorTLvl, wDriveTLvl, wPowLvl, emer } = this.state;
         let curState = classNames({
             "tc-box": true,
             "hide": !isHideCur
@@ -608,6 +624,9 @@ export default class Motor2Page extends Component {
             "tc-box": true,
             "hide": !isHidePower
         })
+        let emrg = classNames({
+            "emrg": emer
+        })
         return (
             <div style={{
                 background: "linear-gradient(0deg, #29323c 0%, #485563 100%)",
@@ -620,9 +639,10 @@ export default class Motor2Page extends Component {
                 <Container className="motor-dc" style={{ marginBottom: "1em" }}>
                     <Row>
                         <Col md="6" className="leftside">
-                            <div className="motor-1-pic">
-                                <img className="motor-image" src={MotorPic} alt="" />
-                            </div>
+                        <div className="motor-1-pic">
+                            <div><img className="motor-image" src={MotorPic} alt="" /></div>
+                            <div className={emrg}><i class="fas fa-radiation-alt"></i></div>
+                        </div>
                             <WarnPanel ioTopic="warnList2" reqId={2} />
                         </Col>
                         <Col md="6" className="rightside" >

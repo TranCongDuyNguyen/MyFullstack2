@@ -1,27 +1,25 @@
 const mongoose = require('mongoose');
 var planSchema = mongoose.Schema({
-    _id: {
-        type: Number
+    plan: {
+        type: String
     },
-    events: [{
-        plan: {
-            type: String
-        },
-        from: {
-            type: String
-        },
-        to: {
-            type: String
-        },
-        date: {
-            type: String
-        }
-    }],
-     date: {
+    from: {
+        type: String
+    },
+    to: {
+        type: String
+    },
+    calendarDate: {
+        type: String
+    },
+    money: {
+        type: String
+    },
+    date: {
         type: Date,
         default: Date.now() //always give current date
     }
-},  { _id: false })
+})
 
 var Plan = mongoose.model('Plan', planSchema );
 
