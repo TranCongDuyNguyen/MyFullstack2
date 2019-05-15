@@ -31,12 +31,12 @@ const config = {
 export default class Motor1Page extends Component {
     constructor(props) {
         super(props);
-        this.maxscale1 = [{ val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
-        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
-        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }, 
-        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
-        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false },
-        { val: "100", fault: 0, warn: 0, pos: '126,86 136,80 136,92', bs: false, ss: false }];
+        this.maxscale1 = [{ val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false },
+        { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false }];
         this.onAdjustTriClick = this.onAdjustTriClick.bind(this);
 
     }
@@ -395,7 +395,7 @@ export default class Motor1Page extends Component {
             let positionStr = `${x},${y} ${xt},${yt} ${xd},${yd}`;
             if (eid === "curset") {
                 this.maxscale1[0].pos = positionStr;
-                this.maxscale1[0].fault = parseInt(text);
+                this.maxscale1[0].fault = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
@@ -404,7 +404,7 @@ export default class Motor1Page extends Component {
             }
             else if (eid === "torset") {
                 this.maxscale1[1].pos = positionStr;
-                this.maxscale1[1].fault = parseInt(text);
+                this.maxscale1[1].fault = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
@@ -413,7 +413,7 @@ export default class Motor1Page extends Component {
             }
             else if (eid === "motorTset") {
                 this.maxscale1[2].pos = positionStr;
-                this.maxscale1[2].fault = parseInt(text);
+                this.maxscale1[2].fault = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
@@ -422,7 +422,7 @@ export default class Motor1Page extends Component {
             }
             else if (eid === "driveTset") {
                 this.maxscale1[3].pos = positionStr;
-                this.maxscale1[3].fault = parseInt(text);
+                this.maxscale1[3].fault = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
@@ -431,7 +431,7 @@ export default class Motor1Page extends Component {
             }
             else if (eid === "powset") {
                 this.maxscale1[4].pos = positionStr;
-                this.maxscale1[4].fault = parseInt(text);
+                this.maxscale1[4].fault = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
@@ -554,7 +554,7 @@ export default class Motor1Page extends Component {
         if (e.keyCode === 13) {
             if (!text) { return; };
             if (eid === "curset1") {
-                this.maxscale1[0].warn = parseInt(text);
+                this.maxscale1[0].warn = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
@@ -562,7 +562,7 @@ export default class Motor1Page extends Component {
                 }))
             }
             else if (eid === "torset1") {
-                this.maxscale1[1].warn = parseInt(text);
+                this.maxscale1[1].warn = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
@@ -570,7 +570,7 @@ export default class Motor1Page extends Component {
                 }))
             }
             else if (eid === "motorTset1") {
-                this.maxscale1[2].warn = parseInt(text);
+                this.maxscale1[2].warn = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
@@ -578,7 +578,7 @@ export default class Motor1Page extends Component {
                 }))
             }
             else if (eid === "driveTset1") {
-                this.maxscale1[3].warn = parseInt(text);
+                this.maxscale1[3].warn = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({
@@ -586,7 +586,7 @@ export default class Motor1Page extends Component {
                 }))
             }
             else if (eid === "powset1") {
-                this.maxscale1[4].warn = parseInt(text);
+                this.maxscale1[4].warn = text;
                 this.putHandler(this.maxscale1, config);
                 this.getHandler();
                 this.setState(() => ({

@@ -78,7 +78,7 @@ export default class CurrentTC extends Component {
                     customColor="#45F0DF"
                     colorId="currentTC"
                     width={450}
-                    height={200}
+                    height={210}
                     onStopClick={this.onStopClick} >
                 </TrendChart>
             </div>

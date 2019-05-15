@@ -54,7 +54,7 @@ export default class PowerTC extends Component {
                 <div className="forw-btn" onClick={this.onForwClick}><i className="fas fa-angle-right"></i></div>
                 <TrendChart data={this.state.data}
                     width={450}
-                    height={200}
+                    height={210}
                     dataKey="power"
                     yAxisName="Power (W)"
                     customColor="#89BBFE"

@@ -78,7 +78,10 @@ client.subscribe('n/image', function (err) {
 
 
 //INITIAL VARIABLES----------------------------------------------------------------------------
-//+height
+//+ temp
+let forwTemp = false; let revTemp = false; let stopTemp = false;
+let faltTemp = false; let mtntTemp = false; let emrgTemp = false;
+//+ height
 let hBuffer = [{ h: 0, time: "00:00:00" }]; let hStore = [{ h: 0, time: "00:00:00" }]; let hStoreCopy = [];
 //-Motor 1----------------------------------------------------------------------------
 //+trend arr
@@ -166,6 +169,7 @@ client.on("message", function (topic, message) {
 	if (topic === "n/motorData") {
 		//let motorData = JSON.parse(message.toString());
 		let motorData = utility.PLCStrToObj(message);
+		console.log(motorData);
 
 		if(motorData.PkID === 1) {
 			motorData1 = motorData;
@@ -273,28 +277,64 @@ client.on("message", function (topic, message) {
 					monitorNotiesFunc.updateMonitorNoties(2, notiesArr2);
 			})
 			if (motorData3.Fwrd) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Forward at ${fullTime}`, operateNoties);
+				if(motorData3.Fwrd !== forwTemp) {
+					let noti = null;
+					utility.generateOperateNoties(noti, `Forward at ${fullTime}`, operateNoties);
+					forwTemp = motorData3.Fwrd;
+				}
+			}	
+			else if (!motorData3.Fwrd) {
+				forwTemp = motorData3.Fwrd;
 			}
 			if (motorData3.Stop) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Stop at ${fullTime}`, operateNoties);
+				if(motorData3.Stop !== stopTemp) {
+					let noti = null;
+					utility.generateOperateNoties(noti, `Stop at ${fullTime}`, operateNoties);
+					stopTemp = motorData3.Stop;
+				}
+			}	
+			else if (!motorData3.Stop) {
+				stopTemp = motorData3.Stop;
 			}
 			if (motorData3.Reve) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Reverse at ${fullTime}`, operateNoties);
+				if(motorData3.Reve !== revTemp) {
+					let noti = null;
+					utility.generateOperateNoties(noti, `Reverse at ${fullTime}`, operateNoties);
+					revTemp = motorData3.Reve;
+				}
+			}
+			else if(!motorData3.Reve) {
+				revTemp = motorData3
 			}
 			if (motorData3.Mtnt) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Reach maintenance at ${fullTime}`, operateNoties);
+				if(motorData3.Mtnt !== mtntTemp) {
+					let noti = null;
+					utility.generateOperateNoties(noti, `Reach maintenance at ${fullTime}`, operateNoties);
+					mtntTemp = motorData3.Mtnt;
+				}
+			}
+			else if(!motorData3.Mtnt) {
+				mtntTemp = motorData3.Mtnt;
 			}
 			if (motorData3.Falt) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Fault at ${fullTime}`, operateNoties);
+				if(motorData3.Falt !== faltTemp) {
+					let noti = null;
+					utility.generateOperateNoties(noti, `Fault at ${fullTime}`, operateNoties);
+					faltTemp = motorData3.Falt;
+				}
+			}
+			else if(!motorData3.Falt) {
+				faltTemp = motorData3.Falt;
 			}
 			if (motorData3.Emrg) {
-				let noti = null;
-				utility.generateOperateNoties(noti, `Emergency stop at ${fullTime}`, operateNoties);
+				if(motorData3.Emrg !== emrgTemp) {
+					let noti = null;
+					utility.generateOperateNoties(noti, `Emergency stop at ${fullTime}`, operateNoties);
+					emrgTemp = motorData3.Emrg;
+				}
+			}
+			else if(!motorData3.Emrg) {
+				emrgTemp = motorData3.Emrg;
 			}
 			operateNotiesFunc.updateOperateNoties(1, operateNoties);
 			operateTimeFunc.updateOtime(1, motorData2.Hrs0);

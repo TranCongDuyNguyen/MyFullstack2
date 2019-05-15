@@ -36,7 +36,7 @@ export default class DoughnutChart extends Component {
                                     onClick={e => this.props.onAdjTriClick(e)}
                                     id={this.props.id} 
                                     className="dc-tribtn"
-                                    style={{"fill": `${(data[0][dataKey]>(fault))?"red":`url(#${colorId})`}`}} />
+                                    style={{"fill": `${(data[0][dataKey]>(fault))?"red":`white`}`}} />
                         </svg>
                 </div>
                 <div className="text">

@@ -109,7 +109,7 @@ module.exports.ArrToPLCMsg = function(arr) {
 	let msg = arr.join(";") + ";";
 	return msg;
 }
-module.exports.PLCStrToObj = function(plcStr) {
+module.exports.PLCStrToObj = function(message) {
 	plcStr = message.toString();
     let plcArr = plcStr.split("+");
     plcStr = plcArr.join("");

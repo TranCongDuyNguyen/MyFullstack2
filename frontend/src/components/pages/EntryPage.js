@@ -396,12 +396,14 @@ export default class EntryPage extends Component {
             bsFre1, bsFre2, ssFre1, ssFre2, mpamp1, mptor1, mpmotorT1, mpdriveT1, mppow1, mpamp2, Hexp,
             mptor2, mpmotorT2, mpdriveT2, mppow2, fFre1Lvl, fFre2Lvl, wFre1Lvl, wFre2Lvl, ssp1, ssp2 } = this.state
         return (
-            <div className="entry-page">
+            <div className="entry-page" style={{backgroundImage: 'linear-gradient(to top, #dfe9f3 0%, #EEEE 100%)'}}>
                 <HeightModal external={isModal}
                     text={text}
                     onChange={this.onChange}
                     onKeyUp={this.onKeyUp}></HeightModal>
-                <Row style={{ marginTop: "4rem" }}>
+                <div style={{ height: "4em" }}></div>
+                
+                <Row >
                     <TriangleBtn onOpenModal={this.onOpenModal}
                         value={Hvalue}></TriangleBtn>
                     <div className="h-bar-box">
