@@ -165,7 +165,7 @@ export default class EntryPage extends Component {
     }
     onChange1(e, maxScale) {
         let eid = e.target.id;
-        if (parseInt(e.target.value) > maxScale) {
+        if (parseFloat(e.target.value) > maxScale) {
             e.target.value = maxScale.toString();
         }
         if (e.target.value.length > 4) {
@@ -208,7 +208,7 @@ export default class EntryPage extends Component {
     }
     onChange3(e, maxScale) {
         let eid = e.target.id;
-        if (parseInt(e.target.value) > maxScale) {
+        if (parseFloat(e.target.value) > maxScale) {
             e.target.value = maxScale.toString();
         }
         if (e.target.value.length > 4) {
@@ -230,9 +230,9 @@ export default class EntryPage extends Component {
         let text = e.target.value;
         if (e.keyCode === 13) {
             if (!text) { return; };
-            this.socket.emit("setHeight", this.state.text);
+            this.socket.emit("setHeight", Number(this.state.text).toFixed(2));
             this.setState(() => ({
-                Hvalue: parseInt(text)
+                Hvalue: text
             }))
             this.setState(() => ({
                 text: ""
@@ -247,7 +247,7 @@ export default class EntryPage extends Component {
             let R = 66;
             let r = 56;
             let center = 70;
-            let setVal = maxScale - parseInt(text);
+            let setVal = maxScale - parseFloat(text);
             let alpha = ((180 / maxScale) * setVal) * (Math.PI / 180);
             let beta = Math.atan(6 / 66);
             let x = center + r * Math.cos(alpha);
@@ -259,7 +259,7 @@ export default class EntryPage extends Component {
             let positionStr = `${x},${y} ${xt},${yt} ${xd},${yd}`;
             if (eid === "fre1set") {
                 this.maxscale1[5].pos = positionStr;
-                this.maxscale1[5].fault = parseInt(text);
+                this.maxscale1[5].fault = parseFloat(text);
                 this.putHandler1(this.maxscale1, config);
                 this.getHandler1();
                 this.setState(() => ({
@@ -268,7 +268,7 @@ export default class EntryPage extends Component {
             }
             else if (eid === "fre2set") {
                 this.maxscale2[5].pos = positionStr;
-                this.maxscale2[5].fault = parseInt(text);
+                this.maxscale2[5].fault = parseFloat(text);
                 this.putHandler2(this.maxscale2, config);
                 this.getHandler2();
                 this.setState(() => ({
@@ -331,7 +331,7 @@ export default class EntryPage extends Component {
         if (e.keyCode === 13) {
             if (!text) { return; };
             if (eid === "fre1set1") {
-                this.maxscale1[5].warn = parseInt(text);
+                this.maxscale1[5].warn = parseFloat(text);
                 this.putHandler1(this.maxscale1, config);
                 this.getHandler1();
                 this.setState({
@@ -339,7 +339,7 @@ export default class EntryPage extends Component {
                 })
             }
             else if (eid === "fre2set1") {
-                this.maxscale2[5].warn = parseInt(text);
+                this.maxscale2[5].warn = parseFloat(text);
                 this.putHandler2(this.maxscale2, config);
                 this.getHandler2();
                 this.setState({

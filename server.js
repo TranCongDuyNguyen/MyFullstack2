@@ -127,7 +127,7 @@ let counter = {
 	countH: 0
 }
 //+data to send to PLC
-let toPLCData = [0, 0, false, false, false, 0, 0, 0, 0, 0];
+let toPLCData = [Number(15).toFixed(2), Number(7).toFixed(2), false, false, false, Number(1).toFixed(2), Number(15).toFixed(2), Number(3).toFixed(2), Number(0.3).toFixed(2), Number(3).toFixed(2)];
 //+ max perfomance paras
 let mp1 = [0, 0, 0, 0, 0];
 let mp2 = [0, 0, 0, 0, 0];
@@ -612,7 +612,7 @@ io.on('connection', function (socket) {
 	//+ send freq
 
 	socket.on("setFrequency", function (frequency) {
-		toPLCData[0] = parseInt(frequency);
+		toPLCData[0] = frequency;
 		let msg = utility.ArrToPLCMsg(toPLCData);
 		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
@@ -623,7 +623,7 @@ io.on('connection', function (socket) {
 	})
 	//+ send Kp, Ki, Kd
 	socket.on("setK", function (K) {
-		toPLCData[5] = parseInt(K);
+		toPLCData[5] = K;
 		let msg = utility.ArrToPLCMsg(toPLCData);
 		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
@@ -633,7 +633,7 @@ io.on('connection', function (socket) {
 		console.log(msg);
 	})
 	socket.on("setTau", function (Tau) {
-		toPLCData[6] = parseInt(Tau);
+		toPLCData[6] =  Tau;
 		let msg = utility.ArrToPLCMsg(toPLCData);
 		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
@@ -643,7 +643,7 @@ io.on('connection', function (socket) {
 		console.log(msg);
 	})
 	socket.on("setKp", function (Kp) {
-		toPLCData[7] = parseInt(Kp);
+		toPLCData[7] = Kp;
 		let msg = utility.ArrToPLCMsg(toPLCData);
 		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
@@ -653,7 +653,7 @@ io.on('connection', function (socket) {
 		console.log(msg);
 	})
 	socket.on("setKi", function (Ki) {
-		toPLCData[8] = parseInt(Ki);
+		toPLCData[8] = Ki;
 		let msg = utility.ArrToPLCMsg(toPLCData);
 		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
@@ -663,7 +663,7 @@ io.on('connection', function (socket) {
 		console.log(msg);
 	})
 	socket.on("setKd", function (Kd) {
-		toPLCData[9] = parseInt(Kd);
+		toPLCData[9] = Kd;
 		let msg = utility.ArrToPLCMsg(toPLCData);
 		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
@@ -674,7 +674,7 @@ io.on('connection', function (socket) {
 	})
 	//+ send height
 	socket.on("setHeight", function (height) {
-		toPLCData[1] = parseFloat(height);
+		toPLCData[1] = height;
 		let msg = utility.ArrToPLCMsg(toPLCData);
 		client.publish("n/toPLC", msg, function (err) {
 			if (err) {

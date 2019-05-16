@@ -12,10 +12,10 @@ export default class NumberInput extends Component {
         this.socket = io()
     };
     onChange = (e) => {
-        if (parseInt(e.target.value) > 100) {
+        if (parseFloat(e.target.value) > 100.0) {
             e.target.value = '100';
         }
-        else if (parseInt(e.target.value) < 0) {
+        else if (parseFloat(e.target.value) < 0.0) {
             e.target.value = '0';
         }
         if (e.target.value.length > 4) {
@@ -32,16 +32,16 @@ export default class NumberInput extends Component {
                 text: "1"
             })
         }
-        else if(parseInt(this.state.text) < 100) {
+        else if(parseFloat(this.state.text) < 100.0) {
             this.setState({
-                text: (parseInt(this.state.text) + 1).toString()
+                text: (parseFloat(this.state.text) + 1).toString()
             })
         }
     }
     onDecClick = () => {
-        if(parseInt(this.state.text) > 0) {
+        if(parseFloat(this.state.text) > 0.0) {
             this.setState({
-                text: (parseInt(this.state.text) - 1).toString()
+                text: (parseFloat(this.state.text) - 1).toString()
             })
         } 
     }
@@ -50,7 +50,8 @@ export default class NumberInput extends Component {
         let text = e.target.value;
         if (e.keyCode === 13) {
             if (!text) { return; };
-            this.socket.emit(this.props.ioTopic, this.state.text);
+            this.socket.emit(this.props.ioTopic, Number(this.state.text).toFixed(2));
+            console.log(Number(this.state.text).toFixed(2));
             this.setState({
                 text: ""
             })

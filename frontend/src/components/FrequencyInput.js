@@ -11,10 +11,10 @@ export default class FrequencyInput extends Component {
     }
 
     onChange = (e) => {
-        if (parseInt(e.target.value) > 100) {
+        if (parseFloat(e.target.value) > 100) {
             e.target.value = '100';
         }
-        else if (parseInt(e.target.value) < 0) {
+        else if (parseFloat(e.target.value) < 0) {
             e.target.value = '0';
         }
         if (e.target.value.length > 4) {
@@ -31,16 +31,16 @@ export default class FrequencyInput extends Component {
                 text: "10"
             })
         }
-        else if(parseInt(this.state.text) < 100) {
+        else if(parseFloat(this.state.text) < 100) {
             this.setState({
-                text: (parseInt(this.state.text) + 10).toString()
+                text: (parseFloat(this.state.text) + 10).toString()
             })
         }
     }
     onDecClick = () => {
-        if(parseInt(this.state.text) > 0) {
+        if(parseFloat(this.state.text) > 0) {
             this.setState({
-                text: (parseInt(this.state.text) - 10).toString()
+                text: (parseFloat(this.state.text) - 10).toString()
             })
         } 
     }
@@ -49,7 +49,7 @@ export default class FrequencyInput extends Component {
         let text = e.target.value;
         if (e.keyCode === 13) {
             if (!text) { return; };
-            this.socket.emit("setFrequency", this.state.text);
+            this.socket.emit("setFrequency", Number(this.state.text).toFixed(2));
             this.setState({
                 text: ""
             })
