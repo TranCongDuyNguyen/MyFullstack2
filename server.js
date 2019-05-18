@@ -169,7 +169,6 @@ client.on("message", function (topic, message) {
 	if (topic === "n/motorData") {
 		//let motorData = JSON.parse(message.toString());
 		let motorData = utility.PLCStrToObj(message);
-		console.log(motorData);
 
 		if(motorData.PkID === 1) {
 			motorData1 = motorData;
@@ -250,7 +249,7 @@ client.on("message", function (topic, message) {
 					utility.generateAlarm("more", motorData1.Tor0, torWarn1, `Torque is above ${torFLvl1}`, `Torque is above ${torWLvl1}`, notiesArr1, torFLvl1, torWLvl1);
 					utility.generateAlarm("more", motorData2.ThM0, motorTWarn1, `Motor Thermal is above ${motorTFLvl1}`, `Motor Thermal is above ${motorTWLvl1}`, notiesArr1, motorTFLvl1, motorTWLvl1);
 					utility.generateAlarm("more", motorData1.ThD0, driveTWarn1, `Drive Thermal is above ${driveTFLvl1}`, `Drive Thermal is above ${driveTWLvl1}`, notiesArr1, driveTFLvl1, driveTWLvl1);
-					utility.generateAlarm("less", motorData1.Pow0, powerWarn1, `Power is above ${powFLvl1}`, `Power is under ${powWLvl1}`, notiesArr1, powFLvl1, powWLvl1);
+					utility.generateAlarm("more", motorData1.Pow0, powerWarn1, `Power is above ${powFLvl1}`, `Power is under ${powWLvl1}`, notiesArr1, powFLvl1, powWLvl1);
 					utility.generateAlarm("more", motorData2.RSp0, freWarn1, `Speed is above ${freFLvl1}`, `Power is above ${freWLvl1}`, operateNoties, freFLvl1, freWLvl1);
 					monitorNotiesFunc.updateMonitorNoties(1, notiesArr1);
 				})
@@ -272,7 +271,7 @@ client.on("message", function (topic, message) {
 					utility.generateAlarm("more", motorData1.Tor1, torWarn2, `Torque is above ${torFLvl2}`, `Torque is above ${torWLvl2}`, notiesArr2, torFLvl2, torWLvl2);
 					utility.generateAlarm("more", motorData2.ThM1, motorTWarn2, `Motor Thermal is above ${motorTFLvl2}`, `Motor Thermal is above ${motorTWLvl2}`, notiesArr2, motorTFLvl2,  motorTWLvl2);
 					utility.generateAlarm("more", motorData1.ThD1, driveTWarn2, `Drive Thermal is above ${driveTFLvl2}`, `Drive Thermal is above ${driveTWLvl2}`, notiesArr2, driveTFLvl2, driveTWLvl2);
-					utility.generateAlarm("less", motorData1.Pow1, powerWarn2, `Power is above ${powFLvl2}`, `Power is under ${powWLvl2}`, notiesArr2, powFLvl2, powWLvl2);
+					utility.generateAlarm("more", motorData1.Pow1, powerWarn2, `Power is above ${powFLvl2}`, `Power is under ${powWLvl2}`, notiesArr2, powFLvl2, powWLvl2);
 					utility.generateAlarm("more", motorData2.RSp1, freWarn2, `Speed is above ${freFLvl2}`, `Power is above ${freWLvl2}`, operateNoties, freFLvl2, freWLvl2);
 					monitorNotiesFunc.updateMonitorNoties(2, notiesArr2);
 			})
@@ -406,6 +405,7 @@ io.on('connection', function (socket) {
 					fault: motorData3.Falt,
 					emer: motorData3.Emrg,
 					hiex: motorData3.HiEx,
+					hifb: motorData3.HiFB,
 					freq: motorData3.FrSy,
 				});
 			}
@@ -619,6 +619,9 @@ io.on('connection', function (socket) {
 				console.log(err);
 			}
 		})
+		let noti = null;
+		utility.generateOperateNoties(noti, `Set sync speed to ${frequency} at ${fullTime}`, operateNoties);
+		operateNotiesFunc.updateOperateNoties(1, operateNoties);
 		console.log(msg);
 	})
 	//+ send Kp, Ki, Kd
@@ -630,6 +633,9 @@ io.on('connection', function (socket) {
 				console.log(err);
 			}
 		})
+		let noti = null;
+		utility.generateOperateNoties(noti, `Set K to ${K} at ${fullTime}`, operateNoties);
+		operateNotiesFunc.updateOperateNoties(1, operateNoties);
 		console.log(msg);
 	})
 	socket.on("setTau", function (Tau) {
@@ -640,6 +646,9 @@ io.on('connection', function (socket) {
 				console.log(err);
 			}
 		})
+		let noti = null;
+		utility.generateOperateNoties(noti, `Set Tau to ${Tau} at ${fullTime}`, operateNoties);
+		operateNotiesFunc.updateOperateNoties(1, operateNoties);
 		console.log(msg);
 	})
 	socket.on("setKp", function (Kp) {
@@ -650,6 +659,9 @@ io.on('connection', function (socket) {
 				console.log(err);
 			}
 		})
+		let noti = null;
+		utility.generateOperateNoties(noti, `Set Kp to ${Kp} at ${fullTime}`, operateNoties);
+		operateNotiesFunc.updateOperateNoties(1, operateNoties);
 		console.log(msg);
 	})
 	socket.on("setKi", function (Ki) {
@@ -660,6 +672,9 @@ io.on('connection', function (socket) {
 				console.log(err);
 			}
 		})
+		let noti = null;
+		utility.generateOperateNoties(noti, `Set Ki to ${Ki} at ${fullTime}`, operateNoties);
+		operateNotiesFunc.updateOperateNoties(1, operateNoties);
 		console.log(msg);
 	})
 	socket.on("setKd", function (Kd) {
@@ -670,6 +685,9 @@ io.on('connection', function (socket) {
 				console.log(err);
 			}
 		})
+		let noti = null;
+		utility.generateOperateNoties(noti, `Set Kd to ${Kd} at ${fullTime}`, operateNoties);
+		operateNotiesFunc.updateOperateNoties(1, operateNoties);
 		console.log(msg);
 	})
 	//+ send height
@@ -680,31 +698,28 @@ io.on('connection', function (socket) {
 			if (err) {
 				console.log(err);
 			}
+		let noti = null;
+		utility.generateOperateNoties(noti, `Set height to ${height} at ${fullTime}`, operateNoties);
+		operateNotiesFunc.updateOperateNoties(1, operateNoties);
 			console.log(msg);
 		})
 	})
 	//+ virtual btn send for,rev,stop,service CMD
 	socket.on("vCmdToPLC", function (cmd) {
 		if (cmd === "onForward") {
-			if (!toPLCData[2]) {
-				toPLCData[2] = true;
-			} else {
-				toPLCData[2] = false;
-			}
+			toPLCData[2] = true;
+			toPLCData[4] = false;
+			toPLCData[3] = false;
 		}
 		else if (cmd === "onStop") {
-			if (!toPLCData[3]) {
-				toPLCData[3] = true;
-			} else {
-				toPLCData[3] = false;
-			}
+			toPLCData[3] = true;
+			toPLCData[4] = false;
+			toPLCData[2] = false;
 		}
 		else if (cmd === "onReverse") {
-			if (!toPLCData[4]) {
-				toPLCData[4] = true;
-			} else {
-				toPLCData[4] = false;
-			}
+			toPLCData[4] = true;
+			toPLCData[3] = false;
+			toPLCData[2] = false;
 		}
 		msg = utility.ArrToPLCMsg(toPLCData);
 		client.publish("n/toPLC", msg, function (err) {

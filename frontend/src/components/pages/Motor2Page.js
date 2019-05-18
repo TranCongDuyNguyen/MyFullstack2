@@ -449,11 +449,11 @@ export default class Motor2Page extends Component {
         if (e.keyCode === 13) {
             if (!text) { return; };
             if (eid === "curmax") {
-                if (e.target.value.length > 3) {
+                if (e.target.value.length < 10) {
                     this.maxscale1[0].bs = true;
                     this.maxscale1[0].ss = false;
                 }
-                else if (e.target.value.length < 3) {
+                else if (e.target.value.length > 999) {
                     this.maxscale1[0].bs = false;
                     this.maxscale1[0].ss = true;
                 }
@@ -469,11 +469,11 @@ export default class Motor2Page extends Component {
                 }))
             }
             else if (eid === "tormax") {
-                if (e.target.value.length > 3) {
+                if (e.target.value.length < 10) {
                     this.maxscale1[1].bs = true;
                     this.maxscale1[1].ss = false;
                 }
-                else if (e.target.value.length < 3) {
+                else if (e.target.value.length > 999) {
                     this.maxscale1[1].bs = false;
                     this.maxscale1[1].ss = true;
                 }
@@ -489,11 +489,11 @@ export default class Motor2Page extends Component {
                 }))
             }
             else if (eid === "motorTmax") {
-                if (e.target.value.length > 3) {
+                if (e.target.value.length < 10) {
                     this.maxscale1[2].bs = true;
                     this.maxscale1[2].ss = false;
                 }
-                else if (e.target.value.length < 3) {
+                else if (e.target.value.length > 999) {
                     this.maxscale1[2].bs = false;
                     this.maxscale1[2].ss = true;
                 }
@@ -509,11 +509,11 @@ export default class Motor2Page extends Component {
                 }))
             }
             else if (eid === "driveTmax") {
-                if (e.target.value.length > 3) {
+                if (e.target.value.length < 10) {
                     this.maxscale1[3].bs = true;
                     this.maxscale1[3].ss = false;
                 }
-                else if (e.target.value.length < 3) {
+                else if (e.target.value.length > 999) {
                     this.maxscale1[3].bs = false;
                     this.maxscale1[3].ss = true;
                 }
@@ -529,11 +529,11 @@ export default class Motor2Page extends Component {
                 }))
             }
             else if (eid === "powmax") {
-                if (e.target.value.length > 3) {
+                if (e.target.value.length < 10) {
                     this.maxscale1[4].bs = true;
                     this.maxscale1[4].ss = false;
                 }
-                else if (e.target.value.length < 3) {
+                else if (e.target.value.length > 999) {
                     this.maxscale1[4].bs = false;
                     this.maxscale1[4].ss = true;
                 }
@@ -678,8 +678,8 @@ export default class Motor2Page extends Component {
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={curpos}
                                         maxScale={maxcur}
-                                        sSize={bsCur}
-                                        ssSize={ssCur} 
+                                        bSize={bsCur}
+                                        sSize={ssCur} 
                                         faultLvl={fCurLvl}
                                         warnLvl={wCurLvl}/>
                                     <div className="trend-button cur"
@@ -723,8 +723,8 @@ export default class Motor2Page extends Component {
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={torpos}
                                         maxScale={maxtor}
-                                        sSize={bsTor}
-                                        ssSize={ssTor}
+                                        bSize={bsTor}
+                                        sSize={ssTor}
                                         faultLvl={fTorLvl}
                                         warnLvl={wTorLvl} />
                                     <div className="trend-button tor"
@@ -770,8 +770,8 @@ export default class Motor2Page extends Component {
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={motorTpos}
                                         maxScale={maxmotorT}
-                                        sSize={bsMotorT}
-                                        ssSize={ssMotorT}
+                                        bSize={bsMotorT}
+                                        sSize={ssMotorT}
                                         faultLvl={fMotorTLvl}
                                         warnLvl={wMotorTLvl} />
                                     <div className="trend-button motorT"
@@ -815,8 +815,8 @@ export default class Motor2Page extends Component {
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={driveTpos}
                                         maxScale={maxdriveT}
-                                        sSize={bsDriveT}
-                                        ssSize={ssDriveT}
+                                        bSize={bsDriveT}
+                                        sSize={ssDriveT}
                                         faultLvl={fDriveTLvl}
                                         warnLvl={wDriveTLvl} />
                                     <div className="trend-button driveT"
@@ -862,8 +862,8 @@ export default class Motor2Page extends Component {
                                         onAdjTriClick={this.onAdjustTriClick}
                                         triBtnPos={powpos}
                                         maxScale={maxpow}
-                                        sSize={bsPow}
-                                        ssSize={ssPow}
+                                        bSize={bsPow}
+                                        sSize={ssPow}
                                         faultLvl={fPowLvl}
                                         warnLvl={wPowLvl} />
                                     <div className="trend-button pow"

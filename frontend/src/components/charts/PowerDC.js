@@ -8,7 +8,7 @@ export default class PowerDC extends Component {
         data: [
             {
                 name: "Power",
-                power: 90
+                power: 0
             },
             {
                 name: "Ref",
@@ -31,20 +31,21 @@ export default class PowerDC extends Component {
         return (
             <div className="power-dc">
                 <DoughnutChart data={data.concat([])}
+                    data1={data.concat([])}
                     dataKey="power"
                     fault={this.props.faultLvl}                             /**/
                     warn={this.props.warnLvl}
                     colorId="power"
                     startGradColor="#84fab0"
                     endGradColor="#8fd3f4"
-                    theUnit="W"
+                    theUnit="kW"
                     flash={this.state.flash}
                     onAdjTriClick={this.props.onAdjTriClick}
                     id={this.props.id}
                     triBtnPos={this.props.triBtnPos}
                     maxScale={this.props.maxScale}
-                    sSize={this.props.sSize}
-                    ssSize={this.props.ssSize}>
+                    bSize={this.props.bSize}
+                    sSize={this.props.sSize}>
                 </DoughnutChart>
             </div>
         )

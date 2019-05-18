@@ -8,7 +8,7 @@ export default class DriveTempDC extends Component {
         data: [
             {
                 name: "DriveTemp",
-                driveT: 40
+                driveT: 0
             },
             {
                 name: "Ref",
@@ -31,6 +31,7 @@ export default class DriveTempDC extends Component {
         return (
             <div className="driveT-dc">
                 <DoughnutChart data={data.concat([])}
+                    data1={data.concat([])}
                     dataKey="driveT"
                     fault={this.props.faultLvl}                             /**/
                     warn={this.props.warnLvl}
@@ -43,8 +44,8 @@ export default class DriveTempDC extends Component {
                     id={this.props.id}
                     triBtnPos={this.props.triBtnPos}
                     maxScale={this.props.maxScale}
-                    sSize={this.props.sSize}
-                    ssSize={this.props.ssSize}></DoughnutChart>
+                    bSize={this.props.bSize}
+                    sSize={this.props.sSize}></DoughnutChart>
             </div>
         )
     }

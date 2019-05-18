@@ -1,13 +1,13 @@
 .speed-dc .dc .text {
-    right: 11.8em;
+    right: 11.4em;
     top: 3.2em;
 }
 .speed-dc .dc .text .smallchar {
     top: 0em;
-    left: -2em;
+    left: -2.5em;
 }
 .speed-dc .dc .unitText {
-    right: 0.6em;
+    right: 1em;
     top: 1.2em;
 }
 .motor-info {
@@ -232,7 +232,7 @@
     position: unset;
     font-size:2.5rem;
 }
-.forw-btn-entry, .rev-btn-entry, .stop-btn-entry {
+.btn-entry {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -243,12 +243,16 @@
     height: 4em;
     transition: all 0.3s ease-in-out;
 }
-
-.forw-btn-entry:hover, .rev-btn-entry:hover, .stop-btn-entry:hover {
+.btn-entry.forw, .reve, .stop {
     background: #FF5A5FEE;
     color: #000e;
 }
-.forw-btn-entry:active, .rev-btn-entry:active, .stop-btn-entry:active {
+
+.btn-entry:hover {
+    background: #FF5A5FEE;
+    color: #000e;
+}
+.btn-entry:active {
     background: #FF5A5F;
     border: 2px solid #000b;
     color: #000b;
@@ -265,4 +269,9 @@
 }
 .ssp {
     font-size: 2em;
+}
+.hiexp {
+    position: absolute;
+    right: 1.6em;
+    color: #777; 
 }

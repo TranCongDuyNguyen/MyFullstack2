@@ -8,7 +8,7 @@ export default class CurrentDC extends Component {
         data: [
             {
                 name: "Current",
-                amp: 10
+                amp: 0.15
             },
             {
                 name: "Ref",
@@ -31,6 +31,7 @@ export default class CurrentDC extends Component {
         return (
             <div className="current-dc">
                 <DoughnutChart data={data.concat([])}
+                    data1={data.concat([])}
                     dataKey="amp"
                     fault={this.props.faultLvl}                         
                     warn={this.props.warnLvl}
@@ -43,8 +44,8 @@ export default class CurrentDC extends Component {
                     id={this.props.id}
                     triBtnPos={this.props.triBtnPos}
                     maxScale={this.props.maxScale}
-                    sSize={this.props.sSize}
-                    ssSize={this.props.ssSize}>
+                    bSize={this.props.bSize}
+                    sSize={this.props.sSize}>
                 </DoughnutChart>
             </div>
         )

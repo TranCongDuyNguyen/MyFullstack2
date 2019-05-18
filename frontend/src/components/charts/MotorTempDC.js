@@ -10,7 +10,7 @@ export default class MotorTempDC extends Component {
         data: [
             {
                 name: "MotorTemp",
-                motorT: 50
+                motorT: 0
             },
             {
                 name: "Ref",
@@ -33,6 +33,7 @@ export default class MotorTempDC extends Component {
         return (
             <div>
                 <DoughnutChart data={data.concat([])}
+                    data1={data.concat([])}
                     dataKey="motorT"
                     fault={this.props.faultLvl}                             /**/
                     warn={this.props.warnLvl}
@@ -45,8 +46,8 @@ export default class MotorTempDC extends Component {
                     id={this.props.id}
                     triBtnPos={this.props.triBtnPos}
                     maxScale={this.props.maxScale}
-                    sSize={this.props.sSize}
-                    ssSize={this.props.ssSize}></DoughnutChart>
+                    bSize={this.props.bSize}
+                    sSize={this.props.sSize}></DoughnutChart>
             </div>
         )
     }

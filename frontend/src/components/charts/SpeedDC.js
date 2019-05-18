@@ -25,6 +25,7 @@ export default class SpeedDC extends Component {
         return (
             <div className="speed-dc">
                 <DoughnutChart data={data.concat([])}
+                    data1={data.concat([])}
                     dataKey="freq"
                     fault={this.props.faultLvl}                             /**/
                     warn={this.props.warnLvl}
@@ -37,8 +38,8 @@ export default class SpeedDC extends Component {
                     id={this.props.id}
                     triBtnPos={this.props.triBtnPos}
                     maxScale={this.props.maxScale}
-                    sSize={this.props.sSize}
-                    ssSize={this.props.ssSize}>
+                    bSize={this.props.bSize}
+                    sSize={this.props.sSize}>
                 </DoughnutChart>
             </div>
         )

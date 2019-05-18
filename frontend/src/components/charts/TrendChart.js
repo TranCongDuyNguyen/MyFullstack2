@@ -16,7 +16,8 @@ export default class TrendChart extends Component {
       <div className="area-chart-wrapper" onClick={onStopClick}>
         <i className="fas fa-pause" ></i>
         <p className="yAxis-name" style={{color: customColor}}>{yAxisName}</p>
-        <AreaChart width={this.props.width} height={this.props.height} data={data}
+        <AreaChart width={this.props.width} height={this.props.height} 
+          data={data}
           padding={{ top: 0, right: 0, left: 0, bottom: 0 }}
           margin={{ top: 0, right: 0 }}
           >

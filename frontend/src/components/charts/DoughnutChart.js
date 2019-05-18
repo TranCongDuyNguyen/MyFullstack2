@@ -24,10 +24,19 @@ export default class DoughnutChart extends Component {
     render() {
         let textClass = classNames({
             blink: this.props.flash,
-            bigchar: this.props.sSize,
-            smallchar: this.props.ssSize
+            bigchar: this.props.bSize,
+            smallchar: this.props.sSize
         })
-        const { data, dataKey, colorId, startGradColor, endGradColor, theUnit, fault } = this.props;
+        const { data, data1, dataKey, colorId, startGradColor, endGradColor, theUnit, fault } = this.props;
+
+        let currentVal = Number(data[0][dataKey]).toFixed(2).toString().slice(0,4);
+        let maxVal = Number(this.props.maxScale).toFixed(2).toString().slice(0,4);
+        if(currentVal.charAt((currentVal.length - 1)) === ".") {
+            currentVal = currentVal.slice(0, currentVal.length - 1);
+        }
+        if(maxVal.charAt((maxVal.length - 1)) === ".") {
+            maxVal = maxVal.slice(0, maxVal.length - 1);
+        }
         return (
             <div className="dc" style={{height:"140px"}}>
                 <div className="dc-tribtn-box">
@@ -36,13 +45,13 @@ export default class DoughnutChart extends Component {
                                     onClick={e => this.props.onAdjTriClick(e)}
                                     id={this.props.id} 
                                     className="dc-tribtn"
-                                    style={{"fill": `${(data[0][dataKey]>(fault))?"red":`white`}`}} />
+                                    style={{"fill": `${(data[0][dataKey]>(fault))?"red":`url(#${colorId}1)`}`}} />
                         </svg>
                 </div>
                 <div className="text">
                     <div className={textClass}>
-                        <sup className="number">{data[0][dataKey].toString().slice(0, 4)}</sup>&frasl;
-                        <sub className="under">{this.props.maxScale}</sub>
+                        <sup className="number">{currentVal}</sup>&frasl;
+                        <sub className="under">{maxVal}</sub>
                     </div>
                     <div className="unitText">{theUnit}</div>
                 </div>
@@ -52,14 +61,20 @@ export default class DoughnutChart extends Component {
                     outerRadius="80%"
                     startAngle={180}
                     endAngle={0}
-                    data={data}
+                    data={data1}
                     barSize={180}
                     barCategoryGap={0}
                 >
                     <defs>
                         <linearGradient id={colorId} x1="0%" y1="0%" x2="120%" y2="20%">
-                            <stop offset="0%" stopColor={startGradColor} stopOpacity={data[0][dataKey] / (80*this.props.warn/100)} />
-                            <stop offset="100%" stopColor={endGradColor} stopOpacity={data[0][dataKey] / (80*this.props.fault/100)} />
+                            <stop offset="0%" stopColor={startGradColor} stopOpacity={data1[0][dataKey] + 0.1 / (8*this.props.warn/100) } />
+                            <stop offset="100%" stopColor={endGradColor} stopOpacity={data1[0][dataKey] + 0.1/ (8*this.props.fault/100)} />
+                        </linearGradient>
+                    </defs>
+                    <defs>
+                        <linearGradient id={`${colorId}1`} x1="0%" y1="0%" x2="120%" y2="20%">
+                            <stop offset="0%" stopColor={startGradColor} stopOpacity={0.8} />
+                            <stop offset="100%" stopColor={endGradColor} stopOpacity={0.8} />
                         </linearGradient>
                     </defs>
                     

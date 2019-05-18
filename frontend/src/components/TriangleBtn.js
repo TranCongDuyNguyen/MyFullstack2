@@ -13,7 +13,7 @@ export default class TriangleBtn extends Component {
       })
   };
   render() {
-    let {value} = this.props;
+    let {value, hiex} = this.props;
     let amount = value*20;
     let pointGroup = `36,${309-amount} 36,${325-amount} 48,${317-amount}`;
     return (
@@ -21,6 +21,7 @@ export default class TriangleBtn extends Component {
         <svg width="50" height="340"  >
             <polygon className="triangle" points={pointGroup} onClick={this.props.onOpenModal}></polygon>
         </svg>
+        <div className="hiexp" style={{top: `${19 - value*1.25}em`}}>{hiex}</div>
       </div>
     )
   }

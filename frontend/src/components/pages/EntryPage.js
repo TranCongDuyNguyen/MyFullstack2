@@ -3,6 +3,7 @@ import { Col, Row, Progress } from 'reactstrap';
 import io from 'socket.io-client';
 import axios from 'axios';
 
+
 import MotorPic from "../../images/motor.png";
 import SpeedDC from "../charts/SpeedDC";
 import MotorInfo from "../MotorInfo";
@@ -11,6 +12,7 @@ import HeightModal from "../HeightModal";
 import FrequencyInput from "../FrequencyInput";
 import NumberInput from "../NumberInput";
 import EntryNotiPanel from "../EntryNotiPanel";
+import ClickOutside from "../ClickOutside";
 import "../CSS/ProgressStyle.css";
 import "../CSS/EntryPageStyle.css";
 
@@ -43,6 +45,7 @@ export default class EntryPage extends Component {
         isFre1Adj: false,
         isFre2Adj: false,
         isService: false,
+
         text: "", //pass to height modal
         textfre1: "",
         textfre2: "",
@@ -70,6 +73,7 @@ export default class EntryPage extends Component {
         pos2: '126,86 136,80 136,92',
         Hvalue: 0, //pass to tri-btn
         Hexp: 0,
+        Hfb: 0,
         ssp1: 0,
         ssp2: 0
     }
@@ -115,7 +119,8 @@ export default class EntryPage extends Component {
         this.socket.on("motorStatus", function (status) {
             this.setState({
                 isService: status.service,
-                Hexp: status.hiex
+                Hexp: status.hiex,
+                Hfb: status.hifb
             });
         }.bind(this));
         this.socket.on("motorStatus2", function (status) {
@@ -284,11 +289,11 @@ export default class EntryPage extends Component {
         if (e.keyCode === 13) {
             if (!text) { return; };
             if (eid === "fre1max") {
-                if (e.target.value.length > 3) {
+                if (e.target.value < 10) {
                     this.maxscale1[5].bs = true;
                     this.maxscale1[5].ss = false;
                 }
-                else if (e.target.value.length < 3) {
+                else if (e.target.value > 999) {
                     this.maxscale1[5].bs = false;
                     this.maxscale1[5].ss = true;
                 }
@@ -304,11 +309,11 @@ export default class EntryPage extends Component {
                 }))
             }
             else if (eid === "fre2max") {
-                if (e.target.value.length > 3) {
+                if (e.target.value < 10 ) {
                     this.maxscale2[5].bs = true;
                     this.maxscale2[5].ss = false;
                 }
-                else if (e.target.value.length < 3) {
+                else if (e.target.value > 999) {
                     this.maxscale2[5].bs = false;
                     this.maxscale2[5].ss = true;
                 }
@@ -374,15 +379,6 @@ export default class EntryPage extends Component {
         }
     }
 
-    onForw = () => {
-        this.socket.emit("vCmdToPLC", "onForward");
-    }
-    onStop = () => {
-        this.socket.emit("vCmdToPLC", "onStop");
-    }
-    onRev = () => {
-        this.socket.emit("vCmdToPLC", "onReverse");
-    }
 
     componentWillUnmount() {
         this.socket.disconnect();
@@ -392,9 +388,19 @@ export default class EntryPage extends Component {
         })
     };
     render() {
+       
         const { isModal, text, Hvalue, info1, info2, pos1, pos2, isFre1Adj, isFre2Adj, maxfre1, maxfre2,
             bsFre1, bsFre2, ssFre1, ssFre2, mpamp1, mptor1, mpmotorT1, mpdriveT1, mppow1, mpamp2, Hexp,
-            mptor2, mpmotorT2, mpdriveT2, mppow2, fFre1Lvl, fFre2Lvl, wFre1Lvl, wFre2Lvl, ssp1, ssp2 } = this.state
+            mptor2, mpmotorT2, mpdriveT2, mppow2, fFre1Lvl, fFre2Lvl, wFre1Lvl, wFre2Lvl, ssp1, ssp2,
+            Hfb } = this.state
+        let hexpVal = Number(Hexp).toFixed(2).toString().slice(0,4);
+        let hfbVal = Number(Hfb).toFixed(2).toString().slice(0,4);
+        if(hexpVal.charAt((hexpVal.length - 1)) === ".") {
+            hexpVal = hexpVal.slice(0, hexpVal.length - 1);
+        }
+        if(hfbVal.charAt((hfbVal.length - 1)) === ".") {
+            hfbVal = hfbVal.slice(0, hfbVal.length - 1);
+        }
         return (
             <div className="entry-page" style={{backgroundImage: 'linear-gradient(to top, #dfe9f3 0%, #EEEE 100%)'}}>
                 <HeightModal external={isModal}
@@ -405,9 +411,10 @@ export default class EntryPage extends Component {
                 
                 <Row >
                     <TriangleBtn onOpenModal={this.onOpenModal}
-                        value={Hvalue}></TriangleBtn>
+                        value={Hvalue}
+                        hiex= {hexpVal}></TriangleBtn>
                     <div className="h-bar-box">
-                        <div className="unit">{`${Hexp} cm`}</div>
+                        <div className="unit">{`${hfbVal} cm`}</div>
                         <Progress max={15} value={10}>
                         </Progress>
                         <div className="scale-box">
@@ -459,8 +466,8 @@ export default class EntryPage extends Component {
                             onAdjTriClick={this.onAdjustTriClick}
                             triBtnPos={pos1}
                             maxScale={maxfre1}
-                            bsSize={bsFre1}
-                            ssSize={ssFre1}
+                            bSize={bsFre1}
+                            sSize={ssFre1}
                             faultLvl={fFre1Lvl}
                             warnLvl={wFre1Lvl}
                         ></SpeedDC>
@@ -505,8 +512,8 @@ export default class EntryPage extends Component {
                             onAdjTriClick={this.onAdjustTriClick}
                             triBtnPos={pos2}
                             maxScale={maxfre2}
-                            bsSize={bsFre2}
-                            ssSize={ssFre2}
+                            bSize={bsFre2}
+                            sSize={ssFre2}
                             faultLvl={fFre2Lvl}
                             warnLvl={wFre2Lvl}></SpeedDC>
                         <img className="motor-image rev" src={MotorPic} alt="" onClick={this.onInfoPopup} />
@@ -551,11 +558,8 @@ export default class EntryPage extends Component {
                     <Col md="3" className="operate" style={{ height: "10rem" }}>
                         <div className="trapezoid">Operation</div>
                         <div className="footer-panel">
-                            <div className="btns">
-                                <div className="rev-btn-entry" onClick={this.onRev}><i className="fas fa-chevron-left"></i></div>
-                                <div className="stop-btn-entry" onClick={this.onStop}><i className="fas fa-pause"></i></div>
-                                <div className="forw-btn-entry" onClick={this.onForw}><i className="fas fa-chevron-right"></i></div>
-                            </div>
+                        <ClickOutside >            
+                        </ClickOutside>
                             <div className="K-tau">
                                 <div className="K">
                                     <NumberInput placeholder="K" ioTopic="setK"></NumberInput>

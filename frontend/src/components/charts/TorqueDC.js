@@ -8,7 +8,7 @@ export default class TorqueDC extends Component {
         data: [
             {
                 name: "Torque",
-                tor: 560
+                tor: 2
             },
             {
                 name: "Ref",
@@ -28,23 +28,36 @@ export default class TorqueDC extends Component {
     }
     render() {
         const { data } = this.state;
+        let data1 = [
+            {
+                name: "Torque",
+                tor: Math.abs(data[0].tor)
+            },
+            {
+                name: "Ref",
+                refKey: this.props.maxScale
+            }
+        ]
+        console.log(data);
+        console.log(data1);
         return (
             <div className="torque-dc">
                 <DoughnutChart data={data.concat([])}
+                    data1={data1}
                     dataKey="tor"
                     fault={this.props.faultLvl}                             /**/
                     warn={this.props.warnLvl}
                     colorId="torque"
-                    startGradColor="#56bc2f"
-                    endGradColor="#a8e063"
+                    startGradColor="#A8E063"
+                    endGradColor="#09814A"
                     theUnit="Nm"
                     flash={this.state.flash}
                     onAdjTriClick={this.props.onAdjTriClick}
                     id={this.props.id}
                     triBtnPos={this.props.triBtnPos}
                     maxScale={this.props.maxScale}
-                    sSize={this.props.sSize}
-                    ssSize={this.props.ssSize}>
+                    bSize={this.props.bSize}
+                    sSize={this.props.sSize}>
                 </DoughnutChart>
             </div>
         )

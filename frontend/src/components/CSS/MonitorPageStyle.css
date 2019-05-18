@@ -82,7 +82,7 @@
 .dc .text {
     position: absolute;
     font-size: 1.5em;   
-    right: 2.6em;
+    right: 2.5em;
     top: 1.5em;
 }
 .dc .unitText {
@@ -92,6 +92,9 @@
 }
 .torque-box .dc .unitText {
     right: 0.6em;
+}
+.power-box .dc .unitText {
+    right: 0.9em;
 }
 .dc .text .blink {
     color: #D60000;
