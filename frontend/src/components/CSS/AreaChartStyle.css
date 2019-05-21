@@ -15,3 +15,13 @@
     stroke-width: 0;
     fill: white;
 }
+
+.xAxis-name.statistic {
+    font-size:1.1em;
+    top: 25.6em;
+    left: 37.6em;
+}
+.yAxis-name.statistic {
+    top: 7.8em;
+    left: 18em;
+}

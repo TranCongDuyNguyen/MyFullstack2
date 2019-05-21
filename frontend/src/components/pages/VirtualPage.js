@@ -75,7 +75,8 @@ export default class VirtualPage extends Component {
     return (
       <div style={{
         background: "linear-gradient(0deg, #29323c 0%, #485563 100%)",
-        padding: "1em 1em 1em 1em"
+        padding: "1em 1em 1em 1em",
+        height: "38rem"
       }}>
         <Row>
           <Col >

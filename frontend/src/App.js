@@ -15,6 +15,7 @@ import Motor1Page from './components/pages/Motor1Page';
 import Motor2Page from './components/pages/Motor2Page';
 import VirtualPage from './components/pages/VirtualPage';
 import EntryPage from './components/pages/EntryPage';
+import StatisticPage from './components/pages/StatisticPage';
 
 class App extends Component {
   
@@ -34,8 +35,9 @@ class App extends Component {
             <Route exact path="/monitor/2" component={Motor2Page}/>
             <Route exact path="/virtualization" component={VirtualPage}/>
             <Route exact path="/entry" component={EntryPage}/>
+            <Route exact path="/statistic" component = {StatisticPage}/>
+            <Route exact path="/management" component={ManagementPage}/> 
             <PrivateRoute exact path="/itemlist" component={ListItemPage}/>
-            <PrivateRoute exact path="/management" component={ManagementPage}/> 
           </div>
         </Router>
       </Provider>

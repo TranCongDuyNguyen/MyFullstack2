@@ -116,3 +116,23 @@ module.exports.PLCStrToObj = function(message) {
 	let plcObj = JSON.parse(plcStr);
 	return plcObj;
 }
+
+module.exports.averageCal = function(arr) {
+	let avg = 0;
+	let sum = 0;
+	for(let i = 0; i < arr.length; i++) {
+		sum += arr[i];
+	}
+	avg = parseFloat(sum/arr.length);
+	return avg;
+}
+
+module.exports.averageObjCal = function (arr, props) {
+	let avg = 0;
+	let sum = 0;
+	for(let i = 0; i < arr.length; i++) {
+		sum += arr[i][props];
+	}
+	avg = parseFloat(sum/arr.length);
+	return avg;
+}

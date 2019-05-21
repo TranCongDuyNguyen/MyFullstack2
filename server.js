@@ -5,8 +5,7 @@ const monitorNotiesFunc = require("./controllers/controller.monitorNoties");
 const operateNotiesFunc = require("./controllers/controller.operateNoties");
 const operateTimeFunc = require("./controllers/controller.operateTime");
 
-
-
+const moment = require('moment');
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
@@ -106,6 +105,20 @@ let tor2Store = [{ tor: 0, time: "00:00:00" }]; let tor2StoreCopy = [];
 let motor2TStore = [{ motorT: 0, time: "00:00:00" }]; let motor2TStoreCopy = [];
 let drive2TStore = [{ driveT: 0, time: "00:00:00" }]; let drive2TStoreCopy = [];
 let power2Store = [{ power: 0, time: "00:00:00" }]; let power2StoreCopy = [];
+//+ statistic
+let powerInWeek = [
+	{ power: 0, time: "Monday" },
+	{ power: 0, time: "Tuesday" },
+	{ power: 0, time: "Wednesday" },
+	{ power: 0, time: "Thursday" },
+	{ power: 0, time: "Friday" },
+	{ power: 0, time: "Saturday" },
+	{ power: 0, time: "Sunday" }
+]
+let powerInDay = [];
+let powerInHour = [];
+let tempHour = 0;
+
 
 let time;
 let id0 = setInterval(() => {
@@ -167,16 +180,16 @@ let motorData3 = {
 //- RECEIVE DATA FROM PLC VIA MQTT
 client.on("message", function (topic, message) {
 	if (topic === "n/motorData") {
-		//let motorData = JSON.parse(message.toString());
-		let motorData = utility.PLCStrToObj(message);
+		let motorData = JSON.parse(message.toString());
+		//let motorData = utility.PLCStrToObj(message);
 
-		if(motorData.PkID === 1) {
+		if (motorData.PkID === 1) {
 			motorData1 = motorData;
 		}
-		else if(motorData.PkID === 2) {
+		else if (motorData.PkID === 2) {
 			motorData2 = motorData;
 		}
-		else if(motorData.PkID === 3) {
+		else if (motorData.PkID === 3) {
 			motorData3 = motorData;
 		}
 		//+create trend buffer
@@ -194,7 +207,7 @@ client.on("message", function (topic, message) {
 				motor1TObj = utility.createObj("motorT", motorData2.ThM0);
 				motor2TObj = utility.createObj("motorT", motorData2.ThM1);
 				hObj = utility.createObj("h", motorData3.HiFB);
-				
+
 
 				utility.objToBuffer(tor1Obj, tor1Buffer, 10);
 				utility.objToBuffer(tor1Obj, tor1Store, 1000);
@@ -224,6 +237,13 @@ client.on("message", function (topic, message) {
 				mp2[4] = utility.maxFilter(power2Buffer, "power");
 				utility.objToBuffer(hObj, hBuffer, 10);
 				utility.objToBuffer(hObj, hStore, 1000);
+				let avgPowerIn10 = utility.averageObjCal(power1Buffer, "power");
+				utility.objToBuffer(avgPowerIn10, powerInHour, 500);
+				if (moment().get('hour') > tempHour) {
+					let avgPowerInHour = utility.averageCal(powerInHour);
+					utility.objToBuffer(avgPowerInHour, powerInDay, 24);
+					tempHour = moment().get('hour');
+				}
 			}
 			catch (e) {
 				console.log(e);
@@ -253,14 +273,14 @@ client.on("message", function (topic, message) {
 					utility.generateAlarm("more", motorData2.RSp0, freWarn1, `Speed is above ${freFLvl1}`, `Power is above ${freWLvl1}`, operateNoties, freFLvl1, freWLvl1);
 					monitorNotiesFunc.updateMonitorNoties(1, notiesArr1);
 				})
-				
+
 			let ampWarn2, torWarn2, motorTWarn2, driveTWarn2, powerWarn2, freWarn2;
 			let curFLvl2 = 0; let torFLvl2 = 0; let motorTFLvl2 = 0; let driveTFLvl2 = 0; let powFLvl2 = 0;
 			let curWLvl2 = 0; let torWLvl2 = 0; let motorTWLvl2 = 0; let driveTWLvl2 = 0; let powWLvl2 = 0;
 			let freFLvl2 = 0; let freWLvl2 = 0;
-			MaxScale1.findOne({_id: 2}, "maxscale1").select('-_id')
-			.then(payload => {
-				let maxscale1 = payload.maxscale1;
+			MaxScale1.findOne({ _id: 2 }, "maxscale1").select('-_id')
+				.then(payload => {
+					let maxscale1 = payload.maxscale1;
 					curFLvl2 = maxscale1[0].fault; curWLvl2 = maxscale1[0].warn;
 					torFLvl2 = maxscale1[1].fault; torWLvl2 = maxscale1[1].warn;
 					motorTFLvl2 = maxscale1[2].fault; motorTWLvl2 = maxscale1[2].warn;
@@ -269,70 +289,70 @@ client.on("message", function (topic, message) {
 					freFLvl2 = maxscale1[5].fault; freWLvl2 = maxscale1[5].warn;
 					utility.generateAlarm("more", motorData1.Cur1, ampWarn2, `Current is above ${curFLvl2}`, `Current is above ${curWLvl2}`, notiesArr2, curFLvl2, curWLvl2);
 					utility.generateAlarm("more", motorData1.Tor1, torWarn2, `Torque is above ${torFLvl2}`, `Torque is above ${torWLvl2}`, notiesArr2, torFLvl2, torWLvl2);
-					utility.generateAlarm("more", motorData2.ThM1, motorTWarn2, `Motor Thermal is above ${motorTFLvl2}`, `Motor Thermal is above ${motorTWLvl2}`, notiesArr2, motorTFLvl2,  motorTWLvl2);
+					utility.generateAlarm("more", motorData2.ThM1, motorTWarn2, `Motor Thermal is above ${motorTFLvl2}`, `Motor Thermal is above ${motorTWLvl2}`, notiesArr2, motorTFLvl2, motorTWLvl2);
 					utility.generateAlarm("more", motorData1.ThD1, driveTWarn2, `Drive Thermal is above ${driveTFLvl2}`, `Drive Thermal is above ${driveTWLvl2}`, notiesArr2, driveTFLvl2, driveTWLvl2);
 					utility.generateAlarm("more", motorData1.Pow1, powerWarn2, `Power is above ${powFLvl2}`, `Power is under ${powWLvl2}`, notiesArr2, powFLvl2, powWLvl2);
 					utility.generateAlarm("more", motorData2.RSp1, freWarn2, `Speed is above ${freFLvl2}`, `Power is above ${freWLvl2}`, operateNoties, freFLvl2, freWLvl2);
 					monitorNotiesFunc.updateMonitorNoties(2, notiesArr2);
-			})
+				})
 			if (motorData3.Fwrd) {
-				if(motorData3.Fwrd !== forwTemp) {
+				if (motorData3.Fwrd !== forwTemp) {
 					let noti = null;
 					utility.generateOperateNoties(noti, `Forward at ${fullTime}`, operateNoties);
 					forwTemp = motorData3.Fwrd;
 				}
-			}	
+			}
 			else if (!motorData3.Fwrd) {
 				forwTemp = motorData3.Fwrd;
 			}
 			if (motorData3.Stop) {
-				if(motorData3.Stop !== stopTemp) {
+				if (motorData3.Stop !== stopTemp) {
 					let noti = null;
 					utility.generateOperateNoties(noti, `Stop at ${fullTime}`, operateNoties);
 					stopTemp = motorData3.Stop;
 				}
-			}	
+			}
 			else if (!motorData3.Stop) {
 				stopTemp = motorData3.Stop;
 			}
 			if (motorData3.Reve) {
-				if(motorData3.Reve !== revTemp) {
+				if (motorData3.Reve !== revTemp) {
 					let noti = null;
 					utility.generateOperateNoties(noti, `Reverse at ${fullTime}`, operateNoties);
 					revTemp = motorData3.Reve;
 				}
 			}
-			else if(!motorData3.Reve) {
+			else if (!motorData3.Reve) {
 				revTemp = motorData3
 			}
 			if (motorData3.Mtnt) {
-				if(motorData3.Mtnt !== mtntTemp) {
+				if (motorData3.Mtnt !== mtntTemp) {
 					let noti = null;
 					utility.generateOperateNoties(noti, `Reach maintenance at ${fullTime}`, operateNoties);
 					mtntTemp = motorData3.Mtnt;
 				}
 			}
-			else if(!motorData3.Mtnt) {
+			else if (!motorData3.Mtnt) {
 				mtntTemp = motorData3.Mtnt;
 			}
 			if (motorData3.Falt) {
-				if(motorData3.Falt !== faltTemp) {
+				if (motorData3.Falt !== faltTemp) {
 					let noti = null;
 					utility.generateOperateNoties(noti, `Fault at ${fullTime}`, operateNoties);
 					faltTemp = motorData3.Falt;
 				}
 			}
-			else if(!motorData3.Falt) {
+			else if (!motorData3.Falt) {
 				faltTemp = motorData3.Falt;
 			}
 			if (motorData3.Emrg) {
-				if(motorData3.Emrg !== emrgTemp) {
+				if (motorData3.Emrg !== emrgTemp) {
 					let noti = null;
 					utility.generateOperateNoties(noti, `Emergency stop at ${fullTime}`, operateNoties);
 					emrgTemp = motorData3.Emrg;
 				}
 			}
-			else if(!motorData3.Emrg) {
+			else if (!motorData3.Emrg) {
 				emrgTemp = motorData3.Emrg;
 			}
 			operateNotiesFunc.updateOperateNoties(1, operateNoties);
@@ -344,6 +364,41 @@ client.on("message", function (topic, message) {
 		}
 	}
 })
+
+let timeout = moment().get("millisecond") + moment().get("second") * 1000 + moment().get("minute") * 60 * 1000
+	+ moment().get("hour") * 60 * 60 * 1000;
+
+
+let timeoutId = setTimeout(() => {
+	setInterval(() => {
+		let avgPowerInDay = utility.averageCal(powerInDay);
+		switch (moment().day()) {
+			case 0:
+				powerInWeek[6].power = avgPowerInDay;
+				break;
+			case 1:
+				powerInWeek[0].power = avgPowerInDay;
+				break;
+			case 2:
+				powerInWeek[1].power = avgPowerInDay;
+				break;
+			case 3:
+				powerInWeek[2].power = avgPowerInDay;
+				break;
+			case 4:
+				powerInWeek[3].power = avgPowerInDay;
+				break;
+			case 5:
+				powerInWeek[4].power = avgPowerInDay;
+				break;
+			case 6:
+				powerInWeek[5].power = avgPowerInDay;
+				break;
+			default:
+				break;
+		}
+	}, 86400000)
+}, 86399000 - timeout)
 
 //TRANSFER BETWEEN FE AND PLC WITH IO & MQTT----------------------------------------------------------------------------
 io.on('connection', function (socket) {
@@ -358,7 +413,7 @@ io.on('connection', function (socket) {
 	client.on("message", function (topic, message) {
 		if (topic === "n/motorData") {
 			//+send dcData, warn, info to fe
-			if(motorData2.Hrs0 && motorData2.Hrs1) {
+			if (motorData2.Hrs0 && motorData2.Hrs1) {
 				socket.emit("motor1OTime", motorData2.Hrs0);
 				socket.emit("motor2OTime", motorData2.Hrs1);
 			}
@@ -366,7 +421,7 @@ io.on('connection', function (socket) {
 				socket.emit("warnList1", notiesArr1);
 				socket.emit("motor1DCData1", motorData1);
 				socket.emit("motor1DCData2", motorData2);
-				if(motorData1) {
+				if (motorData1) {
 					socket.emit("motor1Info1", {
 						amp: motorData1.Cur0,
 						torque: motorData1.Tor0,
@@ -374,13 +429,13 @@ io.on('connection', function (socket) {
 						power: motorData1.Pow0
 					});
 				}
-				if(motorData2.ThM0) {
+				if (motorData2.ThM0) {
 					socket.emit("motor1Info2", motorData2.ThM0)
 				}
 				socket.emit("warnList2", notiesArr2);
 				socket.emit("motor2DCData1", motorData1);
 				socket.emit("motor2DCData2", motorData2);
-				if(motorData1) {
+				if (motorData1) {
 					socket.emit("motor2Info1", {
 						amp: motorData1.Cur1,
 						torque: motorData1.Tor1,
@@ -388,7 +443,7 @@ io.on('connection', function (socket) {
 						power: motorData1.Pow1
 					});
 				}
-				if(motorData2.ThM1) {
+				if (motorData2.ThM1) {
 					socket.emit("motor2Info2", motorData2.ThM1)
 				}
 				socket.emit("operationNoties", operateNoties);
@@ -396,7 +451,7 @@ io.on('connection', function (socket) {
 				console.log("because of undefined data from mqtt fake client");
 			}
 			//+status
-			if(motorData3) {
+			if (motorData3) {
 				socket.emit("motorStatus", {
 					run: motorData3.Fwrd,
 					rev: motorData3.Reve,
@@ -409,13 +464,13 @@ io.on('connection', function (socket) {
 					freq: motorData3.FrSy,
 				});
 			}
-			if(motorData2) {
+			if (motorData2) {
 				socket.emit("motorStatus2", {
 					ssp1: motorData2.SSp0,
 					ssp2: motorData2.SSp1
 				})
 			}
-			
+
 		}
 	});
 
@@ -437,7 +492,9 @@ io.on('connection', function (socket) {
 	let id2 = setInterval(function () {
 		socket.emit("heightAmount", hBuffer);
 	}, 1000);
-
+	let id3 = setInterval(function() {
+		socket.emit("powerInWeek", powerInWeek);
+	}, 43200000);
 	//+image
 	client.on("message", function (topic, message) {
 		if (topic === "n/image") {
@@ -639,7 +696,7 @@ io.on('connection', function (socket) {
 		console.log(msg);
 	})
 	socket.on("setTau", function (Tau) {
-		toPLCData[6] =  Tau;
+		toPLCData[6] = Tau;
 		let msg = utility.ArrToPLCMsg(toPLCData);
 		client.publish("n/toPLC", msg, function (err) {
 			if (err) {
@@ -698,9 +755,9 @@ io.on('connection', function (socket) {
 			if (err) {
 				console.log(err);
 			}
-		let noti = null;
-		utility.generateOperateNoties(noti, `Set height to ${height} at ${fullTime}`, operateNoties);
-		operateNotiesFunc.updateOperateNoties(1, operateNoties);
+			let noti = null;
+			utility.generateOperateNoties(noti, `Set height to ${height} at ${fullTime}`, operateNoties);
+			operateNotiesFunc.updateOperateNoties(1, operateNoties);
 			console.log(msg);
 		})
 	})
@@ -728,7 +785,7 @@ io.on('connection', function (socket) {
 			}
 		})
 		console.log(msg);
-		
+
 	})
 	//- NX
 	socket.on("vCmdToNX", function (cmd) {
@@ -739,7 +796,7 @@ io.on('connection', function (socket) {
 			console.log(cmd);
 		})
 	})
-	
+
 	socket.on("disconnect", (reason) => {
 		if (reason === 'io server disconnect') {
 			// the disconnection was initiated by the server, you need to reconnect manually
@@ -749,6 +806,7 @@ io.on('connection', function (socket) {
 		clearInterval(id0);
 		clearInterval(id1);
 		clearInterval(id2);
+		clearInterval(id3);
 		console.log("Disconnect");
 	});
 });
