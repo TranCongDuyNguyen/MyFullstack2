@@ -271,7 +271,7 @@ export default class Motor1Page extends Component {
     };
     onChange(e, maxScale) {
         let eid = e.target.id;
-        if (parseInt(e.target.value) > maxScale) {
+        if (parseFloat(e.target.value) > maxScale) {
             e.target.value = maxScale.toString();
         }
         if (e.target.value.length > 4) {
@@ -342,7 +342,7 @@ export default class Motor1Page extends Component {
     }
     onChange3(e, maxScale) {                                                        /**/
         let eid = e.target.id;
-        if (parseInt(e.target.value) > maxScale) {
+        if (parseFloat(e.target.value) > maxScale) {
             e.target.value = maxScale.toString();
         }
         if (e.target.value.length > 4) {
@@ -383,7 +383,7 @@ export default class Motor1Page extends Component {
             let R = 66;
             let r = 56;
             let center = 70;
-            let setVal = maxScale - parseInt(text);
+            let setVal = maxScale - parseFloat(text);
             let alpha = ((180 / maxScale) * setVal) * (Math.PI / 180);
             let beta = Math.atan(6 / 66);
             let x = center + r * Math.cos(alpha);
