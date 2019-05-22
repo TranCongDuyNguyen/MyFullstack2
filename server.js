@@ -44,7 +44,7 @@ mongoose.connect(process.env.mongo_url, {
 /*<===========================================IO SOCKET=======================================================>*/
 /*<============================================MQTT CONNECTION============================================> */
 
-const client = mqtt.connect(process.env.CLOUDMQTT_URL);
+const client = mqtt.connect(process.env.CLOUDMQTT_URL, {clientId: "my-client"});
 //, {
 // 	clientId: "my-client",
 // 	username: "admin",
