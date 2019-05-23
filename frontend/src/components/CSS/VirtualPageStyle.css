@@ -53,3 +53,13 @@
     top: 2.2em;
     right: 3.2em;
 }
+
+@media screen and (max-width:880px) {
+    .background-pic {
+        width: 395px;
+        height: 265px;
+    }
+    .onlyled-container {
+        margin-bottom: 1em;
+    }
+}

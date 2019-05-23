@@ -407,7 +407,7 @@ export default class EntryPage extends Component {
                     text={text}
                     onChange={this.onChange}
                     onKeyUp={this.onKeyUp}></HeightModal>
-                <div style={{ height: "4em" }}></div>
+                <div className="space" style={{ height: "4em" }}></div>
                 
                 <Row >
                     <TriangleBtn onOpenModal={this.onOpenModal}
@@ -526,7 +526,8 @@ export default class EntryPage extends Component {
                         </div>}
                     </Col>
                 </Row>
-                <Row style={{ background: "#000d", height: "25rem", padding: "0.5em 0.5em 1em 0.4em", marginTop: "1em" }}>
+                <Row style={{ background: "#000d", height: "25rem", padding: "0.5em 0.5em 1em 0.4em", marginTop: "1em" }}
+                    className="entry-footer">
                     <Col md="3" className="config" style={{ height: "10rem" }}>
                         <div className="trapezoid">Configuration</div>
                         <div className="footer-panel">
@@ -582,7 +583,7 @@ export default class EntryPage extends Component {
                             <div className="dots">...</div>
                         </div>
                     </Col>
-                    <Col className="notify">
+                    <Col md="6" className="notify">
                         <div className="trapezoid">Notification</div>
                         <div className="footer-panel">
                             <EntryNotiPanel ioTopic="operationNoties"></EntryNotiPanel>

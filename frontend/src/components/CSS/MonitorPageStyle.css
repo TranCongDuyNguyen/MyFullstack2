@@ -11,8 +11,8 @@
     display: flex;
     font-weight: 600;
     position: absolute;
-    top: 5.5em;
-    left: 2em;
+    top: -5em;
+    left: 1em;
     width: 10%;
     margin:0!important;
 }
@@ -269,4 +269,110 @@
     font-size: 1.5em;
     margin-bottom: 0.15rem;
     color: white;
+}
+
+@media screen and (max-width:880px) {
+    .page-button {
+        top: -1.5em;
+        left: 19.5em;
+        width: 16%;
+    }
+    .motor-dc.container {
+        padding-top: 2em;
+    }
+    .motor-1-pic .motor-image {
+        margin-left: 0em;
+    }
+    .motor-1-pic .fas.fa-radiation-alt {
+        margin-top: 0.4em;
+        margin-left: 0.8em;
+        font-size: 5em;
+    }
+    .motor-dc.container .warn-panel {
+        width: 100%;
+        height: 26.4rem;
+        padding-bottom: 1em!important;
+    }
+    .motor-dc.container .warn-panel-content {
+        font-size: 0.9em;
+        height: 70%;
+        padding-bottom: 1em!important;
+    }
+    .motor-dc.container .warn-item {
+        margin-bottom: 0.5em;
+        width: 98%;
+        height: 20%;
+        grid-template-columns: 23% 15% 30% 32%;
+    }
+    .motor-dc.container .warn-panel-header{
+        height: 17%!important;
+    }
+    .motor-dc.container .warn-panel-header .title, .class-title, .current-pag {
+        top: 10.5em;
+        left: 3em;
+        font-size:15px;
+    }
+    .motor-dc.container .warn-amount {
+        font-size: 15px;
+        left: 3em!important;
+        top: 12.5em;
+    }
+    .motor-dc.container .current-page{
+        top:13.5em!important;
+        left: 14em!important;
+    }
+    .motor-dc.container .class-title {
+        left: 13em!important;
+    }
+    .warn-panel-header .fault-filt-btn, .warn-filt-btn, .all-filt-btn {
+        top: 9.8em;
+        width: 1.6em;
+        height: 1.6em;
+    }
+    .pagination {
+        top: 41em;
+    }
+    .jmp-to-current-btn {
+        bottom: 1.9em;
+    }
+    .operate-time {
+        line-height: 28px;
+        margin-bottom: -2px;
+    }
+    .tc-box{
+        width: 22em;
+        height: 13em;
+        margin-bottom: 1em;
+    }
+    .tc-box .recharts-wrapper{
+        width: 300px!important;
+        height: 165px!important;
+    }
+    .tc-box .recharts-surface {
+        width: 300px!important;
+        height: 165px!important;
+    }
+    .area-chart-wrapper {
+        width: 250px;
+        margin: 0!important;
+    }
+    .yAxis-name {
+        font-size: 0.9em;
+        margin-bottom: 0;
+        top: 1.6em;
+        font-weight: normal;
+    }
+    .xAxis-name {
+        font-size: 0.9em;
+        font-weight: normal;
+        top: 12.3em;
+        left: 13em;
+    }
+    .tc-box .review-btn, .forw-btn {
+        width: 2em;
+        height: 12em;
+    }
+    .forw-btn{
+        left: 21em;
+    }
 }

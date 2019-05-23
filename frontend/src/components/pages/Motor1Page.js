@@ -632,13 +632,16 @@ export default class Motor1Page extends Component {
                 background: "linear-gradient(0deg, #29323c 0%, #485563 100%)",
                 padding: "1em 1em 1em 1em"
             }}>
-                <div className="page-button">
-                    <a href="/monitor/1" alt="">1</a>
-                    <a href="/monitor/2" alt="">2</a>
-                </div>
+                
                 <Container className="motor-dc" style={{ marginBottom: "1em" }}>
+                  
                     <Row>
+              
                         <Col md="6" className="leftside">
+                            <div className="page-button">
+                                <a href="/monitor/1" alt="">1</a>
+                                <a href="/monitor/2" alt="">2</a>
+                            </div>
                             <div className="motor-1-pic">
                                 <div><img className="motor-image" src={MotorPic} alt="" /></div>
                                 <div className={emrg}><i className="fas fa-radiation-alt"></i></div>

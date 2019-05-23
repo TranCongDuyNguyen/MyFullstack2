@@ -7,6 +7,10 @@
     font-weight: bolder;
     color: #C97D60;
 }
+.nav-brand.mr-auto.navbar-brand {
+    left: 2em; 
+    top: 0em;
+}
 .dropdown .dropdown-menu a {
     color: black;
     background-color: white;
@@ -36,4 +40,21 @@
     background-color: #545b62;
     border-color: #4e555b;
     border-radius: 0.25rem;
+}
+@media screen and (max-width:880px) {
+    .nav-brand.mr-auto.navbar-brand{
+        left: 16em;
+        top: 1em;
+    }
+    .mr-auto.mb-auto.nav {
+        margin-top: 1em!important;
+    }
+    .speed-dc .dc .text {
+        font-size: 1.4em;
+        right: 11.6em;
+        top: 3.6em;
+    }
+    .modal-dialog{
+        width: 96%!important;
+    }
 }

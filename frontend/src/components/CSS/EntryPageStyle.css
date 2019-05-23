@@ -275,3 +275,45 @@
     right: 1.6em;
     color: #777; 
 }
+
+@media screen and (max-width:880px) {
+    .h-bar-box {
+        left: 50%;
+        top: 30em;
+    }
+    .motor-image {
+        margin-left: 4em;
+        margin-right: 0em;
+        width: 158px;
+        height: 133.5px;
+    }
+    .triangle-btn-box {
+        left: 68.6%;
+        top: 19.7em;
+    }
+    .space{
+        height:0em!important;
+    }
+    .entry-footer.row{
+        height: 76em!important;
+    }
+    .operate.col-md-3, .notify.col-md-6{
+        margin-top: 15em;
+    }    
+    .notify.col-md-6 .footer-panel .warn-panel {
+        width: 100%;
+    }
+    .notify.col-md-6 .footer-panel .warn-panel .warn-panel-content{
+        font-size: 0.8em;
+    }
+    .notify.col-md-6 .footer-panel .warn-panel .warn-panel-content .warn-item {
+        height: 26%;
+    }
+    .notify.col-md-6 .footer-panel .warn-panel .pagination {
+        top: 24.5em;
+    }
+    .speed-dc .dc .text {
+        right: 11.6em;
+        top: 3.6em;
+    }
+}

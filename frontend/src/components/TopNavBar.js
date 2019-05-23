@@ -75,7 +75,6 @@ class TopNavBar extends Component {
               <NavbarBrand className="nav-brand mr-auto"
                 style={{
                   color: "#FFF",
-                  left: "2em", top: "0em",
                   position: "absolute"
                 }}>
                 <h1 className="brand-text">SCADA</h1>
