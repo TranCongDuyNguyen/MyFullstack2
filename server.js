@@ -208,8 +208,6 @@ client.on("message", function (topic, message) {
 				motor2TObj = utility.createObj("motorT", motorData2.ThM1);
 				hObj = utility.createObj("h", motorData3.HiFB);
 
-				console.log(tor1Obj);
-				console.log(tor1Buffer);
 				utility.objToBuffer(tor1Obj, tor1Buffer, 10);
 				utility.objToBuffer(tor1Obj, tor1Store, 1000);
 				utility.objToBuffer(amp1Obj, amp1Buffer, 10);
