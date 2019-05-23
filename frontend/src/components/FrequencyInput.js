@@ -84,7 +84,6 @@ export default class FrequencyInput extends Component {
     componentDidMount() {
         this.socket = io()
         this.socket.on("motorStatus", function (status) {
-            console.log(status.freq);
             this.setState({
                 frequency: status.freq
             })

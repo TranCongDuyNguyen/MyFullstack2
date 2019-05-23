@@ -68,6 +68,7 @@ export default class CurrentTC extends Component {
         }
     }
     render() {
+        
         return (
             <div>
                 <div className="review-btn" onClick={this.onReviewClick}><i className="fas fa-angle-left"></i></div>

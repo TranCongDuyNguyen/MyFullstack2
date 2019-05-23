@@ -38,8 +38,7 @@ export default class TorqueDC extends Component {
                 refKey: this.props.maxScale
             }
         ]
-        console.log(data);
-        console.log(data1);
+
         return (
             <div className="torque-dc">
                 <DoughnutChart data={data.concat([])}
