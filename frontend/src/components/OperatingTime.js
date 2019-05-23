@@ -43,7 +43,6 @@ export default class OperatingTime extends Component {
             })
         }.bind(this))
         this.socket.on("motorStatus", function (statusObj) {
-            console.log(statusObj);
             this.setState({
                 maintenance: statusObj.maint
             })
