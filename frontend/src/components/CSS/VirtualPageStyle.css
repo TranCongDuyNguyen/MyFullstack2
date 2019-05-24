@@ -60,9 +60,15 @@
 }
 
 @media screen and (max-width:880px) {
+    .entry-page-wrapper {
+        height: 40rem;
+    }
+    .entry-page-wrapper .row {
+        width: 100%!important;
+    }
     .background-pic {
-        width: 395px;
-        height: 265px;
+        width: 329px;
+        height: 220px;
     }
     .onlyled-container {
         margin-bottom: 1em;
@@ -70,11 +76,9 @@
     .NX-btn {
         flex-direction: column;
     }
-    .col-md-4 {
+    .entry-page-wrapper .col-md-4 {
         margin-left: 1em;
         width: 50%!important;
     }
-    .entry-page-wrapper {
-        height: 40rem;
-    }
+
 }
