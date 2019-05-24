@@ -71,18 +71,17 @@
         position: absolute;
         width: 366px;
         height: 312px;
-        top: -0.5em;
-        border: none!important;
+        top: 0em;
     }
     .entry-page-wrapper .row {
         width: 100%!important;
     }
     .entry-page-wrapper .led-btn-col.col {
-        margin-top: 6em;
+        margin-top: 1em;
     }    
     .background-pic {
-        width: 329px;
-        height: 220px;
+        width: 366px;
+        height: 312px;
     }
     .onlyled-container {
         margin-bottom: 1em;
