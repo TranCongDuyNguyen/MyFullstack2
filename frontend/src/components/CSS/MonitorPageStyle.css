@@ -382,5 +382,11 @@
     }
     .tc-box .fas.fa-pause {
         right: 22em;
+        top: 11em;
     }
+    .dc-tribtn-adjust {
+        top: 0em;
+        left: 13em;
+    }
+    
 }
