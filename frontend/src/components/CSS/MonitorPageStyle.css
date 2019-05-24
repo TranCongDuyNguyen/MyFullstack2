@@ -375,4 +375,9 @@
     .forw-btn{
         left: 21em;
     }
+    .dc .text {
+        font-size: 1.2em;
+        right: 3.5em;
+        top: 2em;
+    }
 }

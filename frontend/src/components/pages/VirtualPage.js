@@ -73,11 +73,7 @@ export default class VirtualPage extends Component {
       "background-pic": !onPic
     })
     return (
-      <div style={{
-        background: "linear-gradient(0deg, #29323c 0%, #485563 100%)",
-        padding: "1em 1em 1em 1em",
-        height: "38rem"
-      }}>
+      <div className="entry-page-wrapper">
         <Row>
           <Col >
             <div className={loadPicClass}></div>
@@ -90,7 +86,8 @@ export default class VirtualPage extends Component {
                 <div className="led-container" style={{ marginRight: "1em" }}>
                   <Led className="red-led"
                     customColor={(fault && "#F00") || (!fault && "#FFFD")}
-                    customShadow={fault && "rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px"}
+                    customShadow={fault && 
+                      "rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px"}
                      />
                 </div>
                 <div className="led-container" >

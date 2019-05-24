@@ -1,3 +1,8 @@
+.entry-page-wrapper {
+    background: linear-gradient(0deg, #29323c 0%, #485563 100%);
+    padding: 1em 1em 1em 1em;
+    height: 38rem;
+}
 .pic {
     width: 610px;
     height: 520px;
@@ -61,5 +66,15 @@
     }
     .onlyled-container {
         margin-bottom: 1em;
+    }
+    .NX-btn {
+        flex-direction: column;
+    }
+    .col-md-4 {
+        margin-left: 1em;
+        width: 50%!important;
+    }
+    .entry-page-wrapper {
+        height: 40rem;
     }
 }
