@@ -61,7 +61,17 @@
 
 @media screen and (max-width:880px) {
     .entry-page-wrapper {
-        height: 40rem;
+        height: 50rem;
+    }
+    .entry-page-wrapper .col-md-4 {
+        margin-left: 1em;
+        width: 50%!important;
+    }
+    .pic {
+        position: absolute;
+        width: 305px;
+        height: 260px;
+        top: -1em;
     }
     .entry-page-wrapper .row {
         width: 100%!important;
@@ -76,9 +86,6 @@
     .NX-btn {
         flex-direction: column;
     }
-    .entry-page-wrapper .col-md-4 {
-        margin-left: 1em;
-        width: 50%!important;
-    }
+
 
 }

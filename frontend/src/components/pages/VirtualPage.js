@@ -80,7 +80,7 @@ export default class VirtualPage extends Component {
             {this.state.onPause && <i class="fas fa-pause"></i>}
             <img className="pic" src={this.state.src} alt=""></img>
           </Col>
-          <Col>
+          <Col className="led-btn-col">
             <Row style={{ justifyContent: "space-evenly" }}>
               <div className="onlyled-container">
                 <div className="led-container" style={{ marginRight: "1em" }}>
