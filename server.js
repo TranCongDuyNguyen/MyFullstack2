@@ -119,7 +119,7 @@ let powerInDay = [];
 let powerInHour = [];
 let tempHour = 0;
 
-
+let fullTime;
 let time;
 let id0 = setInterval(() => {
 	time = utility.getTime(false);
@@ -238,11 +238,15 @@ client.on("message", function (topic, message) {
 				utility.objToBuffer(hObj, hStore, 1000);
 				let avgPowerIn10 = utility.averageObjCal(power1Buffer, "power");
 				utility.objToBuffer(avgPowerIn10, powerInHour, 500);
+				console.log(avgPowerIn10 + " a");
+				
 				if (moment().get('hour') > tempHour) {
 					let avgPowerInHour = utility.averageCal(powerInHour);
 					utility.objToBuffer(avgPowerInHour, powerInDay, 24);
 					tempHour = moment().get('hour');
+					console.log(avgPowerInHour + " b");
 				}
+				
 			}
 			catch (e) {
 				console.log(e);

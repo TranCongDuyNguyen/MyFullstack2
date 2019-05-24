@@ -19,7 +19,7 @@ export default class PowerDayChart extends Component {
         this.socket.on("powerInWeek", function (piwBuffer) {
                 this.setState((state) => {
                     return {
-                        data:piwBuffer
+                        data: piwBuffer
                     }
                 });
         }.bind(this));
