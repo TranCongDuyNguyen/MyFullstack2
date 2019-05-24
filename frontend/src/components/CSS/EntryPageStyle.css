@@ -286,6 +286,10 @@
         margin-right: 0em;
         width: 158px;
         height: 133.5px;
+        z-index: 9999!important;
+    }
+    .triangle {
+        z-index: 99999!important;
     }
     .triangle-btn-box {
         left: 68.6%;
@@ -315,5 +319,9 @@
     .speed-dc .dc .text {
         right: 11.5em;
         top: 3.6em;
+    }
+    .entry-page .dc-fre-adj {
+        top: 2em;
+        left: 1.5em;
     }
 }
