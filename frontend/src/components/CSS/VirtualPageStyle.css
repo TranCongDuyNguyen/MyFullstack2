@@ -72,16 +72,19 @@
         width: 366px;
         height: 312px;
         top: 0em;
+        border: none!important;
     }
     .entry-page-wrapper .row {
         width: 100%!important;
     }
     .entry-page-wrapper .led-btn-col.col {
-        margin-top: 1em;
+        margin-top: 3em;
+        margin-left: 3em;
     }    
     .background-pic {
         width: 366px;
-        height: 312px;
+        height: 244px;
+        margin-top: 2em!important;
     }
     .onlyled-container {
         margin-bottom: 1em;
