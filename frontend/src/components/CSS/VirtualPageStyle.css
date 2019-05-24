@@ -71,8 +71,8 @@
         position: absolute;
         width: 366px;
         height: 312px;
-        top: -1em;
-        border: none;
+        top: -0.5em;
+        border: none!important;
     }
     .entry-page-wrapper .row {
         width: 100%!important;
