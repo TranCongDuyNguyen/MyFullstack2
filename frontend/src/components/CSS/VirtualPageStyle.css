@@ -69,13 +69,17 @@
     }
     .pic {
         position: absolute;
-        width: 305px;
-        height: 260px;
+        width: 366px;
+        height: 312px;
         top: -1em;
+        border: none;
     }
     .entry-page-wrapper .row {
         width: 100%!important;
     }
+    .entry-page-wrapper .led-btn-col.col {
+        margin-top: 6em;
+    }    
     .background-pic {
         width: 329px;
         height: 220px;
