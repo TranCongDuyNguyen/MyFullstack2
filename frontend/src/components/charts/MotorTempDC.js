@@ -40,7 +40,7 @@ export default class MotorTempDC extends Component {
                     colorId="motorT"
                     startGradColor="#FFF275"
                     endGradColor="#fd1d1d"
-                    theUnit = "&deg;C"
+                    theUnit = "%"
                     flash={this.state.flash}
                     onAdjTriClick={this.props.onAdjTriClick}
                     id={this.props.id}

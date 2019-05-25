@@ -13,7 +13,7 @@ export default class SpeedDC extends Component {
             },
             {
                 name: "Ref",
-                refKey: 100
+                refKey: this.props.maxScale
             }
         ],
         flash: false
@@ -22,10 +22,20 @@ export default class SpeedDC extends Component {
 
     render() {
         const { data } = this.state;
+        let data1 = [
+            {
+                name: "Torque",
+                tor: Math.abs(data[0].freq)
+            },
+            {
+                name: "Ref",
+                refKey: this.props.maxScale
+            }
+        ]
         return (
             <div className="speed-dc">
                 <DoughnutChart data={data.concat([])}
-                    data1={data.concat([])}
+                    data1={data1}
                     dataKey="freq"
                     fault={this.props.faultLvl}                             /**/
                     warn={this.props.warnLvl}

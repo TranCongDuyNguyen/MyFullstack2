@@ -76,7 +76,7 @@ export default class DriveTempTC extends Component {
                     width={450}
                     height={210}
                     dataKey="driveT"
-                    yAxisName="&deg;C"
+                    yAxisName="%"
                     customColor="#F7A072"
                     colorId="driveTTC"
                     onStopClick={this.onStopClick} ></TrendChart>

@@ -56,7 +56,7 @@ export default class MotorTempTC extends Component {
                     width={450}
                     height={210}
                     dataKey="motorT"
-                    yAxisName="&deg;C"
+                    yAxisName="%"
                     customColor="#FE654F"
                     colorId="motorTTC"
                     onStopClick={this.onStopClick} ></TrendChart>
