@@ -17,6 +17,7 @@ export default class CurrentTC extends Component {
         this.socket.on(this.props.ioTopic, function (ampereBuffer) {
             if (!isStop) {
                 this.setState((state) => {
+                    console.log(ampereBuffer);
                     return {
                         data: ampereBuffer
                     }
