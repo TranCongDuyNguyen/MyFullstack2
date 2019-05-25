@@ -180,8 +180,8 @@ let motorData3 = {
 //- RECEIVE DATA FROM PLC VIA MQTT
 client.on("message", function (topic, message) {
 	if (topic === "n/motorData") {
-		let motorData = JSON.parse(message.toString());
-		//let motorData = utility.PLCStrToObj(message);
+		//let motorData = JSON.parse(message.toString());
+		let motorData = utility.PLCStrToObj(message);
 
 		if (motorData.PkID === 1) {
 			motorData1 = motorData;
