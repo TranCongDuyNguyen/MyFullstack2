@@ -487,7 +487,7 @@ io.on('connection', function (socket) {
 	let id1 = setInterval(function () {
 		socket.emit("motor1TCTor", tor1Buffer);
 		socket.emit("motor1TCAmp", amp1Buffer);
-		console.log(amp1Buffer);
+		//console.log(amp1Buffer);
 		socket.emit("motor1TCMotorT", motor1TBuffer);
 		socket.emit("motor1TCDriveT", drive1TBuffer);
 		socket.emit("motor1TCPower", power1Buffer);
