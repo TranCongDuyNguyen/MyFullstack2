@@ -1,17 +1,10 @@
 var moment = require('moment');
 
 function getTime(option) {
-	let now = moment().utcOffset(420);
-	let hours = (("0" + now.hour()).slice(-2));
-	let minutes = (("0" + now.minute()).slice(-2));
-	let seconds = (("0" + now.second()).slice(-2));
-	let day = now.date();
-	let month = now.month() + 1;
-	let year = now.year();
 	if (option) {
-		return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
+		return moment().utcOffset(7).format('DD/MM/YYYY hh:mm:ss');
 	}
-	return hours + ":" + minutes + ":" + seconds;
+	return moment().utcOffset(7).format('HH:mm:ss')
 }
 
 let time;
