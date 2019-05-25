@@ -20,6 +20,7 @@ import DriveTempTC from '../charts/DriveTempTC';
 import PowerTC from '../charts/PowerTC';
 import OperatingTime from '../OperatingTime';
 import WarnPanel from '../WarnPanel';
+import Led from '../Led';
 import "../CSS/MonitorPageStyle.css";
 import MotorPic from "../../images/motor.png";
 
@@ -63,6 +64,9 @@ export default class Motor1Page extends Component {
         ssDriveT: false,
         ssPow: false,
         emer: false,
+        forw: false,
+        reve: false,
+        stop: false,
         textcur: '',
         texttor: '',
         textmotorT: '',
@@ -145,8 +149,10 @@ export default class Motor1Page extends Component {
         this.getHandler();
         this.socket = io();
         this.socket.on("motorStatus", function (statusObj) {
-            
             this.setState({
+                forw: statusObj.forw,
+                reve: statusObj.reve,
+                stop: statusObj.stop,
                 emer: statusObj.emer
             })
         }.bind(this))
@@ -602,7 +608,7 @@ export default class Motor1Page extends Component {
             isCurAdj, isTorAdj, isMotorTAdj, isDriveTAdj, isPowerAdj, curpos, torpos, motorTpos, driveTpos, 
             powpos, maxcur, maxtor, maxmotorT, maxdriveT, maxpow, bsCur, bsTor, bsMotorT, bsDriveT, bsPow,
             ssCur, ssTor, ssMotorT, ssDriveT, ssPow, fCurLvl, fTorLvl, fMotorTLvl, fDriveTLvl, fPowLvl, wCurLvl, 
-            wTorLvl, wMotorTLvl, wDriveTLvl, wPowLvl, emer} = this.state;
+            wTorLvl, wMotorTLvl, wDriveTLvl, wPowLvl, emer, stop, forw, reve} = this.state;
         let curState = classNames({
             "tc-box": true,
             "hide": !isHideCur
@@ -639,9 +645,27 @@ export default class Motor1Page extends Component {
                                 <a href="/monitor/1" alt="">1</a>
                                 <a href="/monitor/2" alt="">2</a>
                             </div>
+                            <div className="control-status">
+                            <Led className="green-led"
+                                customColor={(forw && "#ABFF00") || (!forw && "#DCDCDC")}
+                                customShadow={forw ? "rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px" : "0px 0px #0000"}
+                            />
+                            <Led className="red-led"
+                                customColor={(stop && "#F00") || (!stop && "#DCDCDC")}
+                                customShadow={stop &&
+                                    "rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px"}
+                            />
+                            <Led className="blue-led"
+                                customColor={(reve && "#24E0FF") || (!reve && "#DCDCDC")}
+                                customShadow={reve ? "rgba(0, 0, 0, 0.2) 0 -1px 8px 1px, inset  0 -1px 9px, #3F8CFF 0 2px 14px" : "0px 0px #0000"}
+                            />
+                    </div>
                             <div className="motor-1-pic">
                                 <div><img className="motor-image" src={MotorPic} alt="" /></div>
-                                <div className={emrg}><i className="fas fa-radiation-alt"></i></div>
+                                <div className={emrg}>
+                                    <i className="fas fa-radiation-alt"></i>
+                                    <div className="motor-name">Reverse Motor</div>
+                                </div>
                             </div>
                             <WarnPanel ioTopic="warnList1" reqId={1} />
                         </Col>

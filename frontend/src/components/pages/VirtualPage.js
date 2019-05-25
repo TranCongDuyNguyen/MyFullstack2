@@ -14,7 +14,7 @@ export default class VirtualPage extends Component {
     onPause: false,
     onPic: false,
     forw: false,
-    rev: false,
+    reve: false,
     stop: false,
     maintenance: false,
     fault: false
@@ -32,8 +32,8 @@ export default class VirtualPage extends Component {
     
     this.socket.on("motorStatus", function (status) {
       this.setState({
-        forw: status.run,
-        rev: status.rev,
+        forw: status.forw,
+        reve: status.reve,
         stop: status.stop,
         maintenance: status.maint,
         fault: status.fault,
@@ -68,7 +68,7 @@ export default class VirtualPage extends Component {
   }
 
   render() {
-    const { forw, rev, stop, maintenance, fault, onPic } = this.state;
+    const { forw, reve, stop, maintenance, fault, onPic } = this.state;
     let loadPicClass = classNames({
       "background-pic": !onPic
     })
@@ -126,8 +126,8 @@ export default class VirtualPage extends Component {
                       <VirtualPageBtn sendText="onReverse"
                         btnType="blue">Reverse</VirtualPageBtn>
                       <Led className="blue-led"
-                        customColor={(rev && "#24E0FF") || (!rev && "#FFFD")}
-                        customShadow={rev ? "rgba(0, 0, 0, 0.2) 0 -1px 8px 1px, inset  0 -1px 9px, #3F8CFF 0 2px 14px" : "0px 0px #0000"}
+                        customColor={(reve && "#24E0FF") || (!reve && "#FFFD")}
+                        customShadow={reve ? "rgba(0, 0, 0, 0.2) 0 -1px 8px 1px, inset  0 -1px 9px, #3F8CFF 0 2px 14px" : "0px 0px #0000"}
                       />
 
                     </div>

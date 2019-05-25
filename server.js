@@ -198,9 +198,6 @@ client.on("message", function (topic, message) {
 			try {
 				let amp1Obj, amp2Obj, tor1Obj, tor2Obj, drive1TObj, drive2TObj, power1Obj, power2Obj, motor1TObj, motor2TObj, hObj;
 				amp1Obj = utility.createObj("amp", motorData1.Cur0);
-				// console.log(motorData1.Cur0);
-				// console.log(amp1Buffer);
-				// console.log(tor1Buffer);
 				amp2Obj = utility.createObj("amp", motorData1.Cur1);
 				tor1Obj = utility.createObj("tor", motorData1.Tor0);
 				tor2Obj = utility.createObj("tor", motorData1.Tor1);
@@ -465,8 +462,8 @@ io.on('connection', function (socket) {
 			//+status
 			if (motorData3) {
 				socket.emit("motorStatus", {
-					run: motorData3.Fwrd,
-					rev: motorData3.Reve,
+					forw: motorData3.Fwrd,
+					reve: motorData3.Reve,
 					stop: motorData3.Stop,
 					maint: motorData3.Mtnt,
 					fault: motorData3.Falt,
@@ -791,12 +788,15 @@ io.on('connection', function (socket) {
 			toPLCData[2] = false;
 		}
 		msg = utility.ArrToPLCMsg(toPLCData);
-		client.publish("n/toPLC", msg, function (err) {
-			if (err) {
-				console.log(err);
-			}
-		})
-		console.log(msg);
+		setTimeout(() => {
+			client.publish("n/toPLC", msg, function (err) {
+				if (err) {
+					console.log(err);
+				}
+			})
+			console.log(msg);
+		}, 1250)
+		
 
 	})
 	//- NX

@@ -13,6 +13,7 @@ import FrequencyInput from "../FrequencyInput";
 import NumberInput from "../NumberInput";
 import EntryNotiPanel from "../EntryNotiPanel";
 import ClickOutside from "../ClickOutside";
+import Led from "../Led";
 import "../CSS/ProgressStyle.css";
 import "../CSS/EntryPageStyle.css";
 
@@ -45,7 +46,9 @@ export default class EntryPage extends Component {
         isFre1Adj: false,
         isFre2Adj: false,
         isService: false,
-
+        forw: false,
+        reve: false,
+        stop: false,
         text: "", //pass to height modal
         textfre1: "",
         textfre2: "",
@@ -71,7 +74,6 @@ export default class EntryPage extends Component {
         mppow2: null,
         pos1: '126,86 136,80 136,92',
         pos2: '126,86 136,80 136,92',
-        Hvalue: 0, //pass to tri-btn
         Hexp: 0,
         Hfb: 0,
         ssp1: 0,
@@ -120,7 +122,10 @@ export default class EntryPage extends Component {
             this.setState({
                 isService: status.service,
                 Hexp: status.hiex,
-                Hfb: status.hifb
+                Hfb: status.hifb,
+                forw: status.forw,
+                reve: status.reve,
+                stop: status.stop
             });
         }.bind(this));
         this.socket.on("motorStatus2", function (status) {
@@ -309,7 +314,7 @@ export default class EntryPage extends Component {
                 }))
             }
             else if (eid === "fre2max") {
-                if (e.target.value < 10 ) {
+                if (e.target.value < 10) {
                     this.maxscale2[5].bs = true;
                     this.maxscale2[5].ss = false;
                 }
@@ -354,12 +359,12 @@ export default class EntryPage extends Component {
         }
     }
     onInfoPopup = (e) => {
-        if (e.target.className === "motor-image for") {
+        if (e.target.className === "motor-image rev") {
             this.setState({
                 info1: !this.state.info1
             })
         }
-        if (e.target.className === "motor-image rev") {
+        if (e.target.className === "motor-image for") {
             this.setState({
                 info2: !this.state.info2
             })
@@ -388,31 +393,31 @@ export default class EntryPage extends Component {
         })
     };
     render() {
-       
-        const { isModal, text, Hvalue, info1, info2, pos1, pos2, isFre1Adj, isFre2Adj, maxfre1, maxfre2,
+
+        const { isModal, text, info1, info2, pos1, pos2, isFre1Adj, isFre2Adj, maxfre1, maxfre2,
             bsFre1, bsFre2, ssFre1, ssFre2, mpamp1, mptor1, mpmotorT1, mpdriveT1, mppow1, mpamp2, Hexp,
             mptor2, mpmotorT2, mpdriveT2, mppow2, fFre1Lvl, fFre2Lvl, wFre1Lvl, wFre2Lvl, ssp1, ssp2,
-            Hfb } = this.state
-        let hexpVal = Number(Hexp).toFixed(2).toString().slice(0,4);
-        let hfbVal = Number(Hfb).toFixed(2).toString().slice(0,4);
-        if(hexpVal.charAt((hexpVal.length - 1)) === ".") {
+            Hfb, stop, forw, reve } = this.state
+        let hexpVal = Number(Hexp).toFixed(2).toString().slice(0, 4);
+        let hfbVal = Number(Hfb).toFixed(2).toString().slice(0, 4);
+        if (hexpVal.charAt((hexpVal.length - 1)) === ".") {
             hexpVal = hexpVal.slice(0, hexpVal.length - 1);
         }
-        if(hfbVal.charAt((hfbVal.length - 1)) === ".") {
+        if (hfbVal.charAt((hfbVal.length - 1)) === ".") {
             hfbVal = hfbVal.slice(0, hfbVal.length - 1);
         }
         console.log(hfbVal);
         return (
-            <div className="entry-page" style={{backgroundImage: 'linear-gradient(to top, #dfe9f3 0%, #EEEE 100%)'}}>
+            <div className="entry-page" style={{ backgroundImage: 'linear-gradient(to top, #dfe9f3 0%, #EEEE 100%)' }}>
                 <HeightModal external={isModal}
                     text={text}
                     onChange={this.onChange}
                     onKeyUp={this.onKeyUp}></HeightModal>
                 <div className="space" style={{ height: "4em" }}></div>
-                
+
                 <Row >
                     <TriangleBtn onOpenModal={this.onOpenModal}
-                        hiex= {hexpVal}></TriangleBtn>
+                        hiex={hexpVal}></TriangleBtn>
                     <div className="h-bar-box">
                         <div className="unit">{`${hfbVal} cm`}</div>
                         <Progress max={15} value={hfbVal}>
@@ -471,8 +476,8 @@ export default class EntryPage extends Component {
                             faultLvl={fFre1Lvl}
                             warnLvl={wFre1Lvl}
                         ></SpeedDC>
-                        <img className="motor-image for" src={MotorPic} alt="" onClick={this.onInfoPopup} />
-                        {info1 && <MotorInfo ioTopic={["motor1Info1", "motor1Info2"]} >Motor 1</MotorInfo>}
+                        <img className="motor-image rev" src={MotorPic} alt="" onClick={this.onInfoPopup} />
+                        {info1 && <MotorInfo ioTopic={["motor1Info1", "motor1Info2"]} >Reverse Motor</MotorInfo>}
                         <div className="bottom-text">Reversing</div>
                         <div className="bottom-text">{this.state.isService ? "Service" : "Normal"}</div>
                         {info1 && <div className="set-sp1-box">
@@ -516,8 +521,8 @@ export default class EntryPage extends Component {
                             sSize={ssFre2}
                             faultLvl={fFre2Lvl}
                             warnLvl={wFre2Lvl}></SpeedDC>
-                        <img className="motor-image rev" src={MotorPic} alt="" onClick={this.onInfoPopup} />
-                        {info2 && <MotorInfo ioTopic={["motor2Info1", "motor2Info2"]}>Motor 2</MotorInfo>}
+                        <img className="motor-image for" src={MotorPic} alt="" onClick={this.onInfoPopup} />
+                        {info2 && <MotorInfo ioTopic={["motor2Info1", "motor2Info2"]}>Forward Motor</MotorInfo>}
                         <div className="bottom-text">Forwarding</div>
                         <div className="bottom-text">{this.state.isService ? "Service" : "Normal"}</div>
                         {info2 && <div className="set-sp1-box sp2">
@@ -525,6 +530,21 @@ export default class EntryPage extends Component {
                             <div className="ssp">{ssp2}</div>
                         </div>}
                     </Col>
+                    <div className="control-status">
+                            <Led className="green-led"
+                                customColor={(forw && "#ABFF00") || (!forw && "#DCDCDC")}
+                                customShadow={forw ? "rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px" : "0px 0px #0000"}
+                            />
+                            <Led className="red-led"
+                                customColor={(stop && "#F00") || (!stop && "#DCDCDC")}
+                                customShadow={stop &&
+                                    "rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px"}
+                            />
+                            <Led className="blue-led"
+                                customColor={(reve && "#24E0FF") || (!reve && "#DCDCDC")}
+                                customShadow={reve ? "rgba(0, 0, 0, 0.2) 0 -1px 8px 1px, inset  0 -1px 9px, #3F8CFF 0 2px 14px" : "0px 0px #0000"}
+                            />
+                    </div>
                 </Row>
                 <Row style={{ background: "#000d", height: "25rem", padding: "0.5em 0.5em 1em 0.4em", marginTop: "1em" }}
                     className="entry-footer">
@@ -545,7 +565,7 @@ export default class EntryPage extends Component {
                             <FrequencyInput className="freq"></FrequencyInput>
                             <div className="dots">...</div>
                         </div>
-                        <div className="trapezoid mp">Forward</div>
+                        <div className="trapezoid mp">Reverse</div>
                         <div className="footer-panel mp" style={{ height: "11em" }}>
                             <div style={{ textDecoration: "underline", textAlign: "center" }}>Max performance per 10 sec</div>
                             <div>Current: {mpamp1} A</div>
@@ -559,8 +579,8 @@ export default class EntryPage extends Component {
                     <Col md="3" className="operate" style={{ height: "10rem" }}>
                         <div className="trapezoid">Operation</div>
                         <div className="footer-panel">
-                        <ClickOutside >            
-                        </ClickOutside>
+                            <ClickOutside >
+                            </ClickOutside>
                             <div className="K-tau">
                                 <div className="K">
                                     <NumberInput placeholder="K" ioTopic="setK"></NumberInput>
@@ -572,7 +592,7 @@ export default class EntryPage extends Component {
 
                             <div className="dots">...</div>
                         </div>
-                        <div className="trapezoid mp">Reverse</div>
+                        <div className="trapezoid mp">Forward</div>
                         <div className="footer-panel mp" style={{ height: "11em" }}>
                             <div style={{ textDecoration: "underline", textAlign: "center" }}>Max performance per 10 sec</div>
                             <div>Current: {mpamp2} A</div>
