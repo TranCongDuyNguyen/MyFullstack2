@@ -57,4 +57,7 @@
     .modal-dialog{
         width: 96%!important;
     }
+    .brand-text {
+        right: -0.6em;
+    }
 }

@@ -32,9 +32,9 @@ const config = {
 export default class Motor2Page extends Component {
     constructor(props) {
         super(props);
-        this.maxscale1 = [{ val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        this.maxscale1 = [{ val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false },
-        { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false }, 
+        { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false },
         { val: "100", fault: "0", warn: "0", pos: '126,86 136,80 136,92', bs: false, ss: false }];
@@ -153,8 +153,8 @@ export default class Motor2Page extends Component {
     componentWillUnmount() {
         this.socket.disconnect();
         this.socket.on("connect_error", function (error) {
-          console.log(error);
-          this.socket.disconnect();
+            console.log(error);
+            this.socket.disconnect();
         })
     };
     onDeleteTrend = (e) => {
@@ -632,17 +632,17 @@ export default class Motor2Page extends Component {
                 background: "linear-gradient(0deg, #29323c 0%, #485563 100%)",
                 padding: "1em 1em 1em 1em"
             }}>
-                <div className="page-button">
-                    <a href="/monitor/1" alt="">1</a>
-                    <a href="/monitor/2" alt="">2</a>
-                </div>
                 <Container className="motor-dc" style={{ marginBottom: "1em" }}>
                     <Row>
                         <Col md="6" className="leftside">
-                        <div className="motor-1-pic">
-                            <div><img className="motor-image" src={MotorPic} alt="" /></div>
-                            <div className={emrg}><i class="fas fa-radiation-alt"></i></div>
-                        </div>
+                            <div className="page-button">
+                                <a href="/monitor/1" alt="">1</a>
+                                <a href="/monitor/2" alt="">2</a>
+                            </div>
+                            <div className="motor-1-pic">
+                                <div><img className="motor-image" src={MotorPic} alt="" /></div>
+                                <div className={emrg}><i class="fas fa-radiation-alt"></i></div>
+                            </div>
                             <WarnPanel ioTopic="warnList2" reqId={2} />
                         </Col>
                         <Col md="6" className="rightside" >
@@ -679,9 +679,9 @@ export default class Motor2Page extends Component {
                                         triBtnPos={curpos}
                                         maxScale={maxcur}
                                         bSize={bsCur}
-                                        sSize={ssCur} 
+                                        sSize={ssCur}
                                         faultLvl={fCurLvl}
-                                        warnLvl={wCurLvl}/>
+                                        warnLvl={wCurLvl} />
                                     <div className="trend-button cur"
                                         onClick={this.onAddTrend}>
                                         <i className="fas fa-chart-line cur"

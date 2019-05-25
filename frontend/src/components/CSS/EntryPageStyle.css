@@ -316,7 +316,7 @@
         left: 36.5%;
         top: 48em;
     }
-    .dc {
+    .speed-dc .dc {
         margin-top: 6em;
     }
     .space{
@@ -364,6 +364,9 @@
         left: 14em;
         top: 14em;
         margin-top: 0em;
+    }
+    .height-input {
+        width: 2.8em;
     }
     .Tau, .K {
         width: 6em;

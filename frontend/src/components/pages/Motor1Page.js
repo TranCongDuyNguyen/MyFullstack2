@@ -631,12 +631,9 @@ export default class Motor1Page extends Component {
             <div style={{
                 background: "linear-gradient(0deg, #29323c 0%, #485563 100%)",
                 padding: "1em 1em 1em 1em"
-            }}>
-                
-                <Container className="motor-dc" style={{ marginBottom: "1em" }}>
-                  
-                    <Row>
-              
+            }}>          
+                <Container className="motor-dc" style={{ marginBottom: "1em" }}>            
+                    <Row>    
                         <Col md="6" className="leftside">
                             <div className="page-button">
                                 <a href="/monitor/1" alt="">1</a>
