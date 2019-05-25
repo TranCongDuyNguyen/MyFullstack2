@@ -197,6 +197,9 @@ client.on("message", function (topic, message) {
 			try {
 				let amp1Obj, amp2Obj, tor1Obj, tor2Obj, drive1TObj, drive2TObj, power1Obj, power2Obj, motor1TObj, motor2TObj, hObj;
 				amp1Obj = utility.createObj("amp", motorData1.Cur0);
+				console.log(motorData1.Cur0);
+				console.log(amp1Buffer);
+				console.log(tor1Buffer);
 				amp2Obj = utility.createObj("amp", motorData1.Cur1);
 				tor1Obj = utility.createObj("tor", motorData1.Tor0);
 				tor2Obj = utility.createObj("tor", motorData1.Tor1);

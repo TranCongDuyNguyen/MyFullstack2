@@ -19,13 +19,17 @@ setInterval(() => {
 module.exports.getTime = getTime;
 
 module.exports.createObj = function (type, data) {
-	if(data) {
-		let obj = {};
+	let obj = {};
+	if(data) {	
 		obj[type] = data;
 		obj.time = time;
 		return obj;
 	}
-	else return;
+	else  {
+		obj[type] = 0;
+		obj.time = time;
+		return obj;
+	}
 }
 
 function objToBuffer(obj, arr, amount) {
