@@ -1,11 +1,13 @@
+var moment = require('moment');
+
 function getTime(option) {
-	let now = new Date();
-	let hours = (("0" + now.getHours()).slice(-2));
-	let minutes = (("0" + now.getMinutes()).slice(-2));
-	let seconds = (("0" + now.getSeconds()).slice(-2));
-	let day = now.getDate();
-	let month = now.getMonth() + 1;
-	let year = now.getFullYear();
+	let now = moment().utcOffset(420);
+	let hours = (("0" + now.hour()).slice(-2));
+	let minutes = (("0" + now.minute()).slice(-2));
+	let seconds = (("0" + now.second()).slice(-2));
+	let day = now.date();
+	let month = now.month() + 1;
+	let year = now.year();
 	if (option) {
 		return day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
 	}
@@ -26,7 +28,6 @@ module.exports.createObj = function (type, data) {
 		return obj;
 	}
 
-	
 	else  {
 		obj[type] = 0;
 		obj.time = time;
@@ -117,9 +118,13 @@ module.exports.ArrToPLCMsg = function(arr) {
 }
 module.exports.PLCStrToObj = function(message) {
 	plcStr = message.toString();
-    let plcArr = plcStr.split("+");
-    plcStr = plcArr.join("");
+	
+	let plcArr = plcStr.split("+");
+	console.log(plcArr);
+	plcStr = plcArr.join("");
+	//console.log(plcArr);
 	let plcObj = JSON.parse(plcStr);
+	//console.log(plcObj);
 	return plcObj;
 }
 

@@ -185,6 +185,7 @@ client.on("message", function (topic, message) {
 
 		if (motorData.PkID === 1) {
 			motorData1 = motorData;
+			console.log(motorData1);
 		}
 		else if (motorData.PkID === 2) {
 			motorData2 = motorData;
@@ -197,9 +198,9 @@ client.on("message", function (topic, message) {
 			try {
 				let amp1Obj, amp2Obj, tor1Obj, tor2Obj, drive1TObj, drive2TObj, power1Obj, power2Obj, motor1TObj, motor2TObj, hObj;
 				amp1Obj = utility.createObj("amp", motorData1.Cur0);
-				console.log(motorData1.Cur0);
-				console.log(amp1Buffer);
-				console.log(tor1Buffer);
+				// console.log(motorData1.Cur0);
+				// console.log(amp1Buffer);
+				// console.log(tor1Buffer);
 				amp2Obj = utility.createObj("amp", motorData1.Cur1);
 				tor1Obj = utility.createObj("tor", motorData1.Tor0);
 				tor2Obj = utility.createObj("tor", motorData1.Tor1);
@@ -243,8 +244,8 @@ client.on("message", function (topic, message) {
 					if (power1Buffer.length > 0) {
 						var avgPowerIn10 = utility.averageObjCal(power1Buffer, "power");
 						utility.objToBuffer(avgPowerIn10, powerInHour, 500);
-						console.log(avgPowerIn10 + " a");
-						console.log(power1Buffer);
+					//	console.log(avgPowerIn10 + " a");
+						//console.log(power1Buffer);
 						if (moment().get('hour') > tempHour) {
 							let avgPowerInHour = utility.averageCal(powerInHour);
 							utility.objToBuffer(avgPowerInHour, powerInDay, 24);
