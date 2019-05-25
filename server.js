@@ -44,7 +44,7 @@ mongoose.connect(process.env.mongo_url, {
 /*<===========================================IO SOCKET=======================================================>*/
 /*<============================================MQTT CONNECTION============================================> */
 
-const client = mqtt.connect(process.env.CLOUDMQTT_URL, {clientId: "my-client"});
+const client = mqtt.connect(process.env.CLOUDMQTT_URL, { clientId: "my-client" });
 //, {
 // 	clientId: "my-client",
 // 	username: "admin",
@@ -236,21 +236,22 @@ client.on("message", function (topic, message) {
 				mp2[4] = utility.maxFilter(power2Buffer, "power");
 				utility.objToBuffer(hObj, hBuffer, 10);
 				utility.objToBuffer(hObj, hStore, 1000);
-				
-				if(power1Buffer.length > 0) {
-					var avgPowerIn10 = utility.averageObjCal(power1Buffer, "power");
+				try {
+					if (power1Buffer.length > 0) {
+						var avgPowerIn10 = utility.averageObjCal(power1Buffer, "power");
+						utility.objToBuffer(avgPowerIn10, powerInHour, 500);
+						console.log(avgPowerIn10 + " a");
+						console.log(power1Buffer);
+						if (moment().get('hour') > tempHour) {
+							let avgPowerInHour = utility.averageCal(powerInHour);
+							utility.objToBuffer(avgPowerInHour, powerInDay, 24);
+							tempHour = moment().get('hour');
+							console.log(avgPowerInHour + " b");
+						}
+					}
+				} catch (e) {
+					console.log("there is no power element");
 				}
-				
-				utility.objToBuffer(avgPowerIn10, powerInHour, 500);
-				console.log(avgPowerIn10 + " a");
-				console.log(power1Buffer);
-				if (moment().get('hour') > tempHour) {
-					let avgPowerInHour = utility.averageCal(powerInHour);
-					utility.objToBuffer(avgPowerInHour, powerInDay, 24);
-					tempHour = moment().get('hour');
-					console.log(avgPowerInHour + " b");
-				}
-				
 			}
 			catch (e) {
 				console.log(e);
@@ -499,7 +500,7 @@ io.on('connection', function (socket) {
 	let id2 = setInterval(function () {
 		socket.emit("heightAmount", hBuffer);
 	}, 1000);
-	let id3 = setInterval(function() {
+	let id3 = setInterval(function () {
 		socket.emit("powerInWeek", powerInWeek);
 	}, 43200000);
 	//+image
