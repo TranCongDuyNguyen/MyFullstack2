@@ -236,10 +236,14 @@ client.on("message", function (topic, message) {
 				mp2[4] = utility.maxFilter(power2Buffer, "power");
 				utility.objToBuffer(hObj, hBuffer, 10);
 				utility.objToBuffer(hObj, hStore, 1000);
-				let avgPowerIn10 = utility.averageObjCal(power1Buffer, "power");
+				
+				if(power1Buffer.length > 0) {
+					var avgPowerIn10 = utility.averageObjCal(power1Buffer, "power");
+				}
+				
 				utility.objToBuffer(avgPowerIn10, powerInHour, 500);
 				console.log(avgPowerIn10 + " a");
-				
+				console.log(power1Buffer);
 				if (moment().get('hour') > tempHour) {
 					let avgPowerInHour = utility.averageCal(powerInHour);
 					utility.objToBuffer(avgPowerInHour, powerInDay, 24);

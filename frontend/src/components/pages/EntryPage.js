@@ -401,6 +401,7 @@ export default class EntryPage extends Component {
         if(hfbVal.charAt((hfbVal.length - 1)) === ".") {
             hfbVal = hfbVal.slice(0, hfbVal.length - 1);
         }
+        console.log(hfbVal);
         return (
             <div className="entry-page" style={{backgroundImage: 'linear-gradient(to top, #dfe9f3 0%, #EEEE 100%)'}}>
                 <HeightModal external={isModal}
