@@ -88,8 +88,8 @@
     }    
     .background-pic {
         width: 366px;
-        height: 244px;
-        margin-top: 2em!important;
+        height: 312px;
+        background-color: black;
     }
     .onlyled-container {
         margin-bottom: 1em;
