@@ -44,7 +44,7 @@ mongoose.connect(process.env.mongo_url, {
 /*<===========================================IO SOCKET=======================================================>*/
 /*<============================================MQTT CONNECTION============================================> */
 
-const client = mqtt.connect(process.env.CLOUDMQTT_URL, { clientId: "my-client" });
+const client = mqtt.connect(process.env.CLOUDMQTT_URL, { clientId: "tcdnguyen" });
 //, {
 // 	clientId: "my-client",
 // 	username: "admin",
@@ -185,7 +185,7 @@ client.on("message", function (topic, message) {
 
 		if (motorData.PkID === 1) {
 			motorData1 = motorData;
-			console.log(motorData1);
+			//console.log(motorData1);
 		}
 		else if (motorData.PkID === 2) {
 			motorData2 = motorData;
@@ -378,7 +378,7 @@ let timeout = moment().get("millisecond") + moment().get("second") * 1000 + mome
 	+ moment().get("hour") * 60 * 60 * 1000;
 
 
-let timeoutId = setTimeout(() => {
+setTimeout(() => {
 	setInterval(() => {
 		let avgPowerInDay = utility.averageCal(powerInDay);
 		switch (moment().day()) {
@@ -482,7 +482,7 @@ io.on('connection', function (socket) {
 
 		}
 	});
-
+	
 	//+trending
 	let id1 = setInterval(function () {
 		socket.emit("motor1TCTor", tor1Buffer);
@@ -814,7 +814,6 @@ io.on('connection', function (socket) {
 			// the disconnection was initiated by the server, you need to reconnect manually
 			socket.connect();
 		}
-		time = 0;
 		clearInterval(id0);
 		clearInterval(id1);
 		clearInterval(id2);

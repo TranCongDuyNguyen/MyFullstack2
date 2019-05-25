@@ -20,7 +20,6 @@ module.exports.createObj = function (type, data) {
 		obj.time = time;
 		return obj;
 	}
-
 	else  {
 		obj[type] = 0;
 		obj.time = time;
