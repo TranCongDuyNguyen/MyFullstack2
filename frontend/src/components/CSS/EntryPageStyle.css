@@ -277,29 +277,96 @@
 }
 
 @media screen and (max-width:880px) {
-    .h-bar-box {
-        left: 50%;
-        top: 30em;
+    .entry-motor-img-2.col-md-4.offset-md-3 {
+        margin-bottom: 24em;
+        margin-top: 1em;
     }
     .motor-image {
         margin-left: 4em;
         margin-right: 0em;
         width: 158px;
         height: 133.5px;
-        z-index: 100!important;
     }
+    .motor-image.for, .motor-image.rev {
+        position: absolute;
+        top: 8em;
+        left: 10em;
+    }
+    .motor-info {
+        height: 40%;
+        right: 3em;
+        top: 0.2em;
+        width: 12em;
+    }
+    .motor-info pre {
+        font-size: 12px;
+        color: #efede1;
+        margin-bottom: 0.2em;
+    }
+    .set-sp1-box, .set-sp1-box.sp2{
+        font-size: 0.8em;
+        top: 21em;
+        left: 20em;
+    }
+    .bottom-text{
+        padding-left: 1em;
+    }
+ 
     .triangle {
         z-index: 101!important;
     }
     .triangle-btn-box {
-        left: 68.6%;
-        top: 19.7em;
+        left: 36.5%;
+        top: 48em;
+    }
+    .dc {
+        margin-top: 6em;
     }
     .space{
         height:0em!important;
     }
     .entry-footer.row{
         height: 76em!important;
+    }
+    .speed-dc .dc .text {
+        right: 11.5em;
+        top: 8em;
+    }
+    .entry-page .dc-fre-adj {
+        top: 1em;
+        left: 1.5em;
+    }
+    .entry-page .dc-tribtn-box {
+        top: 7.78em;
+    }
+    .h-bar-box {
+        left: 18%;
+        top: 57em;
+    }
+    .height-modal.modal-body {
+        padding-top: 1.4em;
+        height: 18rem!important;
+    }
+    .height-tc .recharts-surface{
+        width: 350px!important;
+    }
+    .height-tc .recharts-wrapper {
+        width: 320px!important;
+    }
+    .height-tc .area-chart-wrapper .xAxis-name {
+        left: 14em;
+        top: 15.5em;
+    }
+    .height-tc .area-chart-wrapper:active .fas.fa-pause {
+        left: 25em;
+    }
+    .height-tc .forw-btn {
+        left: 22em;
+    }
+    .set-height {
+        left: 14em;
+        top: 14em;
+        margin-top: 0em;
     }
     .operate.col-md-3, .notify.col-md-6{
         margin-top: 15em;
@@ -316,24 +383,5 @@
     .notify.col-md-6 .footer-panel .warn-panel .pagination {
         top: 24.5em;
     }
-    .speed-dc .dc .text {
-        right: 11.5em;
-        top: 3.6em;
-    }
-    .entry-page .dc-fre-adj {
-        top: 2em;
-        left: 1.5em;
-    }
 
-    .set-sp1-box{
-        font-size: 0.8em;
-        top: 20em;
-        left: 16em;
-    }
-    
-    .set-sp1-box.sp2 {
-        font-size: 0.8em;
-        left: 16em;
-        top: 20em;
-    }
 }

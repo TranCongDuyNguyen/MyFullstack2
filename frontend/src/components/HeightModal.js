@@ -25,7 +25,7 @@ export default class HeightModal extends Component {
             <div>
                 <Modal isOpen={internal} toggle={this.toggle} className={this.props.className}>
                     <ModalHeader toggle={this.toggle} style={{color:"#004e92"}}>Height Trend</ModalHeader>
-                    <ModalBody style={{ height: "20rem", paddingTop: "2.8em" }}>
+                    <ModalBody className="height-modal" style={{ height: "20rem", paddingTop: "2.8em" }}>
                         <HeightTC ioTopic="heightAmount"
                             stopFlag="hStopFlag"
                             reviewFlag="hReviewFlag"

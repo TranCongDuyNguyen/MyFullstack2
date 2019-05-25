@@ -480,7 +480,7 @@ export default class EntryPage extends Component {
                             <div className="ssp">{ssp1}</div>
                         </div>}
                     </Col>
-                    <Col md={{ size: 4, offset: 3 }}>
+                    <Col md={{ size: 4, offset: 3 }} className="entry-motor-img-2">
                         {isFre2Adj && <div className="dc-fre-adj">
                             <div>Max Value:</div>
                             <input type="number"
