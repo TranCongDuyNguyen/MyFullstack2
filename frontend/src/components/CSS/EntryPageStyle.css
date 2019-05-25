@@ -312,9 +312,6 @@
         padding-left: 1em;
     }
  
-    .triangle {
-        z-index: 101!important;
-    }
     .triangle-btn-box {
         left: 36.5%;
         top: 48em;
@@ -368,6 +365,12 @@
         top: 14em;
         margin-top: 0em;
     }
+    .Tau, .K {
+        width: 6em;
+    }
+    .K-tau .numb-input {
+        width: 75%;
+    }
     .operate.col-md-3, .notify.col-md-6{
         margin-top: 15em;
     }    
@@ -381,7 +384,20 @@
         height: 26%;
     }
     .notify.col-md-6 .footer-panel .warn-panel .pagination {
-        top: 24.5em;
+        top: 25em;
+    }
+    .notify.col-md-6 .footer-panel .jmp-to-current-btn {
+        bottom: 2.4em;
+    }
+    .notify .current-page {
+        left: 21.5em;
+    }
+    .notify .warn-amount {
+        left: 2em;
+    }
+    .noti-panel-footer .current-page, .notify .warn-amount {
+        font-size: 0.9em;
+        top: 25em;
     }
 
 }
