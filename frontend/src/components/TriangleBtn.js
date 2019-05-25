@@ -13,7 +13,7 @@ export default class TriangleBtn extends Component {
       })
   };
   render() {
-    let {value, hiex} = this.props;
+    let {hiex} = this.props;
     let amount = hiex*20;
     let pointGroup = `36,${309-amount} 36,${325-amount} 48,${317-amount}`;
     return (

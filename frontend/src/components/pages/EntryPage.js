@@ -416,7 +416,7 @@ export default class EntryPage extends Component {
                         hiex= {hexpVal}></TriangleBtn>
                     <div className="h-bar-box">
                         <div className="unit">{`${hfbVal} cm`}</div>
-                        <Progress max={15} value={10}>
+                        <Progress max={15} value={hfbVal}>
                         </Progress>
                         <div className="scale-box">
                             <div className="scale-line special top"><span className="numb">14</span>-</div>
@@ -553,7 +553,7 @@ export default class EntryPage extends Component {
                             <div>Torque: {mptor1} Nm</div>
                             <div>Motor Thermal: {mpmotorT1} &deg;C</div>
                             <div>Drive Thermal: {mpdriveT1} &deg;C</div>
-                            <div>Power: {mppow1} W</div>
+                            <div>Power: {mppow1} kW</div>
                             <div className="dots">...</div>
                         </div>
                     </Col>
@@ -580,7 +580,7 @@ export default class EntryPage extends Component {
                             <div>Torque: {mptor2} Nm</div>
                             <div>Motor Thermal: {mpmotorT2} &deg;C</div>
                             <div>Drive Thermal: {mpdriveT2} &deg;C</div>
-                            <div>Power: {mppow2} W</div>
+                            <div>Power: {mppow2} kW</div>
                             <div className="dots">...</div>
                         </div>
                     </Col>
