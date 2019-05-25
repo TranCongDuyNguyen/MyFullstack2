@@ -44,37 +44,29 @@ mongoose.connect(process.env.mongo_url, {
 /*<===========================================IO SOCKET=======================================================>*/
 /*<============================================MQTT CONNECTION============================================> */
 
-const client = mqtt.connect(process.env.CLOUDMQTT_URL, { clientId: "tcdnguyen" });
-//, {
-// 	clientId: "my-client",
-// 	username: "admin",
-// 	password: "admin"
-// });
+const client = mqtt.connect(process.env.CLOUDMQTT_URL, { clientId: "ca757d4bc9044cbaa9d8b45e9c4c2624" });
 
 client.on("connect", function () {
 	console.log("MQTT connected");
+	client.subscribe('n/motorData', function (err) {
+		if (err) {
+			console.log(err);
+		}
+	});
+	//+ Image
+	client.subscribe('n/image', function (err) {
+		if (err) {
+			console.log(err);
+		}
+	})
 });
 
 client.on("error", function (err) {
 	if (err) {
 		console.log(err);
-	}
-	client.end();
-})
-//-MQTT SUBSCRIBE----------------------------------------------------------------------------
-//+data
-client.subscribe('n/motorData', function (err) {
-	if (err) {
-		console.log(err);
-	}
-});
-//+ Image
-client.subscribe('n/image', function (err) {
-	if (err) {
-		console.log(err);
+		client.end();
 	}
 })
-
 
 //INITIAL VARIABLES----------------------------------------------------------------------------
 //+ temp
