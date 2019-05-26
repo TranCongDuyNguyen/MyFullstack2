@@ -37,7 +37,7 @@ export default class TrendChart extends Component {
             labelStyle={{ color: "#301014" }}
             itemStyle={{ color: "#0D0A0B" }}
             formatter={function (value, name) {
-              return `${value}`;
+              return `${Number(value).toFixed(2)}`;
             }}
             labelFormatter={function (value) {
               return `Time: ${value}`;

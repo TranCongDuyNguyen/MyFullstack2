@@ -289,7 +289,7 @@
 }
 @media screen and (max-width:880px) {
     .entry-motor-img-2.col-md-4.offset-md-3 {
-        margin-bottom: 24em;
+        margin-bottom: 32em;
         margin-top: 1em;
     }
     .motor-image {
@@ -325,7 +325,7 @@
  
     .triangle-btn-box {
         left: 36.5%;
-        top: 48em;
+        top: 56.95em;
     }
     .speed-dc .dc {
         margin-top: 6em;
@@ -349,7 +349,7 @@
     }
     .h-bar-box {
         left: 18%;
-        top: 57em;
+        top: 65em;
     }
     .height-modal.modal-body {
         padding-top: 1.4em;
@@ -413,5 +413,9 @@
         font-size: 0.9em;
         top: 25em;
     }
-
-}
+    .control-status {
+        top: 76.5em;
+        right: 9em;
+        width: 5.6em;
+    }
+}   

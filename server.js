@@ -44,7 +44,7 @@ mongoose.connect(process.env.mongo_url, {
 /*<===========================================IO SOCKET=======================================================>*/
 /*<============================================MQTT CONNECTION============================================> */
 
-const client = mqtt.connect(process.env.CLOUDMQTT_URL, { clientId: "ca757d4bc9044cbaa9d8b45e9c4c2624" });
+const client = mqtt.connect(process.env.CLOUDMQTT_URL, { clientId: "42ca4803909540ffb5c91a17a9b3da83" });
 
 client.on("connect", function () {
 	console.log("MQTT connected");
@@ -52,7 +52,7 @@ client.on("connect", function () {
 		if (err) {
 			console.log(err);
 		}
-	});
+	})
 	//+ Image
 	client.subscribe('n/image', function (err) {
 		if (err) {

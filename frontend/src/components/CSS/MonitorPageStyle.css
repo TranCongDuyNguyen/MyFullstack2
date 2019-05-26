@@ -402,5 +402,17 @@
         top: 0em!important;
         left: 13em!important;
     }
-    
+    .motor-dc.container .control-status {
+        top: -1em;
+        right: 11em;
+        height: 4em;
+    }
+    .control-status .led-box {
+        font-size: 0.7em;
+    }
+    .motor-name {
+        font-size: 1em;
+        margin-left: 3em;
+        white-space: nowrap;
+    }
 }
