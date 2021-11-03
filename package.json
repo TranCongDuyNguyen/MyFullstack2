@@ -29,7 +29,7 @@
     "mongoose": "^5.4.17",
     "mqtt": "^2.18.8",
     "socket.io": "^2.2.0",
-    "validator": "^10.11.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.10"
